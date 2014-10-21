@@ -1,5 +1,7 @@
 ### mpv-progressbar
 
+![screenshot][sshot]
+
 mpv-progressbar is a script for mpv that provides a small, unintrusive
 progress bar that persists at the bottom of the video window.
 
@@ -9,6 +11,16 @@ compatible with the built-in osc. If you want to use it, you should add
 
 #### Installation
 
-Place the compiled `mpv-progressbar.lua` script in your `~/.mpv/lua` or
+Place the [compiled `mpv-progressbar.lua` script][build] in your `~/.mpv/lua` or
 `~/.config/mpv/lua` directory. It may be more convenient to update if
 you symlink it in from somewhere else.
+
+#### Building
+
+You must have [moonscript][moonscript] installed (particularly `moonc`,
+the compiler) and ruby. Run `./build.rb` from the root of the
+repository.
+
+[sshot]: https://github.com/torque/mpv-progressbar/raw/images/shot.png
+[build]: https://raw.githubusercontent.com/torque/mpv-progressbar/build/mpv-progressbar.lua
+[moonscript]: http://moonscript.org
