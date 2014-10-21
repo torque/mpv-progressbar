@@ -5,6 +5,7 @@
 sources = [
 	'src/requires.moon',
 	'src/log.moon',
+	'src/OSDAggregator.moon',
 	'src/Rect.moon',
 	'src/ProgressBar.moon',
 	'src/main.moon'

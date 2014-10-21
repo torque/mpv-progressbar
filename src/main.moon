@@ -1,10 +1,12 @@
 local progressBar
 
+display = OSDAggregator!
+
 initDraw = ->
-	log.info "Firing initDraw."
 	mp.unregister_event initDraw
 	unless progressBar
-		progressBar = ProgressBar mp.get_screen_size!
+		width, height = mp.get_screen_size!
+		progressBar = ProgressBar width, height, display
 	else
 		progressBar\manualDraw!
 
