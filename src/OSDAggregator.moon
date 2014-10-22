@@ -1,34 +1,77 @@
 class OSDAggregator
 
 	new: =>
-		@script = {}
-		@scriptLength = 0
+		@script = { }
+		@subscribers = { }
+		@subscriberCount = 0
 		@w = 0
 		@h = 0
 
-	setDisplaySize: ( @w, @h ) =>
+		-- Trying to avoid using a callback each tick (currently we're
+		-- rendering ~10x less frequently for 24fps video than we would be
+		-- using `tick`). However, there are some disadvantages, like
+		-- (relatively) large lag time between e.g. when fullscreen is
+		-- entered and its observe_property callback is fired.
+		-- mp.register_event 'tick', @\draw
 
-	addEvent: ( eventString ) =>
-		@scriptLength += 1
-		@script[@scriptLength] = eventString
-		@needsUpdate = true
-		return @scriptLength
+		-- Redrawing twice a second gives pretty good results here.
+		redrawFrequency = 0.5
+		@updateTimer = mp.add_periodic_timer redrawFrequency, @\update
+		mp.observe_property 'fullscreen', 'bool', @\badFullscreenHack
+		mp.observe_property 'pause', 'bool', @\pause
+		mp.register_event 'seek', @\forceUpdate
+		mp.register_event 'shutdown', ->
+			@updateTimer\kill!
 
-	updateEvent: ( index, eventString ) =>
-		return if index > @scriptLength
-		@script[index] = eventString
-		@needsUpdate = true
+	setDisplaySize: ( w, h ) =>
+		needsRedraw = false
+		if w != @w or h != @h
+			@w, @h = w, h
+			for sub = 1, @subscriberCount
+				theSub = @subscribers[sub]
+				if theSub\updateSize w, h
+					needsRedraw = true
+					@script[sub] = tostring theSub
 
-	removeEvent: ( index ) =>
-		return if index > @scriptLength
-		if index < @scriptLength
-			table.remove @script, index
-		else
-			table[index] = nil
-		@scriptLength -= 1
-		@needsUpdate = true
+		if true == needsRedraw
+			@forceUpdate!
 
-	display: =>
-		if @needsUpdate
+	-- The fullscreen change property gets called before the display size
+	-- is actually updated, so we need to wait some small amount of time
+	-- before actually setting the new display size. 100ms appears
+	-- to work reliably here.
+	badFullscreenHack: =>
+		mp.add_timeout 0.1, ->
+			@setDisplaySize mp.get_screen_size!
+
+	addSubscriber: ( subscriber ) =>
+		return if not subscriber
+		@subscriberCount += 1
+		@subscribers[@subscriberCount] = subscriber
+		@script[@subscriberCount] = tostring subscriber
+
+	update: ( force = false ) =>
+		needsRedraw = force
+		for sub = 1, @subscriberCount
+			theSub = @subscribers[sub]
+			if theSub\update!
+				needsRedraw = true
+				@script[sub] = tostring theSub
+
+		-- Events get passed as the first argument to their callback, so we
+		-- have to check specifically that the value is true and not just
+		-- truthy
+		if true == needsRedraw
 			mp.set_osd_ass @w, @h, table.concat @script, '\n'
-			@needsUpdate = false
+
+	pause: ( event, @paused ) =>
+		if @paused
+			@updateTimer\stop!
+		else
+			@updateTimer\resume!
+
+	forceUpdate: =>
+		@updateTimer\kill!
+		@update true
+		unless @paused
+			@updateTimer\resume!

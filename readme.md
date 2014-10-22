@@ -3,7 +3,8 @@
 ![screenshot][sshot]
 
 mpv-progressbar is a script for mpv that provides a small, unintrusive
-progress bar that persists at the bottom of the video window.
+progress bar that persists at the bottom of the video window. It takes
+up two pixels vertically, and the width of the window horizontally.
 
 As a consequence of how mpv handles drawing the osd, this script is not
 compatible with the built-in osc. If you want to use it, you should add

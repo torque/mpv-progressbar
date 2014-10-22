@@ -1,14 +1,16 @@
-local progressBar
+local progressBar, progressBarBackground
 
-display = OSDAggregator!
+aggregator = OSDAggregator!
 
 initDraw = ->
 	mp.unregister_event initDraw
+
+	width, height = mp.get_screen_size!
 	unless progressBar
-		width, height = mp.get_screen_size!
-		progressBar = ProgressBar width, height, display
-	else
-		progressBar\manualDraw!
+		progressBarBackground = ProgressBarBackground aggregator
+		progressBar = ProgressBar aggregator
+
+	aggregator\setDisplaySize width, height
 
 fileLoaded = ->
 	mp.register_event 'playback-restart', initDraw
