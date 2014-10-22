@@ -16,6 +16,7 @@ class OSDAggregator
 
 		-- Redrawing twice a second gives pretty good results here.
 		redrawFrequency = 0.5
+		@updateTimer = mp.add_periodic_timer 2, @\updateDisplaySize
 		@updateTimer = mp.add_periodic_timer redrawFrequency, @\update
 		mp.observe_property 'fullscreen', 'bool', @\badFullscreenHack
 		mp.observe_property 'pause', 'bool', @\pause
@@ -43,6 +44,9 @@ class OSDAggregator
 	badFullscreenHack: =>
 		mp.add_timeout 0.1, ->
 			@setDisplaySize mp.get_screen_size!
+
+	updateDisplaySize: =>
+		@setDisplaySize mp.get_screen_size!
 
 	addSubscriber: ( subscriber ) =>
 		return if not subscriber
