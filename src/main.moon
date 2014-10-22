@@ -1,15 +1,10 @@
-local progressBar, progressBarBackground
-
 aggregator = OSDAggregator!
+progressBarBackground = ProgressBarBackground aggregator
+progressBar = ProgressBar aggregator
 
 initDraw = ->
 	mp.unregister_event initDraw
-
 	width, height = mp.get_screen_size!
-	unless progressBar
-		progressBarBackground = ProgressBarBackground aggregator
-		progressBar = ProgressBar aggregator
-
 	aggregator\setDisplaySize width, height
 
 fileLoaded = ->
