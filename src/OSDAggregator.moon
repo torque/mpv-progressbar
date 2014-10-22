@@ -62,9 +62,6 @@ class OSDAggregator
 				needsRedraw = true
 				@script[sub] = tostring theSub
 
-		-- Events get passed as the first argument to their callback, so we
-		-- have to check specifically that the value is true and not just
-		-- truthy
 		if true == needsRedraw
 			mp.set_osd_ass @w, @h, table.concat @script, '\n'
 
