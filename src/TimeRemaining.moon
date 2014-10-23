@@ -15,7 +15,7 @@ class TimeRemaining extends Rect
 		@position = -100
 		@needsUpdate = false
 		@animationCb = @\animatePos
-		@posAnimation = Animation -100, 4, 0.25, @animationCb
+		@posAnimation = Animation -100, 4, 0.25, @animationCb, 0.25
 
 	__tostring: =>
 		return table.concat @line
