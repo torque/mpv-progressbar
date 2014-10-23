@@ -20,8 +20,6 @@ class TimeRemaining extends Rect
 	__tostring: =>
 		return table.concat @line
 
-	bar_height = 2
-	hover_zone = 20
 	updateSize: ( w, h ) =>
 		@position += w - @w
 		@y = h - hover_zone*bar_height

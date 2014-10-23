@@ -20,8 +20,6 @@ class ProgressBarBackground extends Rect
 	__tostring: =>
 		return table.concat @line
 
-	bar_height = 2
-	hover_zone = 20
 	updateSize: ( w, h ) =>
 		@y = h - hover_zone*bar_height
 		@w, @h = w, hover_zone*bar_height
