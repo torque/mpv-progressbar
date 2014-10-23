@@ -3,7 +3,6 @@ class TimeRemaining extends Rect
 	new: ( @animationQueue ) =>
 		super 0, 0, 0, 0
 
-
 		@line = {
 			[[{\fnSource Sans Pro Semibold\bord2\fs30\pos(]]
 			[[-100,0]]
@@ -54,7 +53,7 @@ class TimeRemaining extends Rect
 		timeRemaining = math.floor mp.get_property_number( 'time-remaining' ) or 0
 		if timeRemaining != lastTime
 			update = true
-			@line[4] = ([[-%d:%02d:%02d]])\format timeRemaining/3600, (timeRemaining/60)%60, timeRemaining%60
+			@line[4] = ([[–%d:%02d:%02d]])\format timeRemaining/3600, (timeRemaining/60)%60, timeRemaining%60
 			lastTime = timeRemaining
 
 		@needsUpdate = false
