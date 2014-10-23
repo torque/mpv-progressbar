@@ -14,17 +14,20 @@ sources = [
 
 # Test for moonscript compile errors (this does not guarantee there
 # won't be lua compile errors)
+`mkdir -p .build`
 sources.each do |sourceFile|
+	output = ".build/#{sourceFile}.lua"
+	if File.exists?( output ) && File.stat( output ) > File.stat( sourceFile )
+		next
+	end
 	# This doesn't eat stderr
-	`moonc -o tmp.lua #{sourceFile}`
+	`moonc -o #{output} #{sourceFile}`
 	# Abort on error.
 	if $?.exitstatus != 0
 		`rm tmp.lua`
 		return 1
 	end
 end
-
-`rm tmp.lua`
 
 # Compile the sources together.
 tempScript = 'mpv-progressbar-temp.moon'
