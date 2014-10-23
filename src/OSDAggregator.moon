@@ -15,7 +15,7 @@ class OSDAggregator
 		-- mp.register_event 'tick', @\draw
 
 		-- Redrawing twice a second gives pretty good results here.
-		redrawFrequency = 0.5
+		redrawFrequency = 0.25
 		@updateTimer = mp.add_periodic_timer 2, @\updateDisplaySize
 		@updateTimer = mp.add_periodic_timer redrawFrequency, @\update
 		mp.observe_property 'fullscreen', 'bool', @\badFullscreenHack
@@ -56,9 +56,10 @@ class OSDAggregator
 
 	update: ( force = false ) =>
 		needsRedraw = force
+		x, y = mp.get_mouse_pos!
 		for sub = 1, @subscriberCount
 			theSub = @subscribers[sub]
-			if theSub\update!
+			if theSub\update x, y
 				needsRedraw = true
 				@script[sub] = tostring theSub
 

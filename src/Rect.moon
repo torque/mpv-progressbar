@@ -26,3 +26,6 @@ class Rect
 	stretch: ( w, h ) =>
 		@w += w or 0
 		@h += h or 0
+
+	containsPoint: ( x, y ) =>
+		return ((x >= @x) and (y >= @y) and (x < @x + @w) and (y < @y + @h))

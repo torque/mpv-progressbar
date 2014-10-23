@@ -6,9 +6,11 @@ sources = [
 	'src/requires.moon',
 	'src/log.moon',
 	'src/OSDAggregator.moon',
+	'src/AnimationQueue.moon',
+	'src/Animation.moon',
+	'src/Rect.moon',
+	'src/ProgressBar.moon',
 	'src/ProgressBarBackground.moon',
-	'src/ProgressBar.moon',
-	'src/ProgressBar.moon',
 	'src/main.moon'
 ]
 
