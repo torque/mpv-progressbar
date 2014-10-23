@@ -1,7 +1,12 @@
 aggregator = OSDAggregator!
+
 animationQueue = AnimationQueue aggregator
-progressBarBackground = ProgressBarBackground aggregator, animationQueue
-progressBar = ProgressBar aggregator, animationQueue
+
+progressBar = ProgressBar animationQueue
+progressBarBackground = ProgressBarBackground animationQueue
+
+aggregator\addSubscriber progressBarBackground
+aggregator\addSubscriber progressBar
 
 initDraw = ->
 	mp.unregister_event initDraw

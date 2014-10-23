@@ -1,6 +1,6 @@
 class ProgressBarBackground extends Rect
 
-	new: ( @aggregator, @animationQueue ) =>
+	new: ( @animationQueue ) =>
 		super 0, 0, 0, 0
 
 		@line = {
@@ -15,7 +15,6 @@ class ProgressBarBackground extends Rect
 		@needsUpdate = false
 		@animationCb = @\animateHeight
 		@heightAnimation = Animation 100, 400, 0.25, @animationCb
-		@aggregator\addSubscriber @
 
 	__tostring: =>
 		return table.concat @line
