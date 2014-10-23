@@ -12,6 +12,7 @@ class ProgressBarBackground extends Rect
 			0
 		}
 
+		@needsUpdate = false
 		@animationCb = @\animateHeight
 		@heightAnimation = Animation 100, 400, 0.25, @animationCb
 		@aggregator\addSubscriber @

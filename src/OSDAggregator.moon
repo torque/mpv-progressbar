@@ -19,7 +19,7 @@ class OSDAggregator
 		@updateTimer = mp.add_periodic_timer 2, @\updateDisplaySize
 		@updateTimer = mp.add_periodic_timer redrawFrequency, @\update
 		mp.observe_property 'fullscreen', 'bool', @\badFullscreenHack
-		mp.observe_property 'pause', 'bool', @\pause
+		-- mp.observe_property 'pause', 'bool', @\pause
 		mp.register_event 'seek', @\forceUpdate
 		mp.register_event 'shutdown', ->
 			@updateTimer\kill!

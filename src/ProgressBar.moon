@@ -14,6 +14,7 @@ class ProgressBar extends Rect
 			0
 		}
 
+		@needsUpdate = false
 		@animationCb = @\animateHeight
 		@heightAnimation = Animation 100, 400, 0.25, @animationCb
 		@aggregator\addSubscriber @
@@ -33,10 +34,14 @@ class ProgressBar extends Rect
 
 	animateHeight: ( animation, value ) =>
 		@line[6] = ([[%g]])\format value
+		@needsUpdate = true
 
+	lastPosition = 0
 	update: ( mouseX, mouseY ) =>
+		update = @needsUpdate
 		if @containsPoint mouseX, mouseY
 			unless @hovered
+				update = true
 				@hovered = true
 				if @heightAnimation.isReversed
 					@heightAnimation\reverse!
@@ -45,6 +50,7 @@ class ProgressBar extends Rect
 					@animationQueue\registerAnimation @heightAnimation
 		else
 			if @hovered
+				update = true
 				@hovered = false
 				unless @heightAnimation.isReversed
 					@heightAnimation\reverse!
@@ -52,7 +58,11 @@ class ProgressBar extends Rect
 					@heightAnimation\restart!
 					@animationQueue\registerAnimation @heightAnimation
 
-		@line[4] = ([[%g]])\format mp.get_property_number( 'percent-pos' ) or 0
+		position = mp.get_property_number( 'percent-pos' )
+		if position != lastPosition
+			update = true
+			@line[4] = ([[%g]])\format position or 0
+			lastPosition = position
 
-		-- msg.warn tostring @
-		return true
+		@needsUpdate = false
+		return update
