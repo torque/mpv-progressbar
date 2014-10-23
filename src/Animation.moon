@@ -23,6 +23,13 @@ class Animation
 
 		return @isFinished
 
+	interrupt: ( reverse, queue ) =>
+		if reverse != @isReversed
+			@reverse!
+		unless @isRegistered
+			@restart!
+			queue\registerAnimation @
+
 	reverse: =>
 		@isReversed = not @isReversed
 		@initialValue, @endValue = @endValue, @initialValue

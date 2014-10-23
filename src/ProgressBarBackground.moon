@@ -12,6 +12,7 @@ class ProgressBarBackground extends Rect
 			0
 		}
 
+		@hovered = false
 		@needsUpdate = false
 		@animationCb = @\animateHeight
 		@heightAnimation = Animation 100, 400, 0.25, @animationCb
@@ -39,20 +40,12 @@ class ProgressBarBackground extends Rect
 			unless @hovered
 				update = true
 				@hovered = true
-				if @heightAnimation.isReversed
-					@heightAnimation\reverse!
-				unless @heightAnimation.isRegistered
-					@heightAnimation\restart!
-					@animationQueue\registerAnimation @heightAnimation
+				@heightAnimation\interrupt false, @animationQueue
 		else
 			if @hovered
 				update = true
 				@hovered = false
-				unless @heightAnimation.isReversed
-					@heightAnimation\reverse!
-				unless @heightAnimation.isRegistered
-					@heightAnimation\restart!
-					@animationQueue\registerAnimation @heightAnimation
+				@heightAnimation\interrupt true, @animationQueue
 
 		@needsUpdate = false
 		return update
