@@ -11,28 +11,26 @@ class TimeRemaining extends Rect
 		}
 
 		@hovered = false
-		@position = -100
+		@position = 100
 		@needsUpdate = false
 		@animationCb = @\animatePos
 		@posAnimation = Animation -100, 4, 0.25, @animationCb, 0.25
 
 	__tostring: =>
+		if not @hovered and not @posAnimation.isRegistered
+			return ""
 		return table.concat @line
 
 	updateSize: ( w, h ) =>
 		@position += w - @w
 		@y = h - hover_zone*bar_height
 		@w, @h = w, hover_zone*bar_height
-
-		if @hovered
-			@line[2] = ([[%d,%d]])\format @position, @y + (hover_zone-3)*bar_height
-			return true
-
-		return false
+		@line[2] = ([[%g,%g]])\format @position, @y + (hover_zone-4)*bar_height
+		return true
 
 	animatePos: ( animation, value ) =>
 		@position = @w - value
-		@line[2] = ([[%d,%d]])\format @position, @y + (hover_zone-3)*bar_height
+		@line[2] = ([[%g,%g]])\format @position, @y + (hover_zone-4)*bar_height
 		@needsUpdate = true
 
 	lastTime = 0

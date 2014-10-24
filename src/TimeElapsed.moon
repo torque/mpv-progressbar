@@ -17,6 +17,9 @@ class TimeElapsed extends Rect
 		@posAnimation = Animation -100, 2, 0.25, @animationCb, 0.25
 
 	__tostring: =>
+		if not @hovered and not @posAnimation.isRegistered
+			return ""
+
 		return table.concat @line
 
 	updateSize: ( w, h ) =>
@@ -24,14 +27,14 @@ class TimeElapsed extends Rect
 		@w, @h = w, hover_zone*bar_height
 
 		if @hovered
-			@line[2] = ([[%d,%d]])\format @position, @y + (hover_zone-3)*bar_height
+			@line[2] = ([[%g,%g]])\format @position, @y + (hover_zone-4)*bar_height
 			return true
 
 		return false
 
 	animatePos: ( animation, value ) =>
 		@position = value
-		@line[2] = ([[%d,%d]])\format @position, @y + (hover_zone-3)*bar_height
+		@line[2] = ([[%g,%g]])\format @position, @y + (hover_zone-4)*bar_height
 		@needsUpdate = true
 
 	lastTime = 0
