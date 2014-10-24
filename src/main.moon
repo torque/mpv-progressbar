@@ -6,11 +6,13 @@ progressBar = ProgressBar animationQueue
 progressBarBackground = ProgressBarBackground animationQueue
 timeElapsed = TimeElapsed animationQueue
 timeRemaining = TimeRemaining animationQueue
+hoverTime = HoverTime animationQueue
 
 aggregator\addSubscriber progressBarBackground
 aggregator\addSubscriber progressBar
 aggregator\addSubscriber timeElapsed
 aggregator\addSubscriber timeRemaining
+aggregator\addSubscriber hoverTime
 
 initDraw = ->
 	mp.unregister_event initDraw

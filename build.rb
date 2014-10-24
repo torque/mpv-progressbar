@@ -13,6 +13,7 @@ sources = [
 	'src/ProgressBarBackground.moon',
 	'src/TimeElapsed.moon',
 	'src/TimeRemaining.moon',
+	'src/HoverTime.moon',
 	'src/main.moon'
 ]
 
