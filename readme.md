@@ -1,10 +1,14 @@
 ### mpv-progressbar
 
-![screenshot][sshot]
-
 mpv-progressbar is a script for mpv that provides a small, unintrusive
 progress bar that persists at the bottom of the video window. It takes
-up two pixels vertically, and the width of the window horizontally.
+up two pixels vertically, and the width of the window horizontally:
+
+![Normal view][normal]
+
+When hovered with the mouse, it expands to show more information:
+
+![Hover view][hover]
 
 As a consequence of how mpv handles drawing the osd, this script is not
 compatible with the built-in osc. If you want to use it, you should add
@@ -22,6 +26,7 @@ You must have [moonscript][moonscript] installed (particularly `moonc`,
 the compiler) and ruby. Run `./build.rb` from the root of the
 repository.
 
-[sshot]: https://github.com/torque/mpv-progressbar/raw/images/move.gif
+[normal]: https://github.com/torque/mpv-progressbar/raw/images/normal.png
+[hover]: https://github.com/torque/mpv-progressbar/raw/images/hover.png
 [build]: https://raw.githubusercontent.com/torque/mpv-progressbar/build/mpv-progressbar.lua
 [moonscript]: http://moonscript.org
