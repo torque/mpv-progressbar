@@ -18,13 +18,22 @@ class ProgressBar extends Rect
 		@needsUpdate = false
 		@animationCb = @\animateHeight
 		@heightAnimation = Animation 100, 400, 0.25, @animationCb
+		mp.set_key_bindings {{ "mouse_btn0", ->, @\clickUpSeek }}, "clickseek"
+		mp.enable_key_bindings "clickseek"
 
 	__tostring: =>
 		return table.concat @line
 
+	clickUpSeek: =>
+		x, y = mp.get_mouse_pos!
+		if @containsPoint x, y
+			mp.commandv "seek", x*100/@w, "absolute-percent", "keyframes"
+
 	updateSize: ( w, h ) =>
 		@y = h - hover_zone*bar_height
 		@w, @h = w, hover_zone*bar_height
+		log.warn "(%d, %d), (%d, %d)", 0, @y, @w, h
+		mp.set_mouse_area 0, 0, w, h, "clickseek"
 
 		@line[2] = ([[%d,%d]])\format 0, h
 		@line[8] = ([[%d 0 %d %d 0 %d]])\format w*4, w*4, bar_height*4, bar_height*4
@@ -48,10 +57,10 @@ class ProgressBar extends Rect
 				@hovered = false
 				@heightAnimation\interrupt true, @animationQueue
 
-		position = mp.get_property_number( 'percent-pos' )
+		position = mp.get_property_number( 'percent-pos' ) or 0
 		if position != lastPosition
 			update = true
-			@line[4] = ([[%g]])\format position or 0
+			@line[4] = ([[%g]])\format position
 			lastPosition = position
 
 		@needsUpdate = false
