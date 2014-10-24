@@ -1,6 +1,6 @@
 class Animation
 
-	new: ( @initialValue, @endValue, @duration, @updateCb, @accel ) =>
+	new: ( @initialValue, @endValue, @duration, @updateCb, @accel = 1 ) =>
 		@startTime = mp.get_time!
 		@currentTime = @startTime
 		@durationR = 1/@duration
@@ -37,6 +37,7 @@ class Animation
 		@isReversed = not @isReversed
 		@initialValue, @endValue = @endValue, @initialValue
 		@startTime = 2*@currentTime - @duration - @startTime
+		@accel = 1/@accel
 
 	restart: =>
 		@startTime = mp.get_time!
