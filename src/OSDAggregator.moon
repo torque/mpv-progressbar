@@ -7,14 +7,6 @@ class OSDAggregator
 		@w = 0
 		@h = 0
 
-		-- Trying to avoid using a callback each tick (currently we're
-		-- rendering ~10x less frequently for 24fps video than we would be
-		-- using `tick`). However, there are some disadvantages, like
-		-- (relatively) large lag time between e.g. when fullscreen is
-		-- entered and its observe_property callback is fired.
-		-- mp.register_event 'tick', @\draw
-
-		-- Redrawing twice a second gives pretty good results here.
 		redrawFrequency = 0.05
 		@updateTimer = mp.add_periodic_timer 2, @\updateDisplaySize
 		@updateTimer = mp.add_periodic_timer redrawFrequency, @\update
