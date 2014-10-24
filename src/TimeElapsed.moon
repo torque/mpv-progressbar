@@ -52,7 +52,7 @@ class TimeElapsed extends Rect
 				@hovered = false
 				@posAnimation\interrupt true, @animationQueue
 
-		timeElapsed = math.floor mp.get_property_number( 'time-pos' ) or 0
+		timeElapsed = math.floor mp.get_property_number 'time-pos', 0
 		if timeElapsed != lastTime
 			update = true
 			@line[4] = ([[%d:%02d:%02d]])\format timeElapsed/3600, (timeElapsed/60)%60, timeElapsed%60

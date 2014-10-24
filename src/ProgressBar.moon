@@ -56,7 +56,7 @@ class ProgressBar extends Rect
 				@hovered = false
 				@heightAnimation\interrupt true, @animationQueue
 
-		position = mp.get_property_number( 'percent-pos' ) or 0
+		position = mp.get_property_number 'percent-pos', 0
 		if position != lastPosition
 			update = true
 			@line[4] = ([[%g]])\format position

@@ -52,7 +52,7 @@ class HoverTime extends Rect
 		-- width = 76 + 4px padding = 80
 		@line[2] = ("%g,%g")\format math.min( @w-130, math.max( 120, mouseX ) ), @y + (hover_zone-4)*bar_height
 
-		hoverTime = (mp.get_property_number( 'length' ) or 0)*mouseX/@w
+		hoverTime = mp.get_property_number( 'length', 0 )*mouseX/@w
 		if hoverTime != lastTime and (@hovered or @alphaAnimation.isRegistered)
 			update = true
 			@line[6] = ([[%d:%02d:%02d]])\format hoverTime/3600, (hoverTime/60)%60, hoverTime%60
