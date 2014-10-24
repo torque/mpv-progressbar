@@ -19,7 +19,7 @@ class ProgressBar extends Rect
 		@animationCb = @\animateHeight
 		@heightAnimation = Animation 100, 400, 0.25, @animationCb
 		mp.set_key_bindings {{ "mouse_btn0", ->, @\clickUpSeek }}, "clickseek"
-		mp.enable_key_bindings "clickseek"
+		mp.enable_key_bindings "clickseek", "allow-vo-dragging|allow-hide-cursor"
 
 	__tostring: =>
 		return table.concat @line
