@@ -22,6 +22,6 @@ You must have [moonscript][moonscript] installed (particularly `moonc`,
 the compiler) and ruby. Run `./build.rb` from the root of the
 repository.
 
-[sshot]: https://github.com/torque/mpv-progressbar/raw/images/shot.png
+[sshot]: https://github.com/torque/mpv-progressbar/raw/images/move.gif
 [build]: https://raw.githubusercontent.com/torque/mpv-progressbar/build/mpv-progressbar.lua
 [moonscript]: http://moonscript.org
