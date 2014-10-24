@@ -50,10 +50,9 @@ class HoverTime extends Rect
 				@alphaAnimation\interrupt true, @animationQueue
 
 		-- width = 76 + 4px padding = 80
-		percent = mouseX/@w
-		@line[2] = ("%g,%g")\format (@w-250)*percent + 120, @y + (hover_zone-4)*bar_height
+		@line[2] = ("%g,%g")\format math.min( @w-130, math.max( 120, mouseX ) ), @y + (hover_zone-4)*bar_height
 
-		hoverTime = (mp.get_property_number( 'length' ) or 0)*percent
+		hoverTime = (mp.get_property_number( 'length' ) or 0)*mouseX/@w
 		if hoverTime != lastTime and (@hovered or @alphaAnimation.isRegistered)
 			update = true
 			@line[6] = ([[%d:%02d:%02d]])\format hoverTime/3600, (hoverTime/60)%60, hoverTime%60
