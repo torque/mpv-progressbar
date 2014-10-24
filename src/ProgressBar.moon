@@ -32,7 +32,6 @@ class ProgressBar extends Rect
 	updateSize: ( w, h ) =>
 		@y = h - hover_zone*bar_height
 		@w, @h = w, hover_zone*bar_height
-		log.warn "(%d, %d), (%d, %d)", 0, @y, @w, h
 		mp.set_mouse_area 0, 0, w, h, "clickseek"
 
 		@line[2] = ([[%d,%d]])\format 0, h
