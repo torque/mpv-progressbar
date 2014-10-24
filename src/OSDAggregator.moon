@@ -15,7 +15,7 @@ class OSDAggregator
 		-- mp.register_event 'tick', @\draw
 
 		-- Redrawing twice a second gives pretty good results here.
-		redrawFrequency = 0.25
+		redrawFrequency = 0.05
 		@updateTimer = mp.add_periodic_timer 2, @\updateDisplaySize
 		@updateTimer = mp.add_periodic_timer redrawFrequency, @\update
 		mp.observe_property 'fullscreen', 'bool', @\badFullscreenHack
