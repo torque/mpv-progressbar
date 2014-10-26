@@ -14,6 +14,7 @@ sources = [
 	'src/TimeElapsed.moon',
 	'src/TimeRemaining.moon',
 	'src/HoverTime.moon',
+	'src/PauseIndicator.moon',
 	'src/main.moon'
 ]
 

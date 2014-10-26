@@ -14,6 +14,11 @@ aggregator\addSubscriber timeElapsed
 aggregator\addSubscriber timeRemaining
 aggregator\addSubscriber hoverTime
 
+PauseIndicatorWrapper = ( ... ) ->
+	PauseIndicator animationQueue, aggregator, ...
+
+mp.observe_property 'pause', 'bool', PauseIndicatorWrapper
+
 initDraw = ->
 	mp.unregister_event initDraw
 	width, height = mp.get_screen_size!
