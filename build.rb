@@ -19,6 +19,7 @@ sources = [
 
 # Test for moonscript compile errors (this does not guarantee there
 # won't be lua compile errors)
+buildCount = 0
 `mkdir -p .build`
 sources.each do |sourceFile|
 	output = ".build/#{sourceFile}.lua"
@@ -32,10 +33,15 @@ sources.each do |sourceFile|
 		`rm tmp.lua`
 		return 1
 	end
+	buildCount += 1
 end
 
-# Compile the sources together.
-tempScript = 'mpv-progressbar-temp.moon'
-`cat #{sources.join ' '} > #{tempScript}`
-`moonc -o mpv-progressbar.lua #{tempScript}`
-`rm #{tempScript}`
+if buildCount > 0
+	# Compile the sources together.
+	tempScript = 'mpv-progressbar-temp.moon'
+	`cat #{sources.join ' '} > #{tempScript}`
+	`moonc -o mpv-progressbar.lua #{tempScript}`
+	`rm #{tempScript}`
+else
+	puts "Nothing to do."
+end
