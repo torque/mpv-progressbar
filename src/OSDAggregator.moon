@@ -43,8 +43,18 @@ class OSDAggregator
 	addSubscriber: ( subscriber ) =>
 		return if not subscriber
 		@subscriberCount += 1
+		subscriber.aggregatorIndex = @subscriberCount
 		@subscribers[@subscriberCount] = subscriber
 		@script[@subscriberCount] = tostring subscriber
+
+	removeSubscriber: ( index ) =>
+		for i = index+1, @subscriberCount
+			@subscribers[i].aggregatorIndex -= 1
+
+		table.remove @subscribers, index
+		table.remove @script, index
+
+		@subscriberCount -= 1
 
 	update: ( force = false ) =>
 		needsRedraw = force
