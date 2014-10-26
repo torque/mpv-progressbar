@@ -6,7 +6,7 @@ class HoverTime extends Rect
 		@line = {
 			[[{\fnSource Sans Pro Semibold\bord2\fs26\pos(]]
 			[[-100,0]]
-			[[)\3c&H2D2D2D&\c&FC799E&\an2\alpha&H]]
+			[[)\3c&H2D2D2D&\c&HFC799E&\an2\alpha&H]]
 			[[FF]]
 			[[&}]]
 			0

@@ -6,7 +6,7 @@ class TimeRemaining extends Rect
 		@line = {
 			[[{\fnSource Sans Pro Semibold\bord2\fs30\pos(]]
 			[[-100,0]]
-			[[)\3c&H2D2D2D&\c&FC799E&\an3}]]
+			[[)\3c&H2D2D2D&\c&HFC799E&\an3}]]
 			0
 		}
 

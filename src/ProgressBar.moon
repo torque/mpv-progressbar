@@ -4,7 +4,7 @@ class ProgressBar extends Rect
 		super 0, 0, 0, 0
 
 		@line = {
-			[[{\an1\bord0\c&FC799E&\p3\pos(]]
+			[[{\an1\bord0\c&HFC799E&\p3\pos(]]
 			0
 			[[)\fscx]]
 			0
