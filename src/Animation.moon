@@ -1,6 +1,6 @@
 class Animation
 
-	new: ( @initialValue, @endValue, @duration, @updateCb, @accel = 1 ) =>
+	new: ( @initialValue, @endValue, @duration, @updateCb, @finishedCb, @accel = 1 ) =>
 		@startTime = mp.get_time!
 		@currentTime = @startTime
 		@durationR = 1/@duration
@@ -23,6 +23,9 @@ class Animation
 		value = (1 - progress) * @initialValue + progress * @endValue
 
 		@updateCb value
+
+		if @isFinished and @finishedCb
+			@finishedCb!
 
 		return @isFinished
 

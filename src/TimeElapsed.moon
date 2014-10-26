@@ -14,7 +14,7 @@ class TimeElapsed extends Rect
 		@position = -100
 		@needsUpdate = false
 		@animationCb = @\animatePos
-		@posAnimation = Animation -100, 2, 0.25, @animationCb, 0.25
+		@posAnimation = Animation -100, 2, 0.25, @animationCb, nil, 0.25
 
 	__tostring: =>
 		if not @hovered and not @posAnimation.isRegistered
