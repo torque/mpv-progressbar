@@ -7,12 +7,14 @@ progressBarBackground = ProgressBarBackground animationQueue
 timeElapsed = TimeElapsed animationQueue
 timeRemaining = TimeRemaining animationQueue
 hoverTime = HoverTime animationQueue
+playlist = Playlist animationQueue
 
 aggregator\addSubscriber progressBarBackground
 aggregator\addSubscriber progressBar
 aggregator\addSubscriber timeElapsed
 aggregator\addSubscriber timeRemaining
 aggregator\addSubscriber hoverTime
+aggregator\addSubscriber playlist
 
 PauseIndicatorWrapper = ( ... ) ->
 	PauseIndicator animationQueue, aggregator, ...
@@ -23,6 +25,7 @@ initDraw = ->
 	mp.unregister_event initDraw
 	width, height = mp.get_screen_size!
 	aggregator\setDisplaySize width, height
+	playlist\updatePlaylistInfo!
 
 fileLoaded = ->
 	mp.register_event 'playback-restart', initDraw

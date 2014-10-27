@@ -15,6 +15,7 @@ sources = [
 	'src/TimeRemaining.moon',
 	'src/HoverTime.moon',
 	'src/PauseIndicator.moon',
+	'src/Playlist.moon',
 	'src/main.moon'
 ]
 
