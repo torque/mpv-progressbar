@@ -31,7 +31,7 @@ class PauseIndicator
 		@animationCb = @\animate
 		@finishedCb = @\destroy
 
-		queue\registerAnimation Animation 0, 1, 0.5, @animationCb, @finishedCb
+		queue\registerAnimation Animation 0, 1, 0.3, @animationCb, @finishedCb
 		@aggregator\addSubscriber @
 
 	__tostring: =>
@@ -49,7 +49,7 @@ class PauseIndicator
 
 	scaleTags = [[\fscx%g\fscy%g]]
 	animate: ( animation, value ) =>
-		scale = value*100 + 100
+		scale = value*50 + 100
 		scaleStr = scaleTags\format scale, scale
 		alphaStr = ("%02X")\format value*255
 		@line[2]  = scaleStr
