@@ -35,7 +35,7 @@ class Playlist extends Rect
 		@needsUpdate = true
 
 	updatePlaylistInfo: =>
-		title = mp.get_property 'filename', ''
+		title = mp.get_property 'media-title', ''
 		position = mp.get_property_number 'playlist-pos', 0
 		total = mp.get_property_number 'playlist-count', 1
 		@line[4] = ([[%d/%d – %s]])\format position+1, total, title
