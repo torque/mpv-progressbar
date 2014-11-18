@@ -4,6 +4,7 @@ animationQueue = AnimationQueue aggregator
 
 progressBar           = ProgressBar animationQueue
 progressBarBackground = ProgressBarBackground animationQueue
+chapters              = Chapters animationQueue
 timeElapsed           = TimeElapsed animationQueue
 timeRemaining         = TimeRemaining animationQueue
 hoverTime             = HoverTime animationQueue
@@ -11,6 +12,7 @@ playlist              = Playlist animationQueue
 
 aggregator\addSubscriber progressBarBackground
 aggregator\addSubscriber progressBar
+aggregator\addSubscriber chapters
 aggregator\addSubscriber timeElapsed
 aggregator\addSubscriber timeRemaining
 aggregator\addSubscriber hoverTime
@@ -24,6 +26,7 @@ mp.observe_property 'pause', 'bool', PauseIndicatorWrapper
 initDraw = ->
 	mp.unregister_event initDraw
 	width, height = mp.get_screen_size!
+	chapters\createMarkers width, height
 	aggregator\setDisplaySize width, height
 	playlist\updatePlaylistInfo!
 
