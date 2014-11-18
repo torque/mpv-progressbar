@@ -48,7 +48,7 @@ class TimeRemaining extends Rect
 				@hovered = false
 				@posAnimation\interrupt true, @animationQueue
 
-		timeRemaining = math.floor mp.get_property_number 'time-remaining', 0
+		timeRemaining = math.floor mp.get_property_number 'playtime-remaining', 0
 		if timeRemaining != lastTime
 			update = true
 			@line[4] = ([[–%d:%02d:%02d]])\format timeRemaining/3600, (timeRemaining/60)%60, timeRemaining%60
