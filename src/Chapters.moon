@@ -17,7 +17,7 @@ class Chapters extends Rect
 		chapters = mp.get_property_native 'chapter-list', { }
 
 		for chapter in *chapters
-			table.insert @markers, ChapterMarker title, chapter.time/totalTime, w, h
+			table.insert @markers, ChapterMarker chapter.title, chapter.time/totalTime, w, h
 
 	__tostring: =>
 		return table.concat @line, '\n'
