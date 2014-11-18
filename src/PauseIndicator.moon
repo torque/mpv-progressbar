@@ -57,6 +57,5 @@ class PauseIndicator
 		@line[4]  = alphaStr
 		@line[12] = alphaStr
 
-
 	destroy: ( animation ) =>
 		@aggregator\removeSubscriber @aggregatorIndex

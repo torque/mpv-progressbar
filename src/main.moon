@@ -2,12 +2,12 @@ aggregator = OSDAggregator!
 
 animationQueue = AnimationQueue aggregator
 
-progressBar = ProgressBar animationQueue
+progressBar           = ProgressBar animationQueue
 progressBarBackground = ProgressBarBackground animationQueue
-timeElapsed = TimeElapsed animationQueue
-timeRemaining = TimeRemaining animationQueue
-hoverTime = HoverTime animationQueue
-playlist = Playlist animationQueue
+timeElapsed           = TimeElapsed animationQueue
+timeRemaining         = TimeRemaining animationQueue
+hoverTime             = HoverTime animationQueue
+playlist              = Playlist animationQueue
 
 aggregator\addSubscriber progressBarBackground
 aggregator\addSubscriber progressBar
