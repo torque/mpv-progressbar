@@ -8,7 +8,7 @@ class Chapters extends Rect
 		@hovered = false
 		@needsUpdate = false
 		@animationCb = @\animateSize
-		@heightAnimation = Animation 100, 400, 0.25, @animationCb
+		@heightAnimation = Animation 0, 1, 0.25, @animationCb
 
 	createMarkers: ( w, h ) =>
 		@markers = { }

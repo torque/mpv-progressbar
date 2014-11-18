@@ -26,8 +26,8 @@ class ChapterMarker
 		return true
 
 	animateSize: ( value ) =>
-		@line[4] = [[%g]]\format value*0.5
-		@line[6] = [[%g]]\format value
+		@line[4] = [[%g]]\format value * 100 + 100
+		@line[6] = [[%g]]\format value * 300 + 100
 
 	update: ( position ) =>
 		changed = @passed
