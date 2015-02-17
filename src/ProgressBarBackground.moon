@@ -1,7 +1,7 @@
-class ProgressBarBackground extends Rect
+class ProgressBarBackground extends Subscriber
 
 	new: ( @animationQueue ) =>
-		super 0, 0, 0, 0
+		super!
 
 		@line = {
 			[[{\an1\bord0\c&H2D2D2D&\p1\pos(]]
@@ -12,17 +12,13 @@ class ProgressBarBackground extends Rect
 			0
 		}
 
-		@hovered = false
-		@needsUpdate = false
-		@animationCb = @\animateHeight
-		@heightAnimation = Animation 100, 400, 0.25, @animationCb
+		@animation = Animation 100, 400, 0.25, @\animateHeight
 
-	__tostring: =>
+	stringify: =>
 		return table.concat @line
 
 	updateSize: ( w, h ) =>
-		@y = h - hover_zone*bar_height
-		@w, @h = w, hover_zone*bar_height
+		super w, h
 
 		@line[2] = [[%d,%d]]\format 0, h
 		@line[6] = [[%d 0 %d %d 0 %d]]\format w, w, bar_height, bar_height
@@ -32,19 +28,5 @@ class ProgressBarBackground extends Rect
 		@line[4] = ([[%g]])\format value
 		@needsUpdate = true
 
-	update: ( mouseX, mouseY ) =>
-		update = @needsUpdate
-		if @containsPoint mouseX, mouseY
-			unless @hovered
-				update = true
-				@hovered = true
-				@heightAnimation\interrupt false, @animationQueue
-		else
-			if @hovered
-				update = true
-				@hovered = false
-				@heightAnimation\interrupt true, @animationQueue
-
-		@needsUpdate = false
-		return update
-
+	update: ( mouseX, mouseY, mouseOver ) =>
+		super mouseX, mouseY, mouseOver

@@ -1,7 +1,7 @@
-class TimeElapsed extends Rect
+class TimeElapsed extends Subscriber
 
 	new: ( @animationQueue ) =>
-		super 0, 0, 0, 0
+		super!
 
 		@line = {
 			[[{\fnSource Sans Pro Semibold\bord2\fs30\pos(]]
@@ -10,53 +10,27 @@ class TimeElapsed extends Rect
 			0
 		}
 
-		@hovered = false
+		@lastTime = -1
 		@position = -100
-		@needsUpdate = false
-		@animationCb = @\animatePos
-		@posAnimation = Animation -100, 2, 0.25, @animationCb, nil, 0.25
-
-	__tostring: =>
-		if not @hovered and not @posAnimation.isRegistered
-			return ""
-
-		return table.concat @line
+		@animation = Animation -100, 2, 0.25, @\animatePos, nil, 0.25
 
 	updateSize: ( w, h ) =>
-		@y = h - hover_zone*bar_height
-		@w, @h = w, hover_zone*bar_height
-
-		if @hovered
-			@line[2] = ([[%g,%g]])\format @position, @y + (hover_zone-4)*bar_height
-			return true
-
-		return false
+		super w, h
+		@line[2] = ([[%g,%g]])\format @position, @y + (hover_zone-4)*bar_height
+		return true
 
 	animatePos: ( animation, value ) =>
 		@position = value
 		@line[2] = ([[%g,%g]])\format @position, @y + (hover_zone-4)*bar_height
 		@needsUpdate = true
 
-	lastTime = 0
-	update: ( mouseX, mouseY ) =>
-		update = @needsUpdate
-		if @containsPoint mouseX, mouseY
-			unless @hovered
-				update = true
-				@hovered = true
-				@posAnimation\interrupt false, @animationQueue
-
-		else
-			if @hovered
-				update = true
-				@hovered = false
-				@posAnimation\interrupt true, @animationQueue
+	update: ( mouseX, mouseY, mouseOver ) =>
+		update = super mouseX, mouseY, mouseOver
 
 		timeElapsed = math.floor mp.get_property_number 'time-pos', 0
-		if timeElapsed != lastTime
+		if timeElapsed != @lastTime
 			update = true
 			@line[4] = ([[%d:%02d:%02d]])\format timeElapsed/3600, (timeElapsed/60)%60, timeElapsed%60
-			lastTime = timeElapsed
+			@lastTime = timeElapsed
 
-		@needsUpdate = false
 		return update

@@ -9,6 +9,7 @@ sources = [
 	'src/AnimationQueue.moon',
 	'src/Animation.moon',
 	'src/Rect.moon',
+	'src/Subscriber.moon',
 	'src/ProgressBar.moon',
 	'src/ProgressBarBackground.moon',
 	'src/ChapterMarker.moon',
@@ -34,7 +35,7 @@ sources.each do |sourceFile|
 	`moonc -o #{output} #{sourceFile}`
 	# Abort on error.
 	if $?.exitstatus != 0
-		`rm tmp.lua`
+		`rm -f tmp.lua`
 		return 1
 	end
 	buildCount += 1

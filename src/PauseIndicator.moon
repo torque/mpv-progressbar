@@ -2,14 +2,14 @@ class PauseIndicator
 
 	new: ( queue, @aggregator, event, paused ) =>
 		w, h = mp.get_screen_size!
-		@w, @h = 0.5*w, 0.5*h
+		w, h = 0.5*w, 0.5*h
 		@line = {
 			[[{\an5\bord0\c&H2D2D2D&]] --  1
 			[[\fscx0\fscy0]]           --  2
 			[[\alpha&H]]               --  3
 			0                          --  4
 			[[&\pos(]]                 --  5
-			([[%g,%g]])\format @w, @h  --  6
+			([[%g,%g]])\format w, h  --  6
 			[[)\p1}]]                  --  7
 			0                          --  8
 			[[{\an5\bord0\c&HFC799E&]] --  9
@@ -17,7 +17,7 @@ class PauseIndicator
 			[[\alpha&H]]               -- 11
 			0                          -- 12
 			[[&\pos(]]                 -- 13
-			([[%g,%g]])\format @w, @h  -- 14
+			([[%g,%g]])\format w, h  -- 14
 			[[)\p1}]]                  -- 15
 			0                          -- 16
 		}
@@ -34,14 +34,14 @@ class PauseIndicator
 		queue\registerAnimation Animation 0, 1, 0.3, @animationCb, @finishedCb
 		@aggregator\addSubscriber @
 
-	__tostring: =>
+	stringify: =>
 		-- msg.warn table.concat @line
 		return table.concat @line
 
 	updateSize: ( w, h ) =>
-		@w, @h = 0.5*w, 0.5*h
-		@line[6]  = ([[%g,%g]])\format @w, @h
-		@line[14] = ([[%g,%g]])\format @w, @h
+		w, h = 0.5*w, 0.5*h
+		@line[6]  = ([[%g,%g]])\format w, h
+		@line[14] = ([[%g,%g]])\format w, h
 		return true
 
 	update: ->

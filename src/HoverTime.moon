@@ -1,7 +1,7 @@
-class HoverTime extends Rect
+class HoverTime extends Subscriber
 
 	new: ( @animationQueue ) =>
-		super 0, 0, 0, 0
+		super!
 
 		@line = {
 			[[{\fnSource Sans Pro Semibold\bord2\fs26\pos(]]
@@ -12,51 +12,29 @@ class HoverTime extends Rect
 			0
 		}
 
-		@hovered = false
+		@lastTime = 0
+		@lastX = -1
+		@lastY = -1
 		@position = -100
-		@needsUpdate = false
-		@animationCb = @\animateAlpha
-		@alphaAnimation = Animation 255, 0, 0.25, @animationCb
-
-	__tostring: =>
-		if not @hovered and not @alphaAnimation.isRegistered
-			return ""
-
-		return table.concat @line
-
-	updateSize: ( w, h ) =>
-		@y = h - hover_zone*bar_height
-		@w, @h = w, hover_zone*bar_height
-		return false
+		@animation = Animation 255, 0, 0.25, @\animateAlpha
 
 	animateAlpha: ( animation, value ) =>
 		@line[4] = ([[%02X]])\format value
 		-- @line[2] = ([[%d,%d]])\format @position, @y + (hover_zone-3)*bar_height
 		@needsUpdate = true
 
-	lastTime = 0
-	update: ( mouseX, mouseY ) =>
-		update = @needsUpdate
-		if @containsPoint mouseX, mouseY
-			unless @hovered
-				update = true
-				@hovered = true
-				@alphaAnimation\interrupt false, @animationQueue
-
-		else
-			if @hovered
-				update = true
-				@hovered = false
-				@alphaAnimation\interrupt true, @animationQueue
+	update: ( mouseX, mouseY, mouseOver ) =>
+		update = super mouseX, mouseY, mouseOver
 
 		-- width = 76 + 4px padding = 80
-		@line[2] = ("%g,%g")\format math.min( @w-130, math.max( 120, mouseX ) ), @y + (hover_zone-4)*bar_height
+		if mouseX != @lastX or mouseY != @lastY
+			@line[2] = ("%g,%g")\format math.min( @w-130, math.max( 120, mouseX ) ), @y + (hover_zone-4)*bar_height
+			@lastX, @lastY = mouseX, mouseY
 
-		hoverTime = mp.get_property_number( 'length', 0 )*mouseX/@w
-		if hoverTime != lastTime and (@hovered or @alphaAnimation.isRegistered)
-			update = true
-			@line[6] = ([[%d:%02d:%02d]])\format hoverTime/3600, (hoverTime/60)%60, hoverTime%60
-			lastTime = hoverTime
+			hoverTime = mp.get_property_number( 'length', 0 )*mouseX/@w
+			if hoverTime != @lastTime and (@hovered or @animation.isRegistered)
+				update = true
+				@line[6] = ([[%d:%02d:%02d]])\format hoverTime/3600, (hoverTime/60)%60, hoverTime%60
+				@lastTime = hoverTime
 
-		@needsUpdate = false
 		return update

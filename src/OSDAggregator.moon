@@ -4,6 +4,7 @@ class OSDAggregator
 		@script = { }
 		@subscribers = { }
 		@subscriberCount = 0
+		@mouseOver = false
 		@w = 0
 		@h = 0
 
@@ -14,13 +15,17 @@ class OSDAggregator
 		mp.register_event 'shutdown', ->
 			@updateTimer\kill!
 
+		mp.add_key_binding "MOUSE_LEAVE", ->
+			@mouseOver = false
+		mp.add_key_binding "MOUSE_ENTER", ->
+			@mouseOver = true
 
 	addSubscriber: ( subscriber ) =>
 		return if not subscriber
 		@subscriberCount += 1
 		subscriber.aggregatorIndex = @subscriberCount
 		@subscribers[@subscriberCount] = subscriber
-		@script[@subscriberCount] = tostring subscriber
+		@script[@subscriberCount] = subscriber\stringify!
 
 	removeSubscriber: ( index ) =>
 		for i = index+1, @subscriberCount
@@ -43,7 +48,7 @@ class OSDAggregator
 		for sub = 1, @subscriberCount
 			theSub = @subscribers[sub]
 			update = false
-			if theSub\update x, y
+			if theSub\update x, y, @mouseOver
 				update = true
 			if (needsResize and theSub\updateSize( w, h )) or update
 				needsRedraw = true

@@ -1,14 +1,11 @@
-class Chapters extends Rect
+class Chapters extends Subscriber
 
 	new: ( @animationQueue ) =>
-		super 0, 0, 0, 0
+		super!
 
 		@line = { }
 		@markers = { }
-		@hovered = false
-		@needsUpdate = false
-		@animationCb = @\animateSize
-		@heightAnimation = Animation 0, 1, 0.25, @animationCb
+		@animation = Animation 0, 1, 0.25, @\animateSize
 
 	createMarkers: ( w, h ) =>
 		@markers = { }
@@ -17,19 +14,18 @@ class Chapters extends Rect
 		chapters = mp.get_property_native 'chapter-list', { }
 
 		for chapter in *chapters
-			table.insert @markers, ChapterMarker chapter.title, chapter.time/totalTime, w, h
+			table.insert @markers, ChapterMarker @animationQueue, chapter.title, chapter.time/totalTime, w, h
 
-	__tostring: =>
+	stringify: =>
 		return table.concat @line, '\n'
 
 	redrawMarkers: =>
 		@line = {	}
 		for marker in *@markers
-			table.insert @line, tostring marker
+			table.insert @line, marker\stringify!
 
 	updateSize: ( w, h ) =>
-		@y = h - hover_zone*bar_height
-		@w, @h = w, hover_zone*bar_height
+		super w, h
 
 		for marker in *@markers
 			marker\updateSize w, h
@@ -43,26 +39,16 @@ class Chapters extends Rect
 			marker\animateSize value
 		@needsUpdate = true
 
-	update: ( mouseX, mouseY ) =>
-		update = @needsUpdate
-		if @containsPoint mouseX, mouseY
-			unless @hovered
-				update = true
-				@hovered = true
-				@heightAnimation\interrupt false, @animationQueue
-		else
-			if @hovered
-				update = true
-				@hovered = false
-				@heightAnimation\interrupt true, @animationQueue
+	update: ( mouseX, mouseY, mouseOver ) =>
+		update = super mouseX, mouseY, mouseOver
 
 		currentPosition = mp.get_property_number( 'percent-pos', 0 )*0.01
 
 		for marker in *@markers
-			update = update or marker\update currentPosition
+			if marker\update mouseX, mouseY, mouseOver, currentPosition
+				update = true
 
 		if update
 			@redrawMarkers!
 
-		@needsUpdate = false
 		return update
