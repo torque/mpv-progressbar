@@ -4,9 +4,8 @@ class AnimationQueue
 		-- doubly-linked list.
 		@list = nil
 		@animationCount = 0
-		@animateClosure = @\animate
 		@animating = false
-		@timer = mp.add_periodic_timer 0.05, @animateClosure
+		@timer = mp.add_periodic_timer 0.05, @\animate
 		@timer\kill!
 
 	registerAnimation: ( animation ) =>
