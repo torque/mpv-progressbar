@@ -9,12 +9,8 @@ class Animation
 		@isReversed = false
 
 	update: ( @currentTime ) =>
-		progress = (@currentTime - @startTime)*@durationR
-		if progress < 0
-			progress = 0
-
-		if progress >= 1
-			progress = 1
+		progress = math.max 0, math.min 1, (@currentTime - @startTime)*@durationR
+		if progress == 1
 			@isFinished = true
 
 		if @accel
