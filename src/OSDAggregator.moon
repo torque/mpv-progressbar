@@ -8,37 +8,12 @@ class OSDAggregator
 		@h = 0
 
 		redrawFrequency = 0.05
-		@updateTimer = mp.add_periodic_timer 2, @\updateDisplaySize
 		@updateTimer = mp.add_periodic_timer redrawFrequency, @\update
-		mp.observe_property 'fullscreen', 'bool', @\badFullscreenHack
-		-- mp.observe_property 'pause', 'bool', @\pause
+
 		mp.register_event 'seek', @\forceUpdate
 		mp.register_event 'shutdown', ->
 			@updateTimer\kill!
 
-	setDisplaySize: ( w, h ) =>
-		needsRedraw = false
-		if w != @w or h != @h
-			@w, @h = w, h
-			for sub = 1, @subscriberCount
-				theSub = @subscribers[sub]
-				if theSub\updateSize w, h
-					needsRedraw = true
-					@script[sub] = tostring theSub
-
-		if true == needsRedraw
-			@forceUpdate!
-
-	-- The fullscreen change property gets called before the display size
-	-- is actually updated, so we need to wait some small amount of time
-	-- before actually setting the new display size. 100ms appears
-	-- to work reliably here.
-	badFullscreenHack: =>
-		mp.add_timeout 0.1, ->
-			@setDisplaySize mp.get_screen_size!
-
-	updateDisplaySize: =>
-		@setDisplaySize mp.get_screen_size!
 
 	addSubscriber: ( subscriber ) =>
 		return if not subscriber
@@ -59,11 +34,20 @@ class OSDAggregator
 	update: ( force = false ) =>
 		needsRedraw = force
 		x, y = mp.get_mouse_pos!
+		w, h = mp.get_screen_size!
+		needsResize = false
+		if w != @w or h != @h
+			@w, @h = w, h
+			needsResize = true
+
 		for sub = 1, @subscriberCount
 			theSub = @subscribers[sub]
+			update = false
 			if theSub\update x, y
+				update = true
+			if (needsResize and theSub\updateSize( w, h )) or update
 				needsRedraw = true
-				@script[sub] = tostring theSub
+				@script[sub] = theSub\stringify!
 
 		if true == needsRedraw
 			mp.set_osd_ass @w, @h, table.concat @script, '\n'

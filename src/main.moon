@@ -27,7 +27,6 @@ initDraw = ->
 	mp.unregister_event initDraw
 	width, height = mp.get_screen_size!
 	chapters\createMarkers width, height
-	aggregator\setDisplaySize width, height
 	playlist\updatePlaylistInfo!
 
 fileLoaded = ->
