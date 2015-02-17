@@ -18,8 +18,21 @@ aggregator\addSubscriber timeRemaining
 aggregator\addSubscriber hoverTime
 aggregator\addSubscriber playlist
 
-PauseIndicatorWrapper = ( ... ) ->
-	PauseIndicator animationQueue, aggregator, ...
+notFrameStepping = true
+PauseIndicatorWrapper = ( event, paused ) ->
+	if notFrameStepping
+		PauseIndicator animationQueue, aggregator, paused
+	else
+		if paused
+			notFrameStepping = true
+
+mp.add_key_binding '.', 'mp_progbar_stepforward', ->
+	notFrameStepping = false
+	mp.commandv 'frame_step'
+
+mp.add_key_binding ',', 'mp_progbar_stepbackward', ->
+	notFrameStepping = false
+	mp.commandv 'frame_back_step'
 
 mp.observe_property 'pause', 'bool', PauseIndicatorWrapper
 
