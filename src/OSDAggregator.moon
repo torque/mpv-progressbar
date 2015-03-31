@@ -11,7 +11,6 @@ class OSDAggregator
 		redrawFrequency = 0.05
 		@updateTimer = mp.add_periodic_timer redrawFrequency, @\update
 
-		mp.register_event 'seek', @\forceUpdate
 		mp.register_event 'shutdown', ->
 			@updateTimer\kill!
 
@@ -28,13 +27,12 @@ class OSDAggregator
 		@script[@subscriberCount] = subscriber\stringify!
 
 	removeSubscriber: ( index ) =>
-		for i = index+1, @subscriberCount
-			@subscribers[i].aggregatorIndex -= 1
-
 		table.remove @subscribers, index
 		table.remove @script, index
-
 		@subscriberCount -= 1
+
+		for i = index, @subscriberCount
+			@subscribers[i].aggregatorIndex = i
 
 	update: ( force = false ) =>
 		needsRedraw = force
