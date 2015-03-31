@@ -26,6 +26,7 @@ class Playlist extends Subscriber
 		position = mp.get_property_number 'playlist-pos', 0
 		total = mp.get_property_number 'playlist-count', 1
 		@line[4] = ([[%d/%d – %s]])\format position+1, total, title
+		@needsUpdate = true
 
 	update: ( mouseX, mouseY, mouseOver ) =>
 		super mouseX, mouseY, mouseOver, (@containsPoint( mouseX, mouseY ) or @topBox\containsPoint( mouseX, mouseY ))
