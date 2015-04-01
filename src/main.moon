@@ -26,13 +26,17 @@ PauseIndicatorWrapper = ( event, paused ) ->
 		if paused
 			notFrameStepping = true
 
-mp.add_key_binding '.', 'mp_progbar_stepforward', ->
-	notFrameStepping = false
-	mp.commandv 'frame_step'
+mp.add_key_binding '.', 'mp_progbar_stepforward',
+	->
+		notFrameStepping = false
+		mp.commandv 'frame_step',
+	{ repeatable: true }
 
-mp.add_key_binding ',', 'mp_progbar_stepbackward', ->
-	notFrameStepping = false
-	mp.commandv 'frame_back_step'
+mp.add_key_binding ',', 'mp_progbar_stepbackward',
+	->
+		notFrameStepping = false
+		mp.commandv 'frame_back_step',
+	{ repeatable: true }
 
 mp.observe_property 'pause', 'bool', PauseIndicatorWrapper
 
