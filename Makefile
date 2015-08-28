@@ -18,7 +18,7 @@ SOURCES += src/Playlist.moon
 SOURCES += src/main.moon
 
 TMPDIR    := build
-JOINEDSRC := $(TMPDIR)/mpv-progressbar.moon
+JOINEDSRC := $(TMPDIR)/progressbar.moon
 OUTPUT    := $(JOINEDSRC:.moon=.lua)
 RESULTS   := $(addprefix $(TMPDIR)/, $(SOURCES:.moon=.lua))
 

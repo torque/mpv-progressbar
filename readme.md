@@ -1,8 +1,9 @@
-### mpv-progressbar
+### progressbar
 
-mpv-progressbar is a script for mpv that provides a small, unintrusive
-progress bar that persists at the bottom of the video window. It takes
-up two pixels vertically, and the width of the window horizontally:
+progressbar is a script for [mpv][mpv] that provides a small,
+unintrusive progress bar that persists at the bottom of the video
+window. It takes up two pixels vertically, and the width of the window
+horizontally:
 
 ![Normal view][normal]
 
@@ -16,9 +17,9 @@ compatible with the built-in osc. If you want to use it, you should add
 
 #### Installation
 
-Place the [compiled `mpv-progressbar.lua` script][build] in your `~/.mpv/lua` or
-`~/.config/mpv/lua` directory. It may be more convenient to update if
-you symlink it in from somewhere else.
+Place the [compiled `progressbar.lua` script][build] in your
+`~/.mpv/scripts` or `~/.config/mpv/scripts` directory. It may be more
+convenient to update if you symlink it in from somewhere else.
 
 #### Building
 
@@ -28,5 +29,6 @@ repository.
 
 [normal]: https://github.com/torque/mpv-progressbar/raw/images/normal.png
 [hover]: https://github.com/torque/mpv-progressbar/raw/images/hover.png
-[build]: https://raw.githubusercontent.com/torque/mpv-progressbar/build/mpv-progressbar.lua
+[build]: https://raw.githubusercontent.com/torque/mpv-progressbar/build/progressbar.lua
+[mpv]: http://mpv.io
 [moonscript]: http://moonscript.org
