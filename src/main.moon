@@ -45,6 +45,7 @@ initDraw = ->
 	width, height = mp.get_screen_size!
 	chapters\createMarkers width, height
 	playlist\updatePlaylistInfo!
+	mp.command 'script-message-to osc disable-osc'
 
 fileLoaded = ->
 	mp.register_event 'playback-restart', initDraw
