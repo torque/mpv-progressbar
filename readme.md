@@ -23,7 +23,7 @@ you symlink it in from somewhere else.
 #### Building
 
 You must have [moonscript][moonscript] installed (particularly `moonc`,
-the compiler) and ruby. Run `./build.rb` from the root of the
+the compiler) and GNUMake compatible make. `make` from the root of the
 repository.
 
 [normal]: https://github.com/torque/mpv-progressbar/raw/images/normal.png
