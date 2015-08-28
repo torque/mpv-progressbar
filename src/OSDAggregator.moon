@@ -8,8 +8,7 @@ class OSDAggregator
 		@w = 0
 		@h = 0
 
-		redrawFrequency = 0.05
-		@updateTimer = mp.add_periodic_timer redrawFrequency, @\update
+		@updateTimer = mp.add_periodic_timer redraw_period, @\update
 
 		mp.register_event 'shutdown', ->
 			@updateTimer\kill!
