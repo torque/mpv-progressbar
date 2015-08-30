@@ -12,6 +12,8 @@ class TimeRemaining extends Subscriber
 
 		@lastTime = -1
 		@position = -100
+		@lastSize = -1
+		@sizeCache = {}
 		@animation = Animation -100, 4, 0.25, @\animatePos, nil, 0.25
 
 	updateSize: ( w, h ) =>
@@ -27,10 +29,19 @@ class TimeRemaining extends Subscriber
 	update: ( mouseX, mouseY, mouseOver ) =>
 		update = super mouseX, mouseY, mouseOver
 
-		timeRemaining = math.floor mp.get_property_number 'playtime-remaining', 0
-		if timeRemaining != @lastTime
-			update = true
-			@line[4] = ([[–%d:%02d:%02d]])\format timeRemaining/3600, (timeRemaining/60)%60, timeRemaining%60
-			@lastTime = timeRemaining
+		if @hovered or @animation.isRegistered
+			timeRemaining = math.floor mp.get_property_number 'playtime-remaining', 0
+			if timeRemaining != @lastTime
+				update = true
+				@line[4] = ([[–%d:%02d:%02d]])\format timeRemaining/3600, (timeRemaining/60)%60, timeRemaining%60
+				size = #@line[4]
+				if size != @lastSize
+					unless @sizeCache[size]
+						@sizeCache[size] = Bounds\instance!\sizeOf {table.concat @line}
+						@sizeCache[size].w += 4
+
+					@sizeCache.current = @sizeCache[size]
+					@lastSize = size
+				@lastTime = timeRemaining
 
 		return update

@@ -1,6 +1,7 @@
 aggregator = OSDAggregator!
 
 animationQueue = AnimationQueue aggregator
+Bounds\instance!
 
 progressBar           = ProgressBar animationQueue
 progressBarBackground = ProgressBarBackground animationQueue
@@ -9,6 +10,9 @@ timeElapsed           = TimeElapsed animationQueue
 timeRemaining         = TimeRemaining animationQueue
 hoverTime             = HoverTime animationQueue
 playlist              = Playlist animationQueue
+
+hoverTime.leftBound = timeElapsed.sizeCache
+hoverTime.rightBound = timeRemaining.sizeCache
 
 aggregator\addSubscriber progressBarBackground
 aggregator\addSubscriber progressBar

@@ -1,6 +1,10 @@
 # The order of the sources does matter.
 SOURCES := src/requires.moon
 SOURCES += src/log.moon
+
+SOURCES += src/Timer.moon
+SOURCES += src/Bounds.moon
+
 SOURCES += src/OSDAggregator.moon
 SOURCES += src/AnimationQueue.moon
 SOURCES += src/Animation.moon
