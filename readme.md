@@ -24,10 +24,10 @@ convenient to update if you symlink it in from somewhere else.
 #### Configuration
 
 `progressbar.lua` now has a whole bunch of options that can be set
-either on the mpv command line or by writing the file `~~/lua-settings
-/torque-progressbar.conf`, where `~~` is either `~/.mpv` or
-`~/.config/mpv`, depending on your setup. The defaults are provided in
-`settings.moon`, and are reproduced here in config-file-compatible
+either on the mpv command line or by writing the file
+`~~/lua-settings/torque-progressbar.conf`, where `~~` is either `~/.mpv`
+or `~/.config/mpv`, depending on your setup. The defaults are provided
+in `settings.moon`, and are reproduced here in config-file-compatible
 syntax.
 
 ```ini
