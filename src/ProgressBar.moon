@@ -2,20 +2,22 @@ class ProgressBar extends Subscriber
 
 	new: ( @animationQueue ) =>
 		super!
+		minHeight = settings['bar-height-inactive']*100
+		maxHeight = settings['bar-height-active']*100
 
 		@line = {
-			[[{\an1\bord0\c&HFC799E&\p3\pos(]]
+			[[{\an1\bord0\c&H%s&\pos(]]\format settings['bar-foreground']
 			0
 			[[)\fscx]]
 			0
 			[[\fscy]]
-			100
-			[[}m 0 0 l ]]
+			minHeight
+			[[\p1}m 0 0 l ]]
 			0
 		}
 
 		@lastPosition = 0
-		@animation = Animation 100, 400, 0.25, @\animateHeight
+		@animation = Animation minHeight, maxHeight, 0.25, @\animateHeight
 		mp.add_key_binding "MOUSE_BTN0", @\clickUpSeek
 
 	clickUpSeek: =>
@@ -30,7 +32,7 @@ class ProgressBar extends Subscriber
 		super w, h
 
 		@line[2] = ([[%d,%d]])\format 0, h
-		@line[8] = ([[%d 0 %d %d 0 %d]])\format w*4, w*4, bar_height*4, bar_height*4
+		@line[8] = ([[%d 0 %d 1 0 1]])\format w, w
 		return true
 
 	animateHeight: ( animation, value ) =>
@@ -40,6 +42,7 @@ class ProgressBar extends Subscriber
 	update: ( mouseX, mouseY, mouseOver ) =>
 		update = super mouseX, mouseY, mouseOver
 
+		-- todo: optimize to not draw if inactive and inactive height is 0
 		position = mp.get_property_number 'percent-pos', 0
 		if position != @lastPosition
 			update = true

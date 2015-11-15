@@ -4,7 +4,7 @@ class PauseIndicator
 		w, h = mp.get_screen_size!
 		w, h = 0.5*w, 0.5*h
 		@line = {
-			[[{\an5\bord0\c&H2D2D2D&]] --  1
+			[[{\an5\bord0\c&H%s&]]\format settings['pause-indicator-background']
 			[[\fscx0\fscy0]]           --  2
 			[[\alpha&H]]               --  3
 			0                          --  4
@@ -12,7 +12,7 @@ class PauseIndicator
 			([[%g,%g]])\format w, h    --  6
 			[[)\p1}]]                  --  7
 			0                          --  8
-			[[{\an5\bord0\c&HFC799E&]] --  9
+			[[{\an5\bord0\c&H%s&]]\format settings['pause-indicator-foreground']
 			[[\fscx0\fscy0]]           -- 10
 			[[\alpha&H]]               -- 11
 			0                          -- 12

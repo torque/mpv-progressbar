@@ -1,5 +1,7 @@
 class Subscriber extends Rect
 
+	active_height = settings['hover-zone-height']
+
 	new: =>
 		super 0, 0, 0, 0
 
@@ -13,8 +15,8 @@ class Subscriber extends Rect
 		return table.concat @line
 
 	updateSize: ( w, h ) =>
-		@y = h - hover_zone*bar_height
-		@w, @h = w, hover_zone*bar_height
+		@y = h - active_height
+		@w, @h = w, active_height
 
 	update: ( mouseX, mouseY, mouseOver, hoverCondition = @containsPoint( mouseX, mouseY ) ) =>
 		update = @needsUpdate

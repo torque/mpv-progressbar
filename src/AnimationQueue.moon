@@ -5,7 +5,7 @@ class AnimationQueue
 		@list = nil
 		@animationCount = 0
 		@animating = false
-		@timer = mp.add_periodic_timer redraw_period, @\animate
+		@timer = mp.add_periodic_timer settings['redraw-period'], @\animate
 		@timer\kill!
 
 	registerAnimation: ( animation ) =>
@@ -59,6 +59,7 @@ class AnimationQueue
 		@stopAnimation!
 		currentAnimation = @list
 		while currentAnimation
+			currentAnimation.isRegistered = false
 			currentAnimation = @list.prev
 			@list.prev = nil
 			@list.next = nil

@@ -1,11 +1,13 @@
 # The order of the sources does matter.
 SOURCES := src/requires.moon
 SOURCES += src/log.moon
+SOURCES += src/settings.moon
 SOURCES += src/OSDAggregator.moon
 SOURCES += src/AnimationQueue.moon
 SOURCES += src/Animation.moon
 SOURCES += src/Rect.moon
 SOURCES += src/Subscriber.moon
+SOURCES += src/BarAccent.moon
 SOURCES += src/ProgressBar.moon
 SOURCES += src/ProgressBarBackground.moon
 SOURCES += src/ChapterMarker.moon

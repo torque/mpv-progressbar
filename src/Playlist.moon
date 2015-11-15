@@ -2,16 +2,16 @@ class Playlist extends Subscriber
 
 	new: ( @animationQueue ) =>
 		super!
-
+		offscreenPos = settings['title-offscreen-pos']
 		@line = {
-			[[{\an7\fnSource Sans Pro Semibold\bord2\fs30\pos(]]
-			[[4,-40]]
-			[[)\3c&H2D2D2D&\c&HFC799E&}]]
+			[[{\an7\fn%s\bord2\fs%d\pos(]]\format settings.font, settings['title-font-size']
+			[[4,%g]]\format offscreenPos
+			[[)\c&H%s&\3c&H%s&}]]\format settings['title-foreground'], settings['title-background']
 			0
 		}
 
-		@topBox = Rect 0, 0, 0, hover_zone*bar_height
-		@animation = Animation -40, 0, 0.25, @\animatePos, nil, 0.25
+		@topBox = Rect 0, 0, 0, settings['top-hover-zone-height']
+		@animation = Animation offscreenPos, 0, 0.25, @\animatePos, nil, 0.25
 
 	updateSize: ( w, h ) =>
 		super w, h

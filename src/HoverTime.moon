@@ -1,12 +1,15 @@
-class HoverTime extends Subscriber
+class HoverTime extends BarAccent
+
+	rightMargin = settings['hover-time-right-margin']
+	leftMargin = settings['hover-time-left-margin']
 
 	new: ( @animationQueue ) =>
 		super!
 
 		@line = {
-			[[{\fnSource Sans Pro Semibold\bord2\fs26\pos(]]
+			[[{\fn%s\bord2\fs%d\pos(]]\format settings.font, settings['hover-time-font-size']
 			[[-100,0]]
-			[[)\3c&H2D2D2D&\c&HFC799E&\an2\alpha&H]]
+			[[)\c&H%s&\3c&H%s&\an2\alpha&H]]\format settings['hover-time-foreground'], settings['hover-time-background']
 			[[FF]]
 			[[&}]]
 			0
@@ -26,15 +29,15 @@ class HoverTime extends Subscriber
 	update: ( mouseX, mouseY, mouseOver ) =>
 		update = super mouseX, mouseY, mouseOver
 
-		-- width = 76 + 4px padding = 80
-		if mouseX != @lastX or mouseY != @lastY
-			@line[2] = ("%g,%g")\format math.min( @w-130, math.max( 120, mouseX ) ), @y + (hover_zone-4)*bar_height
-			@lastX, @lastY = mouseX, mouseY
+		if update or @hovered
+			if mouseX != @lastX or mouseY != @lastY
+				@line[2] = ("%g,%g")\format math.min( @w - rightMargin, math.max( leftMargin, mouseX ) ), @yPos
+				@lastX, @lastY = mouseX, mouseY
 
-			hoverTime = mp.get_property_number( 'length', 0 )*mouseX/@w
-			if hoverTime != @lastTime and (@hovered or @animation.isRegistered)
-				update = true
-				@line[6] = ([[%d:%02d:%02d]])\format hoverTime/3600, (hoverTime/60)%60, hoverTime%60
-				@lastTime = hoverTime
+				hoverTime = mp.get_property_number( 'length', 0 )*mouseX/@w
+				if hoverTime != @lastTime and (@hovered or @animation.isRegistered)
+					update = true
+					@line[6] = ([[%d:%02d:%02d]])\format hoverTime/3600, (hoverTime/60)%60, hoverTime%60
+					@lastTime = hoverTime
 
 		return update

@@ -1,7 +1,5 @@
 msg = require 'mp.msg'
+options = require 'mp.options'
 
--- pixels
-bar_height = 2
-hover_zone = 20
--- seconds
-redraw_period = 0.03
+-- script namespace for options
+script_name = 'torque-progressbar'
