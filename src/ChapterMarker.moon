@@ -3,14 +3,14 @@ class ChapterMarker extends Subscriber
 	new: ( @animationQueue, title, @position, w, h ) =>
 		super!
 		@x = math.floor( w*@position ) - 10
-		@y = h - hover_zone*bar_height
+		@y = h - settings['hover-zone-height']*settings['bar-height-inactive']
 		@w = 20
-		@h = hover_zone*bar_height
+		@h = settings['hover-zone-height']*settings['bar-height-inactive']
 
 		@line = {
 			{
 				[[{\an2\bord2\c&H7A77F2&\3c&H2D2D2D\fs30\pos(]]
-				[[%d,%d]]\format @x + 10, h - hover_zone - 10
+				[[%d,%d]]\format @x + 10, h - settings['hover-zone-height'] - 10
 				[[)\alpha&H]]
 				[[FF]]
 				[[&}%s]]\format title
@@ -46,8 +46,8 @@ class ChapterMarker extends Subscriber
 
 	updateSize: ( w, h ) =>
 		@x = math.floor( w*@position )
-		@y = h - hover_zone*bar_height
-		@line[1][2] = [[%d,%d]]\format @x + 10, h - hover_zone - 10
+		@y = h - settings['hover-zone-height']*settings['bar-height-inactive']
+		@line[1][2] = [[%d,%d]]\format @x + 10, h - settings['hover-zone-height'] - 10
 		@line[2][2] = [[%d,%d]]\format @x + 10, h
 		return true
 
