@@ -37,7 +37,7 @@ class HoverTime extends BarAccent
 				hoverTime = mp.get_property_number( 'length', 0 )*mouseX/@w
 				if hoverTime != @lastTime and (@hovered or @animation.isRegistered)
 					update = true
-					@line[6] = ([[%d:%02d:%02d]])\format hoverTime/3600, (hoverTime/60)%60, hoverTime%60
+					@line[6] = ([[%d:%02d:%02d]])\format math.floor( hoverTime/3600 ), math.floor( (hoverTime/60)%60 ), math.floor( hoverTime%60 )
 					@lastTime = hoverTime
 
 		return update

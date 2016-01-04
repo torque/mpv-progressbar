@@ -31,7 +31,7 @@ class TimeElapsed extends BarAccent
 			timeElapsed = math.floor mp.get_property_number 'time-pos', 0
 			if timeElapsed != @lastTime
 				update = true
-				@line[4] = ([[%d:%02d:%02d]])\format math.floor( timeElapsed/3600 ), math.floor( timeElapsed/60 )%60, math.floor( timeElapsed )%60
+				@line[4] = ([[%d:%02d:%02d]])\format math.floor( timeElapsed/3600 ), math.floor( (timeElapsed/60)%60 ), math.floor( timeElapsed%60 )
 				@lastTime = timeElapsed
 
 		return update
