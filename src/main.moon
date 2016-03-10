@@ -43,7 +43,7 @@ if settings['pause-indicator']
 
 initDraw = ->
 	mp.unregister_event initDraw
-	width, height = mp.get_screen_size!
+	width, height = mp.get_osd_size!
 	chapters\createMarkers width, height
 	playlist\updatePlaylistInfo!
 	mp.command 'script-message-to osc disable-osc'

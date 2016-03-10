@@ -36,7 +36,7 @@ class OSDAggregator
 	update: ( force = false ) =>
 		needsRedraw = force
 		x, y = mp.get_mouse_pos!
-		w, h = mp.get_screen_size!
+		w, h = mp.get_osd_size!
 		needsResize = false
 		if w != @w or h != @h
 			@w, @h = w, h

@@ -1,7 +1,7 @@
 class PauseIndicator
 
 	new: ( queue, @aggregator, paused ) =>
-		w, h = mp.get_screen_size!
+		w, h = mp.get_osd_size!
 		w, h = 0.5*w, 0.5*h
 		@line = {
 			[[{\an5\bord0\c&H%s&]]\format settings['pause-indicator-background']
