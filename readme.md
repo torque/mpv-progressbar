@@ -81,7 +81,8 @@ bar-height-inactive=2
 # checked.
 bar-height-active=8
 # Flash an icon in the center of the screen when pausing/unpausing.
-pause-indicator=true
+# Boolean value must be either `yes` or `no`.
+pause-indicator=yes
 # How often the display is redrawn, in seconds. Affects smoothness of
 # animations, but lower values may use more CPU (the default is
 # negligible on my old C2D, and looks okay to me)
