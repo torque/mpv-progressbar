@@ -89,6 +89,18 @@ pause-indicator=yes
 redraw-period=0.03
 ```
 
+#### Keybindings
+
+`progressbar.lua` creates a few keybindings integral to correct script
+operation. If you are running mpv with `no-input-default-bindings`,
+these must be manually rebound in `~~/input.conf`.
+
+```ini
+. script-binding progressbar/step-forward
+, script-binding progressbar/step-backward
+mouse_btn0 script-binding progressbar/seek-to-mouse
+```
+
 #### Building
 
 You must have [moonscript][moonscript] installed (particularly `moonc`,
