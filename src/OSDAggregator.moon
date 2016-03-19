@@ -20,13 +20,15 @@ class OSDAggregator
 			@inputState.mouseInWindow = true
 
 		displayDuration = settings['request-display-duration']
+		displayRequestTimer = mp.add_timeout 0, ->
 		mp.add_key_binding "tab", "request-display",
 			( event ) ->
 				switch event.event
 					when "down"
+						displayRequestTimer\kill!
 						@inputState.displayRequested = true
 					when "up"
-						mp.add_timeout displayDuration, ->
+						displayRequestTimer = mp.add_timeout displayDuration, ->
 							@inputState.displayRequested = false,
 			{ complex: true }
 
