@@ -18,19 +18,22 @@ class Subscriber extends Rect
 		@y = h - active_height
 		@w, @h = w, active_height
 
-	update: ( mouseX, mouseY, mouseOver, hoverCondition = @containsPoint( mouseX, mouseY ) ) =>
-		update = @needsUpdate
-		@needsUpdate = false
+	update: ( inputState, hoverCondition ) =>
+		with inputState
+			if hoverCondition == nil
+				hoverCondition = (@containsPoint( .mouseX, .mouseY ) or .displayRequested)
+			update = @needsUpdate
+			@needsUpdate = false
 
-		if mouseOver and hoverCondition
-			unless @hovered
-				update = true
-				@hovered = true
-				@animation\interrupt false, @animationQueue
-		else
-			if @hovered
-				update = true
-				@hovered = false
-				@animation\interrupt true, @animationQueue
+			if (.mouseInWindow or .displayRequested) and hoverCondition
+				unless @hovered
+					update = true
+					@hovered = true
+					@animation\interrupt false, @animationQueue
+			else
+				if @hovered
+					update = true
+					@hovered = false
+					@animation\interrupt true, @animationQueue
 
-		return update
+			return update

@@ -39,8 +39,8 @@ class ProgressBar extends Subscriber
 		@line[6] = ([[%g]])\format value
 		@needsUpdate = true
 
-	update: ( mouseX, mouseY, mouseOver ) =>
-		update = super mouseX, mouseY, mouseOver
+	update: ( inputState ) =>
+		update = super inputState
 
 		-- todo: optimize to not draw if inactive and inactive height is 0
 		position = mp.get_property_number 'percent-pos', 0

@@ -3,8 +3,8 @@ class OSDAggregator
 	new: =>
 		@script = { }
 		@subscribers = { }
+		@inputState = { mouseX: -1, mouseY: -1, mouseInWindow: true, displayRequested: false }
 		@subscriberCount = 0
-		@mouseOver = false
 		@w = 0
 		@h = 0
 
@@ -13,10 +13,22 @@ class OSDAggregator
 		mp.register_event 'shutdown', ->
 			@updateTimer\kill!
 
-		mp.add_key_binding "MOUSE_LEAVE", ->
-			@mouseOver = false
-		mp.add_key_binding "MOUSE_ENTER", ->
-			@mouseOver = true
+		mp.add_forced_key_binding "mouse_leave", "mouse-leave", ->
+			@inputState.mouseInWindow = false
+
+		mp.add_forced_key_binding "mouse_enter", "mouse-enter", ->
+			@inputState.mouseInWindow = true
+
+		displayDuration = settings['request-display-duration']
+		mp.add_key_binding "tab", "request-display",
+			( event ) ->
+				switch event.event
+					when "down"
+						@inputState.displayRequested = true
+					when "up"
+						mp.add_timeout displayDuration, ->
+							@inputState.displayRequested = false,
+			{ complex: true }
 
 	addSubscriber: ( subscriber ) =>
 		return if not subscriber
@@ -33,9 +45,9 @@ class OSDAggregator
 		for i = index, @subscriberCount
 			@subscribers[i].aggregatorIndex = i
 
-	update: ( force = false ) =>
-		needsRedraw = force
-		x, y = mp.get_mouse_pos!
+	update: ( needsRedraw ) =>
+		with @inputState
+			.mouseX, .mouseY = mp.get_mouse_pos!
 		w, h = mp.get_osd_size!
 		needsResize = false
 		if w != @w or h != @h
@@ -45,13 +57,13 @@ class OSDAggregator
 		for sub = 1, @subscriberCount
 			theSub = @subscribers[sub]
 			update = false
-			if theSub\update x, y, @mouseOver
+			if theSub\update @inputState
 				update = true
 			if (needsResize and theSub\updateSize( w, h )) or update
 				needsRedraw = true
 				@script[sub] = theSub\stringify!
 
-		if true == needsRedraw
+		if needsRedraw == true
 			mp.set_osd_ass @w, @h, table.concat @script, '\n'
 
 	pause: ( event, @paused ) =>

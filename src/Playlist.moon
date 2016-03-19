@@ -28,5 +28,6 @@ class Playlist extends Subscriber
 		@line[4] = ([[%d/%d – %s]])\format position+1, total, title
 		@needsUpdate = true
 
-	update: ( mouseX, mouseY, mouseOver ) =>
-		super mouseX, mouseY, mouseOver, (@containsPoint( mouseX, mouseY ) or @topBox\containsPoint( mouseX, mouseY ))
+	update: ( inputState ) =>
+		with inputState
+			super inputState, (@containsPoint( .mouseX, .mouseY ) or @topBox\containsPoint( .mouseX, .mouseY ))

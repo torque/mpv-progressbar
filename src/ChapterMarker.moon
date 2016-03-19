@@ -59,8 +59,8 @@ class ChapterMarker extends Subscriber
 		@line[2][4] = [[%g]]\format value * 100 + 100
 		@line[2][6] = [[%g]]\format value * 300 + 100
 
-	update: ( mouseX, mouseY, mouseOver, position ) =>
-		update = super mouseX, mouseY, mouseOver
+	update: ( inputState, position ) =>
+		update = super inputState
 
 		changed = @passed
 		@passed = position > @position

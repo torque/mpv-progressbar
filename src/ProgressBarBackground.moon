@@ -30,5 +30,5 @@ class ProgressBarBackground extends Subscriber
 		@line[4] = ([[%g]])\format value
 		@needsUpdate = true
 
-	update: ( mouseX, mouseY, mouseOver ) =>
-		super mouseX, mouseY, mouseOver
+	update: ( inputState ) =>
+		super inputState

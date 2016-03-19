@@ -39,13 +39,13 @@ class Chapters extends Subscriber
 			marker\animateSize value
 		@needsUpdate = true
 
-	update: ( mouseX, mouseY, mouseOver ) =>
-		update = super mouseX, mouseY, mouseOver
+	update: ( inputState ) =>
+		update = super inputState
 
 		currentPosition = mp.get_property_number( 'percent-pos', 0 )*0.01
 
 		for marker in *@markers
-			if marker\update mouseX, mouseY, mouseOver, currentPosition
+			if marker\update inputState, currentPosition
 				update = true
 
 		if update
