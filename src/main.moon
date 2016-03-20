@@ -2,21 +2,28 @@ aggregator = OSDAggregator!
 
 animationQueue = AnimationQueue aggregator
 
-progressBar           = ProgressBar animationQueue
-progressBarBackground = ProgressBarBackground animationQueue
-chapters              = Chapters animationQueue
-timeElapsed           = TimeElapsed animationQueue
-timeRemaining         = TimeRemaining animationQueue
-hoverTime             = HoverTime animationQueue
-playlist              = Playlist animationQueue
+if settings['enable-bar']
+	aggregator\addSubscriber ProgressBarBackground animationQueue
+	aggregator\addSubscriber ProgressBar animationQueue
 
-aggregator\addSubscriber progressBarBackground
-aggregator\addSubscriber progressBar
-aggregator\addSubscriber chapters
-aggregator\addSubscriber timeElapsed
-aggregator\addSubscriber timeRemaining
-aggregator\addSubscriber hoverTime
-aggregator\addSubscriber playlist
+chapters = nil
+if settings['enable-chapter-markers']
+	chapters = Chapters animationQueue
+	aggregator\addSubscriber chapters
+
+if settings['enable-elapsed-time']
+	aggregator\addSubscriber TimeElapsed animationQueue
+
+if settings['enable-remaining-time']
+	aggregator\addSubscriber TimeRemaining animationQueue
+
+if settings['enable-hover-time']
+	aggregator\addSubscriber HoverTime animationQueue
+
+playlist = nil
+if settings['enable-title']
+	playlist = Playlist animationQueue
+	aggregator\addSubscriber playlist
 
 if settings['pause-indicator']
 	notFrameStepping = true
@@ -44,8 +51,11 @@ if settings['pause-indicator']
 initDraw = ->
 	mp.unregister_event initDraw
 	width, height = mp.get_osd_size!
-	chapters\createMarkers width, height
-	playlist\updatePlaylistInfo!
+	if chapters
+		chapters\createMarkers width, height
+	if playlist
+		playlist\updatePlaylistInfo!
+
 	mp.command 'script-message-to osc disable-osc'
 
 fileLoaded = ->
