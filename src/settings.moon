@@ -49,6 +49,12 @@ settings = {
 	-- smaller than the inactive bar height, but this isn't actually
 	-- checked.
 	'bar-height-active': 8
+	-- Width of chapter markers in pixels. Probably want an even number.
+	'chapter-marker-width': 2
+	-- color of chapter marker before it has been passed. BGR hex.
+	'chapter-marker-before': '7A77F2'
+	-- color of chapter marker after it has been passed. BGR hex.
+	'chapter-marker-after': '2D2D2D'
 	-- Flash an icon in the center of the screen when pausing/unpausing.
 	'pause-indicator': true
 	-- Amount of time (in seconds) to display osc when button is pressed.

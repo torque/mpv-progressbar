@@ -14,29 +14,34 @@ class Chapters extends Subscriber
 		chapters = mp.get_property_native 'chapter-list', { }
 
 		for chapter in *chapters
-			table.insert @markers, ChapterMarker @animationQueue, chapter.title, chapter.time/totalTime, w, h
+			marker = ChapterMarker chapter.time/totalTime, w, h
+			table.insert @markers, marker
+			table.insert @line, marker\stringify!
 
 	stringify: =>
 		return table.concat @line, '\n'
 
+	redrawMarker: ( i ) =>
+		@line[i] = @markers[i]\stringify!
+
 	redrawMarkers: =>
-		@line = {	}
-		for marker in *@markers
-			table.insert @line, marker\stringify!
+		for i, marker in ipairs @markers
+			@line[i] = marker\stringify!
 
 	updateSize: ( w, h ) =>
 		super w, h
 
-		for marker in *@markers
+		for i, marker in ipairs @markers
 			marker\updateSize w, h
-
-		@redrawMarkers!
+			@line[i] = marker\stringify!
 
 		return true
 
 	animateSize: ( animation, value ) =>
-		for marker in *@markers
+		for i, marker in ipairs @markers
 			marker\animateSize value
+			@line[i] = marker\stringify!
+
 		@needsUpdate = true
 
 	update: ( inputState ) =>
@@ -44,11 +49,9 @@ class Chapters extends Subscriber
 
 		currentPosition = mp.get_property_number( 'percent-pos', 0 )*0.01
 
-		for marker in *@markers
-			if marker\update inputState, currentPosition
+		for i, marker in ipairs @markers
+			if marker\update currentPosition
+				@redrawMarker i
 				update = true
-
-		if update
-			@redrawMarkers!
 
 		return update
