@@ -8,6 +8,7 @@ class Chapters extends Subscriber
 		@animation = Animation 0, 1, 0.25, @\animateSize
 
 	createMarkers: ( w, h ) =>
+		@line = { }
 		@markers = { }
 
 		totalTime = mp.get_property_number 'length', 0
