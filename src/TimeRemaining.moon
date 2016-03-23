@@ -16,6 +16,7 @@ class TimeRemaining extends BarAccent
 
 	updateSize: ( w, h ) =>
 		super w, h
+		@position = @w - @animation.value
 		@line[2] = ([[%g,%g]])\format @position, @yPos
 		return true
 
