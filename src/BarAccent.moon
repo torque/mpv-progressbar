@@ -4,3 +4,4 @@ class BarAccent extends Subscriber
 	updateSize: ( w, h ) =>
 		super w, h
 		@yPos = h - barSize
+		@sizeChanged = true
