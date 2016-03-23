@@ -27,8 +27,8 @@ convenient to update if you symlink it in from somewhere else.
 either on the mpv command line or by writing the file
 `~~/lua-settings/torque-progressbar.conf`, where `~~` is either `~/.mpv`
 or `~/.config/mpv`, depending on your setup. The defaults are provided
-in `settings.moon`, and are reproduced here config-file-compatible
-syntax in [`torque-progressbar.conf`][conf-example].
+in `settings.moon`, and are reproduced in config-file-compatible syntax
+in [`torque-progressbar.conf`][conf-example].
 
 #### Keybindings
 
