@@ -1,3 +1,7 @@
+-- Placeholders for default foreground and background color settings
+FG_PLACEHOLDER = '__FG__'
+BG_PLACEHOLDER = '__BG__'
+
 -- default options
 settings = {
 	--[=[ mouse zone settings ]=]--
@@ -8,6 +12,13 @@ settings = {
 	-- name when the mouse is hovered over it. Pixels.
 	'top-hover-zone-height': 40
 
+	--[=[ default color settings ]=]--
+	-- Default foreground and background colors. Will be used for all color
+	-- settings (except chapter-marker-before) unless set explicitly.
+	-- Format is BGR hex because ASS is dumb.
+	'foreground': 'FC799E'
+	'background': '2D2D2D'
+
 	--[=[ progress bar options ]=]--
 	-- whether or not to draw the progress bar at all.
 	'enable-bar': true
@@ -17,42 +28,42 @@ settings = {
 	-- Active (i.e. hovered) bar height. Pixels.
 	'bar-height-active': 8
 	-- [[ bar color options ]] --
-	-- Progress bar foreground color. Format is BGR hex because ASS is dumb.
-	'bar-foreground': 'FC799E'
-	'bar-background': '2D2D2D'
+	-- Progress bar foreground color. BGR hex.
+	'bar-foreground': FG_PLACEHOLDER
+	'bar-background': BG_PLACEHOLDER
 
 	--[=[ elapsed time options ]=]--
 	'enable-elapsed-time': true
 	-- Elapsed time foreground and background colors. BGR hex.
-	'elapsed-foreground': 'FC799E'
-	'elapsed-background': '2D2D2D'
+	'elapsed-foreground': FG_PLACEHOLDER
+	'elapsed-background': BG_PLACEHOLDER
 
 	--[=[ remaining time options ]=]--
 	'enable-remaining-time': true
 	-- Remaining time foreground and background colors. BGR hex.
-	'remaining-foreground': 'FC799E'
-	'remaining-background': '2D2D2D'
+	'remaining-foreground': FG_PLACEHOLDER
+	'remaining-background': BG_PLACEHOLDER
 
 	--[=[ hover time options ]=]--
 	'enable-hover-time': true
 	-- Hover time foreground and background colors. BGR hex.
-	'hover-time-foreground': 'FC799E'
-	'hover-time-background': '2D2D2D'
+	'hover-time-foreground': FG_PLACEHOLDER
+	'hover-time-background': BG_PLACEHOLDER
 
 	--[=[ title display options ]=]--
 	'enable-title': true
 	-- Font size for the title. Integer.
 	'title-font-size': 30
 	-- Title/playlist foreground and background colors. BGR hex.
-	'title-foreground': 'FC799E'
-	'title-background': '2D2D2D'
+	'title-foreground': FG_PLACEHOLDER
+	'title-background': BG_PLACEHOLDER
 
 	--[=[ pause indicator options ]=]--
 	-- Flash an icon in the center of the screen when pausing/unpausing.
 	'pause-indicator': true
 	-- Pause indicator foreground and background colors. BGR hex.
-	'pause-indicator-foreground': 'FC799E'
-	'pause-indicator-background': '2D2D2D'
+	'pause-indicator-foreground': FG_PLACEHOLDER
+	'pause-indicator-background': BG_PLACEHOLDER
 
 	--[=[ chapter marker options ]=]--
 	-- Enable or disable chapter position markers on the progress bar
@@ -70,7 +81,7 @@ settings = {
 	-- [[ chapter marker color options ]] --
 	-- color of chapter marker before/after it has been passed. BGR hex.
 	'chapter-marker-before': '7A77F2'
-	'chapter-marker-after': '2D2D2D'
+	'chapter-marker-after': BG_PLACEHOLDER
 
 	--[=[ timing options ]=]--
 	-- Amount of time (in seconds) to display OSD when button is pressed.
@@ -104,3 +115,13 @@ settings = {
 }
 
 options.read_options settings, script_name
+
+-- Post-process settings and replace placeholder
+-- values with their base color pendants
+for key, value in pairs settings
+	if key\match('-foreground')
+		if value == FG_PLACEHOLDER
+			settings[key] = settings.foreground
+	elseif key\match('-background')
+		if value == BG_PLACEHOLDER
+			settings[key] = settings.background
