@@ -122,6 +122,6 @@ for key, value in pairs settings
 	if key\match('-foreground')
 		if value == FG_PLACEHOLDER
 			settings[key] = settings.foreground
-	elseif key\match('-background')
+	elseif key\match('-background') or key == 'chapter-marker-after'
 		if value == BG_PLACEHOLDER
 			settings[key] = settings.background
