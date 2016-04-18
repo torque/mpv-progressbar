@@ -80,7 +80,7 @@ settings = {
 	'chapter-marker-active-height-fraction': 1
 	-- [[ chapter marker color options ]] --
 	-- color of chapter marker before/after it has been passed. BGR hex.
-	'chapter-marker-before': '7A77F2'
+	'chapter-marker-before': FG_PLACEHOLDER
 	'chapter-marker-after': BG_PLACEHOLDER
 
 	--[=[ timing options ]=]--
@@ -119,7 +119,7 @@ options.read_options settings, script_name
 -- Post-process settings and replace placeholder
 -- values with their base color pendants
 for key, value in pairs settings
-	if key\match('-foreground')
+	if key\match('-foreground') or key == 'chapter-marker-before'
 		if value == FG_PLACEHOLDER
 			settings[key] = settings.foreground
 	elseif key\match('-background') or key == 'chapter-marker-after'
