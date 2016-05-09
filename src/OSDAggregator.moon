@@ -23,13 +23,16 @@ class OSDAggregator
 		displayRequestTimer = mp.add_timeout 0, ->
 		mp.add_key_binding "tab", "request-display",
 			( event ) ->
-				switch event.event
-					when "down"
-						displayRequestTimer\kill!
-						@inputState.displayRequested = true
-					when "up"
-						displayRequestTimer = mp.add_timeout displayDuration, ->
-							@inputState.displayRequested = false,
+				-- "press" event happens when a simulated keypress happens
+				-- through JSON IPC, the client API and through the mpv command
+				-- interface. Don't know if it will ever happen with an actual
+				-- key event.
+				if event.event == "down" or event.event == "press"
+					displayRequestTimer\kill!
+					@inputState.displayRequested = true
+				if event.event == "up" or event.event == "press"
+					displayRequestTimer = mp.add_timeout displayDuration, ->
+						@inputState.displayRequested = false,
 			{ complex: true }
 
 	addSubscriber: ( subscriber ) =>
