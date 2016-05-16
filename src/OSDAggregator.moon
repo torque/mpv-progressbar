@@ -3,7 +3,7 @@ class OSDAggregator
 	new: =>
 		@script = { }
 		@subscribers = { }
-		@inputState = { mouseX: -1, mouseY: -1, mouseInWindow: true, displayRequested: false }
+		@inputState = { mouseX: -1, mouseY: -1, mouseInWindow: false, displayRequested: false }
 		@subscriberCount = 0
 		@w = 0
 		@h = 0
