@@ -27,6 +27,10 @@ settings = {
 	'bar-height-inactive': 2
 	-- Active (i.e. hovered) bar height. Pixels.
 	'bar-height-active': 8
+	-- [[ click-seek precision ]] --
+	-- Affects precision of seeks due to clicks on the progress bar. Must
+	-- be 'exact' or 'keyframes'.
+	'seek-precision': 'exact'
 	-- [[ bar color options ]] --
 	-- Progress bar foreground color. BGR hex.
 	'bar-foreground': FG_PLACEHOLDER

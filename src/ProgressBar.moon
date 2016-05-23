@@ -23,7 +23,7 @@ class ProgressBar extends Subscriber
 	clickUpSeek: =>
 		x, y = mp.get_mouse_pos!
 		if @containsPoint x, y
-			mp.commandv "seek", x*100/@w, "absolute-percent", "keyframes"
+			mp.commandv "seek", x*100/@w, "absolute-percent+#{settings['seek-precision']}"
 
 	stringify: =>
 		return table.concat @line
