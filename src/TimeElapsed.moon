@@ -3,25 +3,25 @@ class TimeElapsed extends BarAccent
 	new: ( @animationQueue ) =>
 		super!
 
+		offscreenPos = settings['elapsed-offscreen-pos']
 		@line = {
 			[[{\fn%s\bord2\fs%d\pos(]]\format settings.font, settings['time-font-size']
-			[[-100,0]]
+			[[%g,0]]\format offscreenPos
 			[[)\c&H%s&\3c&H%s&\an1}]]\format settings['elapsed-foreground'], settings['elapsed-background']
 			0
 		}
-		offscreenPos = settings['elapsed-offscreen-pos']
 		@lastTime = -1
 		@position = offscreenPos
-		@animation = Animation offscreenPos, 2, 0.25, @\animatePos, nil, 0.25
+		@animation = Animation offscreenPos, settings['elapsed-left-margin'], 0.25, @\animatePos, nil, 0.25
 
 	updateSize: ( w, h ) =>
 		super w, h
-		@line[2] = ([[%g,%g]])\format @position, @yPos
+		@line[2] = ([[%g,%g]])\format @position, @yPos - settings['elapsed-bottom-margin']
 		return true
 
 	animatePos: ( animation, value ) =>
 		@position = value
-		@line[2] = ([[%g,%g]])\format @position, @yPos
+		@line[2] = ([[%g,%g]])\format @position, @yPos - settings['elapsed-bottom-margin']
 		@needsUpdate = true
 
 	update: ( inputState ) =>

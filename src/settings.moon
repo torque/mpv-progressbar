@@ -34,6 +34,7 @@ settings = {
 	-- [[ bar color options ]] --
 	-- Progress bar foreground color. BGR hex.
 	'bar-foreground': FG_PLACEHOLDER
+	'bar-cache-color': '444444'
 	'bar-background': BG_PLACEHOLDER
 
 	--[=[ elapsed time options ]=]--
@@ -41,21 +42,37 @@ settings = {
 	-- Elapsed time foreground and background colors. BGR hex.
 	'elapsed-foreground': FG_PLACEHOLDER
 	'elapsed-background': BG_PLACEHOLDER
+	-- margins
+	'elapsed-left-margin': 2
+	-- This is actually added on top of the height of the progress bar.
+	'elapsed-bottom-margin': 0
 
 	--[=[ remaining time options ]=]--
 	'enable-remaining-time': true
 	-- Remaining time foreground and background colors. BGR hex.
 	'remaining-foreground': FG_PLACEHOLDER
 	'remaining-background': BG_PLACEHOLDER
+	-- margins
+	'remaining-right-margin': 4
+	-- This is actually added on top of the height of the progress bar.
+	'remaining-bottom-margin': 0
 
 	--[=[ hover time options ]=]--
 	'enable-hover-time': true
 	-- Hover time foreground and background colors. BGR hex.
 	'hover-time-foreground': FG_PLACEHOLDER
 	'hover-time-background': BG_PLACEHOLDER
+	-- margins
+	'hover-time-left-margin': 120
+	'hover-time-right-margin': 130
+	-- This is actually added on top of the height of the progress bar.
+	'hover-time-bottom-margin': 0
 
 	--[=[ title display options ]=]--
 	'enable-title': true
+	-- margins
+	'title-left-margin': 4
+	'title-top-margin': 0
 	-- Font size for the title. Integer.
 	'title-font-size': 30
 	-- Title/playlist foreground and background colors. BGR hex.
@@ -92,7 +109,9 @@ settings = {
 	'request-display-duration': 1
 	-- How often the display is redrawn, in seconds. Affects smoothness of
 	-- animations, but lower values may use more CPU (the default is
-	-- negligible on my old C2D, and looks okay to me)
+	-- negligible on my old C2D, and looks okay to me). The libass display
+	-- update speed appears to be locked to the video framerate though, so
+	-- even with a small value this may end up looking fairly jerky.
 	'redraw-period': 0.03
 
 	--[=[ /!\ FONT SIZE/METRICS STUFF. CHANGE AT YOUR OWN RISK /!\ ]=]--
@@ -104,12 +123,6 @@ settings = {
 	'time-font-size': 30
 	-- Font size for hover time.
 	'hover-time-font-size': 26
-	-- Manually calculated collision/placement metrics based on font
-	-- sizes. Probably want to change these if you change the font or
-	-- sizes. Unfortunately, my automated solution isn't easy to set up.
-	-- Pixels.
-	'hover-time-left-margin': 120
-	'hover-time-right-margin': 130
 	-- These primarily affect animations. If the script thinks the items
 	-- are off screen, they won't be drawn. Positive numbers will look
 	-- goofy.

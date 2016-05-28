@@ -34,7 +34,7 @@ class HoverTime extends BarAccent
 
 			if update or @hovered
 				if .mouseX != @lastX or @sizeChanged
-					@line[2] = ("%g,%g")\format math.min( @w - rightMargin, math.max( leftMargin, .mouseX ) ), @yPos
+					@line[2] = ("%g,%g")\format math.min( @w - rightMargin, math.max( leftMargin, .mouseX ) ), @yPos - settings['hover-time-bottom-margin']
 					@sizeChanged = false
 
 					@lastX = .mouseX

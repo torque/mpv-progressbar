@@ -5,20 +5,20 @@ class Playlist extends Subscriber
 		offscreenPos = settings['title-offscreen-pos']
 		@line = {
 			[[{\an7\fn%s\bord2\fs%d\pos(]]\format settings.font, settings['title-font-size']
-			[[4,%g]]\format offscreenPos
+			[[%g,%g]]\format settings['title-left-margin'], offscreenPos
 			[[)\c&H%s&\3c&H%s&}]]\format settings['title-foreground'], settings['title-background']
 			0
 		}
 
 		@topBox = Rect 0, 0, 0, settings['top-hover-zone-height']
-		@animation = Animation offscreenPos, 0, 0.25, @\animatePos, nil, 0.25
+		@animation = Animation offscreenPos, settings['title-top-margin'], 0.25, @\animatePos, nil, 0.25
 
 	updateSize: ( w, h ) =>
 		super w, h
 		@topBox.w = w
 
 	animatePos: ( animation, value ) =>
-		@line[2] = ([[4,%g]])\format value
+		@line[2] = [[%g,%g]]\format settings['title-left-margin'], value
 		@needsUpdate = true
 
 	updatePlaylistInfo: =>
