@@ -26,7 +26,7 @@ if settings['enable-title']
 	aggregator\addSubscriber playlist
 
 if settings['pause-indicator']
-	notFrameStepping = true
+	notFrameStepping = false
 	PauseIndicatorWrapper = ( event, paused ) ->
 		if notFrameStepping
 			PauseIndicator animationQueue, aggregator, paused
