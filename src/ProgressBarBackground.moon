@@ -6,12 +6,12 @@ class ProgressBarBackground extends Subscriber
 		maxHeight = settings['bar-height-active']*100
 
 		@line = {
-			[[{\an1\bord0\c&H%s&\pos(]]\format settings['bar-background']
-			0
-			[[)\fscy]]
-			minHeight
-			[[\p1}m 0 0 l ]]
-			0
+			[[{\an1\bord0\c&H%s&\pos(]]\format settings['bar-background'] -- 1
+			0                                                             -- 2
+			[[)\fscy]]                                                    -- 3
+			minHeight                                                     -- 4
+			[[\p1}m 0 0 l ]]                                              -- 5
+			0                                                             -- 6
 		}
 
 		@animation = Animation minHeight, maxHeight, 0.25, @\animateHeight

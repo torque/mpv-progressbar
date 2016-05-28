@@ -6,14 +6,14 @@ class ProgressBar extends Subscriber
 		maxHeight = settings['bar-height-active']*100
 
 		@line = {
-			[[{\an1\bord0\c&H%s&\pos(]]\format settings['bar-foreground']
-			0
-			[[)\fscx]]
-			0
-			[[\fscy]]
-			minHeight
-			[[\p1}m 0 0 l ]]
-			0
+			[[{\an1\bord0\c&H%s&\pos(]]\format settings['bar-foreground'] -- 1
+			0                                                             -- 2
+			[[)\fscx]]                                                    -- 3
+			0                                                             -- 4
+			[[\fscy]]                                                     -- 5
+			minHeight                                                     -- 6
+			[[\p1}m 0 0 l ]]                                              -- 7
+			0                                                             -- 8
 		}
 
 		@lastPosition = 0
