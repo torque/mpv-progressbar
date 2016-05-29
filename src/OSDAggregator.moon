@@ -3,7 +3,7 @@ class OSDAggregator
 	new: =>
 		@script = { }
 		@subscribers = { }
-		@inputState = { mouseX: -1, mouseY: -1, mouseInWindow: false, displayRequested: false }
+		@inputState = { mouseX: -1, mouseY: -1, mouseInWindow: false, displayRequested: false, mouseDead: true }
 		@subscriberCount = 0
 		@w = 0
 		@h = 0
@@ -12,6 +12,11 @@ class OSDAggregator
 
 		mp.register_event 'shutdown', ->
 			@updateTimer\kill!
+
+		mp.observe_property 'fullscreen', 'bool', ->
+			with @inputState
+				.mouseX, .mouseY = mp.get_mouse_pos!
+				.mouseDead = true
 
 		mp.add_forced_key_binding "mouse_leave", "mouse-leave", ->
 			@inputState.mouseInWindow = false
@@ -52,7 +57,11 @@ class OSDAggregator
 
 	update: ( needsRedraw ) =>
 		with @inputState
+			oldX, oldY = .mouseX, .mouseY
 			.mouseX, .mouseY = mp.get_mouse_pos!
+			if .mouseDead and (oldX != .mouseX or oldY != .mouseY)
+				.mouseDead = false
+
 		w, h = mp.get_osd_size!
 		needsResize = false
 		if w != @w or h != @h

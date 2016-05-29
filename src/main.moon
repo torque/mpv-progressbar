@@ -3,8 +3,15 @@ aggregator = OSDAggregator!
 animationQueue = AnimationQueue aggregator
 
 if settings['enable-bar']
+	progressBar = ProgressBar animationQueue
 	aggregator\addSubscriber ProgressBarBackground animationQueue
-	aggregator\addSubscriber ProgressBar animationQueue
+	aggregator\addSubscriber progressBar
+
+	mp.add_key_binding "mouse_btn0", "seek-to-mouse", ->
+		x, y = mp.get_mouse_pos!
+		mp.add_timeout 0.001, ->
+			if not aggregator.inputState.mouseDead and progressBar\containsPoint x, y
+				mp.commandv "seek", x*100/progressBar.w, "absolute-percent+#{settings['seek-precision']}"
 
 chapters = nil
 if settings['enable-chapter-markers']

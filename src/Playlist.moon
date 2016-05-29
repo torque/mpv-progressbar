@@ -30,4 +30,4 @@ class Playlist extends Subscriber
 
 	update: ( inputState ) =>
 		with inputState
-			super inputState, (@containsPoint( .mouseX, .mouseY ) or @topBox\containsPoint( .mouseX, .mouseY ) or .displayRequested)
+			super inputState, ((not .mouseDead and (@containsPoint( .mouseX, .mouseY ) or @topBox\containsPoint( .mouseX, .mouseY ))) or .displayRequested)

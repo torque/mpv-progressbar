@@ -21,7 +21,7 @@ class Subscriber extends Rect
 	update: ( inputState, hoverCondition ) =>
 		with inputState
 			if hoverCondition == nil
-				hoverCondition = (@containsPoint( .mouseX, .mouseY ) or .displayRequested)
+				hoverCondition = ((not .mouseDead and @containsPoint( .mouseX, .mouseY )) or .displayRequested)
 			update = @needsUpdate
 			@needsUpdate = false
 

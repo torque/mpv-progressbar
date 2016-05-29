@@ -18,12 +18,6 @@ class ProgressBar extends Subscriber
 
 		@lastPosition = 0
 		@animation = Animation minHeight, maxHeight, 0.25, @\animateHeight
-		mp.add_key_binding "mouse_btn0", "seek-to-mouse", @\clickUpSeek
-
-	clickUpSeek: =>
-		x, y = mp.get_mouse_pos!
-		if @containsPoint x, y
-			mp.commandv "seek", x*100/@w, "absolute-percent+#{settings['seek-precision']}"
 
 	stringify: =>
 		return table.concat @line
