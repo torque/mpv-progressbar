@@ -1,7 +1,8 @@
 aggregator = OSDAggregator!
-
 animationQueue = AnimationQueue aggregator
-chapters = nil
+-- This is kind of ugly but I have gone insane and don't care any more.
+-- Watch the rapidly declining quality of this codebase in realtime.
+local chapters, progressBar, barBackground, elapsedTime, remainingTime, hoverTime
 
 if settings['enable-bar']
 	progressBar = ProgressBar animationQueue
@@ -26,13 +27,16 @@ if settings['enable-chapter-markers']
 	aggregator\addSubscriber chapters
 
 if settings['enable-elapsed-time']
-	aggregator\addSubscriber TimeElapsed animationQueue
+	elapsedTime = TimeElapsed animationQueue
+	aggregator\addSubscriber elapsedTime
 
 if settings['enable-remaining-time']
-	aggregator\addSubscriber TimeRemaining animationQueue
+	remainingTime = TimeRemaining animationQueue
+	aggregator\addSubscriber remainingTime
 
 if settings['enable-hover-time']
-	aggregator\addSubscriber HoverTime animationQueue
+	hoverTime = HoverTime animationQueue
+	aggregator\addSubscriber hoverTime
 
 playlist = nil
 if settings['enable-title']
@@ -69,6 +73,20 @@ initDraw = ->
 		chapters\createMarkers width, height
 	if playlist
 		playlist\updatePlaylistInfo!
+	-- duration is nil for streams of indeterminate length
+	unless mp.get_property 'duration'
+		if progressBar
+			aggregator\removeSubscriber progressBar.aggregatorIndex
+			aggregator\removeSubscriber barBackground.aggregatorIndex
+		if chapters
+			aggregator\removeSubscriber chapters.aggregatorIndex
+		if hoverTime
+			aggregator\removeSubscriber hoverTime.aggregatorIndex
+		if remainingTime
+			aggregator\removeSubscriber remainingTime.aggregatorIndex
+		if elapsedTime
+			elapsedTime\changeBarSize 0
+			aggregator\forceResize!
 
 	mp.command 'script-message-to osc disable-osc'
 

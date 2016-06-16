@@ -55,6 +55,10 @@ class OSDAggregator
 		for i = index, @subscriberCount
 			@subscribers[i].aggregatorIndex = i
 
+	forceResize: =>
+		for index, subscriber in ipairs @subscribers
+			subscriber\updateSize @w, @h
+
 	update: ( needsRedraw ) =>
 		with @inputState
 			oldX, oldY = .mouseX, .mouseY
