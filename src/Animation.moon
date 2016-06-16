@@ -17,7 +17,10 @@ class Animation
 		if @accel
 			progress = math.pow progress, @accel
 
-		@value = (1 - progress) * @initialValue + progress * @endValue
+		if @isReversed
+			@value = (1 - progress) * @endValue + progress * @initialValue
+		else
+			@value = (1 - progress) * @initialValue + progress * @endValue
 
 		@updateCb @value
 
@@ -35,7 +38,6 @@ class Animation
 
 	reverse: =>
 		@isReversed = not @isReversed
-		@initialValue, @endValue = @endValue, @initialValue
 		@startTime = 2*@currentTime - @duration - @startTime
 		@accel = 1/@accel
 

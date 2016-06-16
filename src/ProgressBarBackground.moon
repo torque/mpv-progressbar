@@ -1,9 +1,10 @@
 class ProgressBarBackground extends Subscriber
 
+	minHeight = settings['bar-height-inactive']*100
+	maxHeight = settings['bar-height-active']*100
+
 	new: ( @animationQueue ) =>
 		super!
-		minHeight = settings['bar-height-inactive']*100
-		maxHeight = settings['bar-height-active']*100
 
 		@line = {
 			[[{\an1\bord0\c&H%s&\pos(]]\format settings['bar-background'] -- 1
@@ -15,6 +16,14 @@ class ProgressBarBackground extends Subscriber
 		}
 
 		@animation = Animation minHeight, maxHeight, 0.25, @\animateHeight
+		@visible = true
+
+	toggleInactiveVisibility: =>
+		value = @visible and 0 or minHeight
+		@animation.initialValue = value
+		@line[4] = value if not @hovered
+		@visible = not @visible
+		@needsUpdate = true
 
 	stringify: =>
 		return table.concat @line

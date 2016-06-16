@@ -1,11 +1,14 @@
 class Chapters extends Subscriber
 
+	minHeight = settings['bar-height-inactive']*100
+
 	new: ( @animationQueue ) =>
 		super!
 
 		@line = { }
 		@markers = { }
 		@animation = Animation 0, 1, 0.25, @\animateSize
+		@visible = true
 
 	createMarkers: ( w, h ) =>
 		@line = { }
@@ -18,6 +21,16 @@ class Chapters extends Subscriber
 			marker = ChapterMarker chapter.time/totalTime, w, h
 			table.insert @markers, marker
 			table.insert @line, marker\stringify!
+
+	toggleInactiveVisibility: =>
+		value = @visible and 0 or minHeight
+		for i, marker in ipairs @markers
+			marker.minHeight = value
+			marker.line[6] = value if not @hovered
+			@line[i] = marker\stringify!
+
+		@visible = not @visible
+		@needsUpdate = true
 
 	stringify: =>
 		return table.concat @line, '\n'
