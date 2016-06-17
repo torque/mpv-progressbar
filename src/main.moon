@@ -66,6 +66,7 @@ if settings['pause-indicator']
 
 	mp.observe_property 'pause', 'bool', PauseIndicatorWrapper
 
+streamMode = false
 initDraw = ->
 	mp.unregister_event initDraw
 	width, height = mp.get_osd_size!
@@ -74,7 +75,8 @@ initDraw = ->
 	if playlist
 		playlist\updatePlaylistInfo!
 	-- duration is nil for streams of indeterminate length
-	unless mp.get_property 'duration'
+	duration = mp.get_property 'duration'
+	if not (streamMode or duration)
 		if progressBar
 			aggregator\removeSubscriber progressBar.aggregatorIndex
 			aggregator\removeSubscriber barBackground.aggregatorIndex
@@ -87,6 +89,21 @@ initDraw = ->
 		if elapsedTime
 			elapsedTime\changeBarSize 0
 			aggregator\forceResize!
+		streamMode = true
+	elseif streamMode and duration
+		if progressBar
+			aggregator\addSubscriber barBackground
+			aggregator\addSubscriber progressBar
+		if chapters
+			aggregator\addSubscriber chapters
+		if hoverTime
+			aggregator\addSubscriber hoverTime
+		if remainingTime
+			aggregator\addSubscriber remainingTime
+		if elapsedTime
+			elapsedTime\changeBarSize settings['bar-height-active']
+		aggregator\forceResize!
+		streamMode = false
 
 	mp.command 'script-message-to osc disable-osc'
 
