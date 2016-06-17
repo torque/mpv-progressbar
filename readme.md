@@ -34,11 +34,12 @@ in [`torque-progressbar.conf`][conf-example].
 
 `progressbar.lua` creates a few keybindings integral to correct script
 operation. If you are running mpv with `no-input-default-bindings`,
-these must be manually rebound in `~~/input.conf`.
+these must be manually rebound in `~~/input.conf`. The defaults are:
 
 ```ini
 . script-binding progressbar/step-forward
 , script-binding progressbar/step-backward
+c script-binding progressbar/toggle-inactive-bar
 tab script-binding progressbar/request-display
 mouse_btn0 script-binding progressbar/seek-to-mouse
 ```
