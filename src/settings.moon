@@ -22,6 +22,8 @@ settings = {
 	--[=[ progress bar options ]=]--
 	-- whether or not to draw the progress bar at all.
 	'enable-bar': true
+	-- whether the inactive bar should be hidden until toggled.
+	'hide-inactive-bar': false
 	-- [[ bar size options ]] --
 	-- Inactive bar height. Pixels. Bar is invisible when inactive if 0.
 	'bar-height-inactive': 2
