@@ -21,7 +21,6 @@ class ChapterMarker
 		}
 
 		@passed = false
-		@minHeight = minHeight
 
 	stringify: =>
 		return table.concat @line
@@ -32,7 +31,7 @@ class ChapterMarker
 
 	animateSize: ( value ) =>
 		@line[4] = [[%g]]\format (maxWidth - minWidth)*value + minWidth
-		@line[6] = [[%g]]\format (maxHeight*maxHeightFrac - @minHeight)*value + @minHeight
+		@line[6] = [[%g]]\format (maxHeight*maxHeightFrac - minHeight)*value + minHeight
 
 	update: ( position ) =>
 		update = false

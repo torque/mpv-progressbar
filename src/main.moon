@@ -17,10 +17,7 @@ if settings['enable-bar']
 				mp.commandv "seek", x*100/progressBar.w, "absolute-percent+#{settings['seek-precision']}"
 
 	mp.add_key_binding "c", "toggle-inactive-bar", ->
-		barBackground\toggleInactiveVisibility!
-		progressBar\toggleInactiveVisibility!
-		if chapters
-			chapters\toggleInactiveVisibility!
+		aggregator\toggleInactiveVisibility!
 
 if settings['enable-chapter-markers']
 	chapters = Chapters animationQueue

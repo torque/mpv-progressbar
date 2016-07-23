@@ -7,6 +7,8 @@ class OSDAggregator
 		@subscriberCount = 0
 		@w = 0
 		@h = 0
+		@hideInactive = settings['hide-inactive']
+		@needsRedrawAll = false
 
 		@updateTimer = mp.add_periodic_timer settings['redraw-period'], @\update
 
@@ -77,12 +79,17 @@ class OSDAggregator
 			update = false
 			if theSub\update @inputState
 				update = true
-			if (needsResize and theSub\updateSize( w, h )) or update
+			if (needsResize and theSub\updateSize( w, h )) or update or @needsRedrawAll
 				needsRedraw = true
-				@script[sub] = theSub\stringify!
+				if @hideInactive and not theSub.hovered
+					@script[sub] = nil
+				else
+					@script[sub] = theSub\stringify!
 
 		if needsRedraw == true
 			mp.set_osd_ass @w, @h, table.concat @script, '\n'
+
+		@needsRedrawAll = false
 
 	pause: ( event, @paused ) =>
 		if @paused
@@ -95,3 +102,7 @@ class OSDAggregator
 		@update true
 		unless @paused
 			@updateTimer\resume!
+
+	toggleInactiveVisibility: =>
+		@hideInactive = not @hideInactive
+		@needsRedrawAll = true
