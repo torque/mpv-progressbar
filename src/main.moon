@@ -22,6 +22,12 @@ if settings['enable-bar']
 		if chapters
 			chapters\toggleInactiveVisibility!
 
+if settings['hide-inactive-bar']
+	barBackground\toggleInactiveVisibility!
+	progressBar\toggleInactiveVisibility!
+	if chapters
+		chapters\toggleInactiveVisibility!
+
 if settings['enable-chapter-markers']
 	chapters = Chapters animationQueue
 	aggregator\addSubscriber chapters
