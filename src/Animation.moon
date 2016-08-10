@@ -30,6 +30,7 @@ class Animation
 		return @isFinished
 
 	interrupt: ( reverse, queue ) =>
+		@finishedCb = nil
 		if reverse != @isReversed
 			@reverse!
 		unless @isRegistered

@@ -81,8 +81,8 @@ class OSDAggregator
 				update = true
 			if (needsResize and theSub\updateSize( w, h )) or update or @needsRedrawAll
 				needsRedraw = true
-				if @hideInactive and not theSub.hovered
-					@script[sub] = nil
+				if @hideInactive and not theSub.active
+					@script[sub] = ""
 				else
 					@script[sub] = theSub\stringify!
 

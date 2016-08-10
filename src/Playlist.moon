@@ -28,6 +28,9 @@ class Playlist extends Subscriber
 		@line[4] = ([[%d/%d – %s]])\format position+1, total, title
 		@needsUpdate = true
 
-	update: ( inputState ) =>
+	hoverCondition: ( inputState ) =>
 		with inputState
-			super inputState, ((not .mouseDead and (@containsPoint( .mouseX, .mouseY ) or @topBox\containsPoint( .mouseX, .mouseY ))) or .displayRequested)
+			return ((not .mouseDead and (@containsPoint( .mouseX, .mouseY ) or @topBox\containsPoint( .mouseX, .mouseY ))) or .displayRequested)
+
+	update: ( inputState ) =>
+		super inputState

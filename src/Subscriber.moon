@@ -7,9 +7,12 @@ class Subscriber extends Rect
 
 		@hovered = false
 		@needsUpdate = false
+		@active = false
+		@deactivate = ->
+			@active = false
 
 	stringify: =>
-		if not @hovered and not @animation.isRegistered
+		if not @active
 			return ""
 
 		return table.concat @line
@@ -18,22 +21,26 @@ class Subscriber extends Rect
 		@y = h - active_height
 		@w, @h = w, active_height
 
-	update: ( inputState, hoverCondition ) =>
+	hoverCondition: ( inputState ) =>
 		with inputState
-			if hoverCondition == nil
-				hoverCondition = ((not .mouseDead and @containsPoint( .mouseX, .mouseY )) or .displayRequested)
+			return ((not .mouseDead and @containsPoint( .mouseX, .mouseY )) or .displayRequested)
+
+	update: ( inputState ) =>
+		with inputState
 			update = @needsUpdate
 			@needsUpdate = false
 
-			if (.mouseInWindow or .displayRequested) and hoverCondition
+			if (.mouseInWindow or .displayRequested) and @hoverCondition inputState
 				unless @hovered
 					update = true
 					@hovered = true
 					@animation\interrupt false, @animationQueue
+					@active = true
 			else
 				if @hovered
 					update = true
 					@hovered = false
 					@animation\interrupt true, @animationQueue
+					@animation.finishedCb = @deactivate
 
 			return update

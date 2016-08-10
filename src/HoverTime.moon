@@ -28,9 +28,13 @@ class HoverTime extends BarAccent
 		super w, h
 		@yposChanged = true
 
+	hoverCondition: ( inputState ) =>
+		with inputState
+			return (not .mouseDead and @containsPoint( .mouseX, .mouseY ) and .mouseInWindow)
+
 	update: ( inputState ) =>
 		with inputState
-			update = super inputState, (not .mouseDead and @containsPoint( .mouseX, .mouseY ) and .mouseInWindow)
+			update = super inputState
 
 			if update or @hovered
 				if .mouseX != @lastX or @sizeChanged
