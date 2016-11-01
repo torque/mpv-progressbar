@@ -14,7 +14,7 @@ if settings['enable-bar']
 		x, y = mp.get_mouse_pos!
 		mp.add_timeout 0.001, ->
 			if not aggregator.inputState.mouseDead and progressBar.zone\containsPoint x, y
-				mp.commandv "seek", x*100/progressBar.w, "absolute-percent+#{settings['seek-precision']}"
+				mp.commandv "seek", x*100/progressBar.zone.w, "absolute-percent+#{settings['seek-precision']}"
 
 	mp.add_key_binding "c", "toggle-inactive-bar", ->
 		aggregator\toggleInactiveVisibility!
