@@ -1,45 +1,31 @@
 class AnimationQueue
 
 	new: ( @aggregator ) =>
-		-- doubly-linked list.
-		@list = nil
+		@list = {}
 		@animationCount = 0
 		@animating = false
 		@timer = mp.add_periodic_timer settings['redraw-period'], @\animate
 		@timer\kill!
 
 	registerAnimation: ( animation ) =>
-		if @list
-			@list.next = animation
-
-		animation.prev = @list
-		animation.isRegistered = true
-		@list = animation
 		@animationCount += 1
+		animation.index = @animationCount
+		animation.isRegistered = true
+		table.insert @list, animation
 
 		@startAnimation!
 
 	unregisterAnimation: ( animation ) =>
-		prev = animation.prev
-		next = animation.next
+		@unregisterAnimationByIndex animation.index
 
-		if prev
-			prev.next = next
-		if next
-			next.prev = prev
-
-		if @list == animation
-			@list = prev
-
-		animation.next = nil
-		animation.prev = nil
-		animation.isRegistered = false
+	unregisterAnimationByIndex: ( index ) =>
 		@animationCount -= 1
+		animation = table.remove @list, index
+		animation.index = nil
+		animation.isRegistered = false
 
-		if 0 == @animationCount
+		if @animationCount == 0
 			@stopAnimation!
-
-		return prev
 
 	startAnimation: =>
 		if @animating
@@ -58,23 +44,13 @@ class AnimationQueue
 	destroyAnimationStack: =>
 		@stopAnimation!
 		currentAnimation = @list
-		while currentAnimation
-			currentAnimation.isRegistered = false
-			currentAnimation = @list.prev
-			@list.prev = nil
-			@list.next = nil
-			@list = currentAnimation
+		for i = @animationCount, 1, -1
+			@unregisterAnimationByIndex i
 
 	animate: =>
-		currentAnimation = @list
 		currentTime = mp.get_time!
-		while currentAnimation
-			-- Animation::update returns true if an animation completes
-			if currentAnimation\update currentTime
-				currentAnimation = @unregisterAnimation currentAnimation
-			else
-				currentAnimation = currentAnimation.prev
+		for i = @animationCount, 1, -1
+			if @list[i]\update currentTime
+				@unregisterAnimationByIndex i
 
 		@aggregator\forceUpdate!
-
-
