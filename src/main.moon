@@ -40,6 +40,10 @@ if settings['enable-title']
 	playlist = Playlist animationQueue
 	aggregator\addSubscriber playlist
 
+if settings['enable-system-time']
+	systemTime = SystemTime animationQueue
+	aggregator\addSubscriber systemTime
+
 if settings['pause-indicator']
 	notFrameStepping = false
 	PauseIndicatorWrapper = ( event, paused ) ->

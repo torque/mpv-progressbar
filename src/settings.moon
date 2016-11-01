@@ -82,6 +82,17 @@ settings = {
 	'title-foreground': FG_PLACEHOLDER
 	'title-background': BG_PLACEHOLDER
 
+	--[=[ system time display options ]=]--
+	'enable-system-time': true
+	-- This must be a strftime-compatible format string.
+	'system-time-format': '%H:%M'
+	-- margins
+	'system-time-right-margin': 4
+	'system-time-top-margin': 0
+	'system-time-font-size': 30
+	'system-time-foreground': FG_PLACEHOLDER
+	'system-time-background': BG_PLACEHOLDER
+
 	--[=[ pause indicator options ]=]--
 	-- Flash an icon in the center of the screen when pausing/unpausing.
 	'pause-indicator': true
@@ -131,6 +142,7 @@ settings = {
 	-- goofy.
 	'elapsed-offscreen-pos': -100
 	'remaining-offscreen-pos': -100
+	'system-time-offscreen-pos': -100
 	'title-offscreen-pos': -40
 }
 
