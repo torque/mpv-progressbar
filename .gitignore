@@ -1,5 +1,6 @@
-*.lua
 /*.moon
 /*.ass
 /*.mp4
+/*.xml
+/*.mkv
 build
