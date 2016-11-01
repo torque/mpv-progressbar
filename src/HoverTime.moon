@@ -30,7 +30,7 @@ class HoverTime extends BarAccent
 
 	hoverCondition: ( inputState ) =>
 		with inputState
-			return (not .mouseDead and @containsPoint( .mouseX, .mouseY ) and .mouseInWindow)
+			return .mouseInWindow and not .mouseDead and @zone\containsPoint .mouseX, .mouseY
 
 	update: ( inputState ) =>
 		with inputState
@@ -38,11 +38,11 @@ class HoverTime extends BarAccent
 
 			if update or @hovered
 				if .mouseX != @lastX or @sizeChanged
-					@line[2] = ("%g,%g")\format math.min( @w - rightMargin, math.max( leftMargin, .mouseX ) ), @yPos - settings['hover-time-bottom-margin']
+					@line[2] = ("%g,%g")\format math.min( @zone.w - rightMargin, math.max( leftMargin, .mouseX ) ), @yPos - settings['hover-time-bottom-margin']
 					@sizeChanged = false
 
 					@lastX = .mouseX
-					hoverTime = mp.get_property_number( 'duration', 0 )*.mouseX/@w
+					hoverTime = mp.get_property_number( 'duration', 0 )*.mouseX/@zone.w
 					if hoverTime != @lastTime and (@hovered or @animation.isRegistered)
 						update = true
 						@line[6] = ([[%d:%02d:%02d]])\format math.floor( hoverTime/3600 ), math.floor( (hoverTime/60)%60 ), math.floor( hoverTime%60 )

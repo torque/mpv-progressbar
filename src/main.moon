@@ -13,7 +13,7 @@ if settings['enable-bar']
 	mp.add_key_binding "mouse_btn0", "seek-to-mouse", ->
 		x, y = mp.get_mouse_pos!
 		mp.add_timeout 0.001, ->
-			if not aggregator.inputState.mouseDead and progressBar\containsPoint x, y
+			if not aggregator.inputState.mouseDead and progressBar.zone\containsPoint x, y
 				mp.commandv "seek", x*100/progressBar.w, "absolute-percent+#{settings['seek-precision']}"
 
 	mp.add_key_binding "c", "toggle-inactive-bar", ->

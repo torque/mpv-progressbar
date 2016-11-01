@@ -1,9 +1,9 @@
-class Subscriber extends Rect
+class Subscriber
 
 	active_height = settings['hover-zone-height']
 
 	new: =>
-		super 0, 0, 0, 0
+		@zone = Rect 0, 0, 0, 0
 
 		@hovered = false
 		@needsUpdate = false
@@ -12,24 +12,25 @@ class Subscriber extends Rect
 			@active = false
 
 	stringify: =>
-		if not @active
-			return ""
-
+		return "" if not @active
 		return table.concat @line
 
 	updateSize: ( w, h ) =>
-		@y = h - active_height
-		@w, @h = w, active_height
+		@zone\reset nil, h - active_height, w, h
 
 	hoverCondition: ( inputState ) =>
-		with inputState
-			return ((not .mouseDead and @containsPoint( .mouseX, .mouseY )) or .displayRequested)
+		if inputState.displayRequested
+			return true
+
+		unless inputState.mouseDead
+			return @zone\containsPoint inputState.mouseX, inputState.mouseY
+		else
+			return false
 
 	update: ( inputState ) =>
 		with inputState
 			update = @needsUpdate
 			@needsUpdate = false
-
 			if (.mouseInWindow or .displayRequested) and @hoverCondition inputState
 				unless @hovered
 					update = true
