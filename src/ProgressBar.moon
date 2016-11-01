@@ -10,7 +10,7 @@ class ProgressBar extends Subscriber
 			[[{\an1\bord0\c&H%s&\pos(]]\format settings['bar-foreground'] -- 1
 			0                                                             -- 2
 			[[)\fscx]]                                                    -- 3
-			0                                                             -- 4
+			0.01                                                          -- 4
 			[[\fscy]]                                                     -- 5
 			minHeight                                                     -- 6
 			[[\p1}m 0 0 l ]]                                              -- 7
@@ -37,7 +37,6 @@ class ProgressBar extends Subscriber
 	update: ( inputState ) =>
 		update = super inputState
 
-		-- todo: optimize to not draw if inactive and inactive height is 0
 		position = mp.get_property_number 'percent-pos', 0
 		if position != @lastPosition
 			update = true

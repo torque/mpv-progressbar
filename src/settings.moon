@@ -22,10 +22,11 @@ settings = {
 	--[=[ progress bar options ]=]--
 	-- whether or not to draw the progress bar at all.
 	'enable-bar': true
-	-- Hide elements even when they are inactive.
+	-- Hide the bar even when it is inactive.
 	'hide-inactive': false
 	-- [[ bar size options ]] --
-	-- Inactive bar height. Pixels. Bar is invisible when inactive if 0.
+	-- Inactive bar height. Pixels. Sets `hide-inactive` to true if
+	-- bar-height-inactive <= 0.
 	'bar-height-inactive': 2
 	-- Active (i.e. hovered) bar height. Pixels.
 	'bar-height-active': 8
@@ -144,3 +145,7 @@ for key, value in pairs settings
 	elseif key\match('-background') or key == 'chapter-marker-after'
 		if value == BG_PLACEHOLDER
 			settings[key] = settings.background
+
+if settings['bar-height-inactive'] <= 0
+	settings['hide-inactive'] = true
+	settings['bar-height-inactive'] = 1
