@@ -7,6 +7,7 @@ SOURCES += src/AnimationQueue.moon
 SOURCES += src/Animation.moon
 SOURCES += src/Rect.moon
 SOURCES += src/Subscriber.moon
+SOURCES += src/TopSubscriber.moon
 SOURCES += src/BarAccent.moon
 SOURCES += src/ProgressBar.moon
 SOURCES += src/ProgressBarBackground.moon

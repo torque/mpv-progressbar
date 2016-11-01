@@ -1,21 +1,16 @@
-class Playlist extends Subscriber
+class Playlist extends TopSubscriber
 
 	new: ( @animationQueue ) =>
 		super!
 		offscreenPos = settings['title-offscreen-pos']
 		@line = {
-			[[{\an7\fn%s\bord2\fs%d\pos(]]\format settings.font, settings['title-font-size']
+			[[{\fn%s\bord2\fs%d\pos(]]\format settings.font, settings['title-font-size']
 			[[%g,%g]]\format settings['title-left-margin'], offscreenPos
-			[[)\c&H%s&\3c&H%s&}]]\format settings['title-foreground'], settings['title-background']
+			[[)\c&H%s&\3c&H%s&\an7}]]\format settings['title-foreground'], settings['title-background']
 			0
 		}
 
-		@topBox = Rect 0, 0, 0, settings['top-hover-zone-height']
 		@animation = Animation offscreenPos, settings['title-top-margin'], 0.25, @\animatePos, nil, 0.25
-
-	updateSize: ( w, h ) =>
-		super w, h
-		@topBox.w = w
 
 	animatePos: ( animation, value ) =>
 		@line[2] = [[%g,%g]]\format settings['title-left-margin'], value
@@ -27,10 +22,3 @@ class Playlist extends Subscriber
 		total = mp.get_property_number 'playlist-count', 1
 		@line[4] = ([[%d/%d – %s]])\format position+1, total, title
 		@needsUpdate = true
-
-	hoverCondition: ( inputState ) =>
-		with inputState
-			return ((not .mouseDead and (@containsPoint( .mouseX, .mouseY ) or @topBox\containsPoint( .mouseX, .mouseY ))) or .displayRequested)
-
-	update: ( inputState ) =>
-		super inputState
