@@ -10,22 +10,38 @@
 
 class Rect
 	new: ( @x, @y, @w, @h ) =>
+		@cacheMaxBounds!
+
+	cacheMaxBounds: =>
+		@xMax = @x + @w
+		@yMax = @y + @h
 
 	setPosition: ( x, y ) =>
 		@x = x or @x
 		@y = y or @y
+		@cacheMaxBounds!
 
-	setDimensions: ( w, h ) =>
+	setSize: ( w, h ) =>
 		@w = w or @w
 		@h = h or @h
+		@cacheMaxBounds!
+
+	reset: ( x, y, w, h ) =>
+		@x = x or @x
+		@y = y or @y
+		@w = w or @w
+		@h = h or @h
+		@cacheMaxBounds!
 
 	move: ( x, y ) =>
-		@x += x or 0
-		@y += y or 0
+		@x += x or @x
+		@y += y or @y
+		@cacheMaxBounds!
 
 	stretch: ( w, h ) =>
-		@w += w or 0
-		@h += h or 0
+		@w += w or @w
+		@h += h or @h
+		@cacheMaxBounds!
 
 	containsPoint: ( x, y ) =>
-		return ((x >= @x) and (y >= @y) and (x < @x + @w) and (y < @y + @h))
+		return (x >= @x) and (x < @xMax) and (y >= @y) and (y < @yMax)
