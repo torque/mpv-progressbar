@@ -6,8 +6,10 @@ local chapters, progressBar, barBackground, elapsedTime, remainingTime, hoverTim
 
 if settings['enable-bar']
 	progressBar = ProgressBar animationQueue
+	barCache = ProgressBarCache animationQueue
 	barBackground = ProgressBarBackground animationQueue
 	aggregator\addSubscriber barBackground
+	aggregator\addSubscriber barCache
 	aggregator\addSubscriber progressBar
 
 	mp.add_key_binding "mouse_btn0", "seek-to-mouse", ->

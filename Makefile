@@ -10,6 +10,7 @@ SOURCES += src/Subscriber.moon
 SOURCES += src/TopSubscriber.moon
 SOURCES += src/BarAccent.moon
 SOURCES += src/ProgressBar.moon
+SOURCES += src/ProgressBarCache.moon
 SOURCES += src/ProgressBarBackground.moon
 SOURCES += src/ChapterMarker.moon
 SOURCES += src/Chapters.moon
