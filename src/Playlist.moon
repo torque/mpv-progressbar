@@ -18,7 +18,8 @@ class Playlist extends TopSubscriber
 
 	updatePlaylistInfo: =>
 		title = mp.get_property 'media-title', ''
-		position = mp.get_property_number 'playlist-pos', 0
+		position = mp.get_property_number 'playlist-pos-1', 1
 		total = mp.get_property_number 'playlist-count', 1
-		@line[4] = ([[%d/%d – %s]])\format position+1, total, title
+		playlistString = (total > 1) and '%d/%d - '\format( position, total ) or ''
+		@line[4] = [[%s%s]]\format playlistString, title
 		@needsUpdate = true
