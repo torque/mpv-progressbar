@@ -21,5 +21,7 @@ class Playlist extends TopSubscriber
 		position = mp.get_property_number 'playlist-pos-1', 1
 		total = mp.get_property_number 'playlist-count', 1
 		playlistString = (total > 1) and '%d/%d - '\format( position, total ) or ''
+		if settings['title-print-to-cli']
+			log.warn "Playing: %s%q", playlistString, title
 		@line[4] = [[%s%s]]\format playlistString, title
 		@needsUpdate = true

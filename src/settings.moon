@@ -81,6 +81,10 @@ settings = {
 	-- Title/playlist foreground and background colors. BGR hex.
 	'title-foreground': FG_PLACEHOLDER
 	'title-background': BG_PLACEHOLDER
+	-- This is useful for e.g. leaving behind a record youtube videos
+	-- watched after mpv has closed. This is disabled if `enable-title` is
+	-- false.
+	'title-print-to-cli': true
 
 	--[=[ system time display options ]=]--
 	'enable-system-time': true
