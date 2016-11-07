@@ -1,9 +1,8 @@
 ### progressbar
 
 `progressbar.lua` is a script for [mpv][mpv] that provides a small,
-unintrusive progress bar that persists at the bottom of the video
-window. It takes up two pixels vertically, and the width of the window
-horizontally:
+unintrusive progress bar that persists at the bottom of the video window
+by default, though it can be configured to be hidden.
 
 ![Normal view][normal]
 
@@ -23,8 +22,9 @@ convenient to update if you symlink it in from somewhere else.
 
 #### Configuration
 
-`progressbar.lua` now has a whole bunch of options that can be set
-either on the mpv command line or by writing the file
+`progressbar.lua` has a whole host of options that can be set to change
+the way it displays. These can be set on the mpv command line, but the
+recommended approach is by using the configuration file
 `~~/lua-settings/torque-progressbar.conf`, where `~~` is either `~/.mpv`
 or `~/.config/mpv`, depending on your setup. The defaults are provided
 in `settings.moon`, and are reproduced in config-file-compatible syntax
@@ -47,8 +47,8 @@ mouse_btn0 script-binding progressbar/seek-to-mouse
 #### Building
 
 You must have [moonscript][moonscript] installed (particularly `moonc`,
-the compiler) and GNUMake compatible make. `make` from the root of the
-repository.
+the compiler) and GNUMake compatible make. Run `make` from the root of
+the repository.
 
 [normal]: https://github.com/torque/mpv-progressbar/raw/images/normal.png
 [conf-example]: https://github.com/torque/mpv-progressbar/blob/master/torque-progressbar.conf
