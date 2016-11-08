@@ -37,7 +37,7 @@ settings = {
 	-- [[ bar color options ]] --
 	-- Progress bar foreground color. BGR hex.
 	'bar-foreground': FG_PLACEHOLDER
-	'bar-cache-color': '444444'
+	'bar-cache-color': '515151'
 	'bar-background': BG_PLACEHOLDER
 
 	--[=[ elapsed time options ]=]--
