@@ -46,8 +46,8 @@ if settings['enable-system-time']
 	systemTime = SystemTime animationQueue
 	aggregator\addSubscriber systemTime
 
+notFrameStepping = false
 if settings['pause-indicator']
-	notFrameStepping = false
 	PauseIndicatorWrapper = ( event, paused ) ->
 		if notFrameStepping
 			PauseIndicator animationQueue, aggregator, paused
@@ -77,6 +77,7 @@ initDraw = ->
 		chapters\createMarkers width, height
 	if playlist
 		playlist\updatePlaylistInfo!
+	notFrameStepping = true
 	-- duration is nil for streams of indeterminate length
 	duration = mp.get_property 'duration'
 	if not (streamMode or duration)
