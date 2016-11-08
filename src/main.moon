@@ -2,7 +2,7 @@ aggregator = OSDAggregator!
 animationQueue = AnimationQueue aggregator
 -- This is kind of ugly but I have gone insane and don't care any more.
 -- Watch the rapidly declining quality of this codebase in realtime.
-local chapters, progressBar, barBackground, elapsedTime, remainingTime, hoverTime
+local chapters, progressBar, barCache, barBackground, elapsedTime, remainingTime, hoverTime
 
 if settings['enable-bar']
 	progressBar = ProgressBar animationQueue
@@ -82,6 +82,7 @@ initDraw = ->
 	if not (streamMode or duration)
 		if progressBar
 			aggregator\removeSubscriber progressBar.aggregatorIndex
+			aggregator\removeSubscriber barCache.aggregatorIndex
 			aggregator\removeSubscriber barBackground.aggregatorIndex
 		if chapters
 			aggregator\removeSubscriber chapters.aggregatorIndex
@@ -96,6 +97,7 @@ initDraw = ->
 	elseif streamMode and duration
 		if progressBar
 			aggregator\addSubscriber barBackground
+			aggregator\addSubscriber barCache
 			aggregator\addSubscriber progressBar
 		if chapters
 			aggregator\addSubscriber chapters
