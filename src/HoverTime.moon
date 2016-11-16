@@ -3,7 +3,7 @@ class HoverTime extends BarAccent
 	rightMargin = settings['hover-time-right-margin']
 	leftMargin = settings['hover-time-left-margin']
 
-	new: ( @animationQueue ) =>
+	new: =>
 		super!
 
 		@line = {

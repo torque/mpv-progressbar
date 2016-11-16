@@ -11,8 +11,8 @@ class ProgressBarCache extends Subscriber
 
 	new: ( @animationQueue ) =>
 		super!
-		minHeight = settings['bar-height-inactive']*100
-		maxHeight = settings['bar-height-active']*100
+		minHeight = settings['bar-height-inactive']*50
+		maxHeight = settings['bar-height-active']*50
 
 		@line = {
 			[[{\an1\bord0\c&H%s&\pos(]]\format settings['bar-cache-color'] -- 1

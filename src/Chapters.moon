@@ -2,7 +2,7 @@ class Chapters extends Subscriber
 
 	minHeight = settings['bar-height-inactive']*100
 
-	new: ( @animationQueue ) =>
+	new: =>
 		super!
 
 		@line = { }

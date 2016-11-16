@@ -35,13 +35,13 @@ class Subscriber
 				unless @hovered
 					update = true
 					@hovered = true
-					@animation\interrupt false, @animationQueue
+					@animation\interrupt false
 					@active = true
 			else
 				if @hovered
 					update = true
 					@hovered = false
-					@animation\interrupt true, @animationQueue
+					@animation\interrupt true
 					@animation.finishedCb = @deactivate
 
 			return update

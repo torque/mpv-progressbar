@@ -29,13 +29,13 @@ class Animation
 
 		return @isFinished
 
-	interrupt: ( reverse, queue ) =>
+	interrupt: ( reverse ) =>
 		@finishedCb = nil
 		if reverse != @isReversed
 			@reverse!
 		unless @isRegistered
 			@restart!
-			queue\registerAnimation @
+			AnimationQueue.registerAnimation @
 
 	reverse: =>
 		@isReversed = not @isReversed

@@ -26,12 +26,12 @@ class ProgressBar extends Subscriber
 	updateSize: ( w, h ) =>
 		super w, h
 
-		@line[2] = ([[%d,%d]])\format 0, h
-		@line[8] = ([[%d 0 %d 1 0 1]])\format w, w
+		@line[2] = [[%d,%d]]\format 0, h
+		@line[8] = [[%d 0 %d 1 0 1]]\format w, w
 		return true
 
 	animateHeight: ( animation, value ) =>
-		@line[6] = ([[%g]])\format value
+		@line[6] = [[%g]]\format value
 		@needsUpdate = true
 
 	update: ( inputState ) =>
@@ -40,7 +40,7 @@ class ProgressBar extends Subscriber
 		position = mp.get_property_number 'percent-pos', 0
 		if position != @lastPosition
 			update = true
-			@line[4] = ([[%g]])\format position
+			@line[4] = [[%g]]\format position
 			@lastPosition = position
 
 		return update

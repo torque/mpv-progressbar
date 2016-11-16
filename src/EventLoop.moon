@@ -1,14 +1,15 @@
-class OSDAggregator
+class EventLoop
 
 	new: =>
 		@script = { }
 		@subscribers = { }
-		@inputState = { mouseX: -1, mouseY: -1, mouseInWindow: false, displayRequested: false, mouseDead: true }
+		@inputState = {
+			mouseX: -1, mouseY: -1, mouseInWindow: false, mouseDead: true,
+			displayRequested: false, hideInactive: settings['hide-inactive']
+		}
 		@subscriberCount = 0
 		@w = 0
 		@h = 0
-		@hideInactive = settings['hide-inactive']
-		@needsRedrawAll = false
 
 		@updateTimer = mp.add_periodic_timer settings['redraw-period'], @\update
 
@@ -45,7 +46,7 @@ class OSDAggregator
 	addSubscriber: ( subscriber ) =>
 		return if not subscriber
 		@subscriberCount += 1
-		subscriber.aggregatorIndex = @subscriberCount
+		subscriber.index = @subscriberCount
 		@subscribers[@subscriberCount] = subscriber
 		@script[@subscriberCount] = subscriber\stringify!
 
@@ -55,7 +56,7 @@ class OSDAggregator
 		@subscriberCount -= 1
 
 		for i = index, @subscriberCount
-			@subscribers[i].aggregatorIndex = i
+			@subscribers[i].index = i
 
 	forceResize: =>
 		for index, subscriber in ipairs @subscribers
@@ -69,27 +70,29 @@ class OSDAggregator
 				.mouseDead = false
 
 		w, h = mp.get_osd_size!
-		needsResize = false
 		if w != @w or h != @h
 			@w, @h = w, h
-			needsResize = true
+			@forceResize!
 
-		for sub = 1, @subscriberCount
-			theSub = @subscribers[sub]
-			update = false
-			if theSub\update @inputState
-				update = true
-			if (needsResize and theSub\updateSize( w, h )) or update or @needsRedrawAll
-				needsRedraw = true
-				if @hideInactive and not theSub.active
-					@script[sub] = ""
-				else
-					@script[sub] = theSub\stringify!
+		for index, subscriber in ipairs @subscribers
+			if subscriber.needsUpdate
+				@script[sub] = subscriber\stringify!
+				unless needsRedraw
+					needsRedraw = true
+		-- for sub = 1, @subscriberCount
+		-- 	theSub = @subscribers[sub]
+		-- 	update = false
+		-- 	if theSub\update @inputState
+		-- 		update = true
+		-- 	if (needsResize and theSub\updateSize( w, h )) or update or @needsRedrawAll
+		-- 		needsRedraw = true
+		-- 		if @hideInactive and not theSub.active
+		-- 			@script[sub] = ""
+		-- 		else
+		-- 			@script[sub] = theSub\stringify!
 
-		if needsRedraw == true
+		if needsRedraw
 			mp.set_osd_ass @w, @h, table.concat @script, '\n'
-
-		@needsRedrawAll = false
 
 	pause: ( event, @paused ) =>
 		if @paused
@@ -104,5 +107,4 @@ class OSDAggregator
 			@updateTimer\resume!
 
 	toggleInactiveVisibility: =>
-		@hideInactive = not @hideInactive
-		@needsRedrawAll = true
+		@inputState.hideInactive = not @inputState.hideInactive
