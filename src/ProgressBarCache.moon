@@ -47,15 +47,14 @@ class ProgressBarCache extends Subscriber
 		-- Raw file size, bytes
 		totalSize = mp.get_property_number 'file-size', 0
 		if totalSize != 0
-			-- Current playback stream position, bytes
-			pos = mp.get_property_number 'stream-pos', 0
+			position = mp.get_property_number 'percent-pos', 0
 			-- Amount of cache used, kilobytes.
 			-- This property does not seem to include backward cache, if I am
 			-- reading the documentation correctly. Either way, there doesn't
 			-- appear to be a way to distinguish cache and cache-backbuffer in
 			-- the properties so the point is moot.
 			cacheUsed = mp.get_property_number( 'cache-used', 0 )*1024
-			networkCacheContribution = (cacheUsed + pos)/totalSize
+			networkCacheContribution = cacheUsed/totalSize
 			-- Duration of the video in the demuxer cache, seconds. Manpage
 			-- claims this value isn't reliable, but it gets used by the
 			-- default cache display?
@@ -67,6 +66,6 @@ class ProgressBarCache extends Subscriber
 			demuxerCacheContribution = demuxerCacheDuration/fileDuration
 
 			update = true
-			@line[4] = (networkCacheContribution + demuxerCacheContribution)*100
+			@line[4] = (networkCacheContribution + demuxerCacheContribution)*100 + position
 
 		return update
