@@ -47,7 +47,7 @@ class ProgressBarCache extends Subscriber
 		-- Raw file size, bytes
 		totalSize = mp.get_property_number 'file-size', 0
 		if totalSize != 0
-			position = mp.get_property_number 'percent-pos', 0
+			position = mp.get_property_number 'percent-pos', 0.001
 			-- Amount of cache used, kilobytes.
 			-- This property does not seem to include backward cache, if I am
 			-- reading the documentation correctly. Either way, there doesn't
