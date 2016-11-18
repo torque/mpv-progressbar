@@ -4,7 +4,7 @@ class SystemTime extends TopSubscriber
 	top_margin = settings['system-time-top-margin']
 	time_format = settings['system-time-format']
 
-	new: ( @animationQueue ) =>
+	new: =>
 		super!
 
 		@line = {

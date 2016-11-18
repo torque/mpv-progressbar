@@ -1,6 +1,6 @@
 class TimeElapsed extends BarAccent
 
-	new: ( @animationQueue ) =>
+	new: =>
 		super!
 
 		offscreenPos = settings['elapsed-offscreen-pos']

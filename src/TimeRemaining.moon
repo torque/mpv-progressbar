@@ -1,6 +1,6 @@
 class TimeRemaining extends BarAccent
 
-	new: ( @animationQueue ) =>
+	new: =>
 		super!
 
 		@line = {
