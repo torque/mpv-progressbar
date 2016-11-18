@@ -1,45 +1,12 @@
--- percent-pos
--- file-size -- bytes
--- cache-used -- kilobytes, symmetric cache
+class ProgressBarCache extends BarBase
 
--- duration
--- demuxer-cache-time
-
--- paused-for-cache
--- cache-buffering-state
-class ProgressBarCache extends Subscriber
-
-	new: ( @animationQueue ) =>
+	new: =>
 		super!
-		minHeight = settings['bar-height-inactive']*50
-		maxHeight = settings['bar-height-active']*50
+		@line[1] = @line[1]\format settings['bar-cache-color']
 
-		@line = {
-			[[{\an1\bord0\c&H%s&\pos(]]\format settings['bar-cache-color'] -- 1
-			0                                                              -- 2
-			[[)\fscx]]                                                     -- 3
-			0.001                                                          -- 4
-			[[\fscy]]                                                      -- 5
-			minHeight                                                      -- 6
-			[[\p1}m 0 0 l ]]                                               -- 7
-			0                                                              -- 8
-		}
-
-		@animation = Animation minHeight, maxHeight, 0.25, @\animateHeight
-
-	stringify: =>
-		return table.concat @line
-
-	updateSize: ( w, h ) =>
-		super w, h
-
-		@line[2] = ([[%d,%d]])\format 0, h
-		@line[8] = ([[%d 0 %d 1 0 1]])\format w, w
-		return true
-
-	animateHeight: ( animation, value ) =>
-		@line[6] = ([[%g]])\format value
-		@needsUpdate = true
+		-- minHeight = settings['bar-height-inactive']*50
+		-- maxHeight = settings['bar-height-active']*50
+		-- @animation = Animation minHeight, maxHeight, 0.25, @\animateHeight
 
 	update: ( inputState ) =>
 		update = super inputState
@@ -66,6 +33,6 @@ class ProgressBarCache extends Subscriber
 			demuxerCacheContribution = demuxerCacheDuration/fileDuration
 
 			update = true
-			@line[4] = (networkCacheContribution + demuxerCacheContribution)*100 + position
+			@line[6] = (networkCacheContribution + demuxerCacheContribution)*100 + position
 
 		return update
