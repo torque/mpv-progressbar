@@ -1,4 +1,4 @@
-class BarBase extends Subscriber
+class BarBase extends UIElement
 	minHeight = settings['bar-height-inactive']*100
 	maxHeight = settings['bar-height-active']*100
 

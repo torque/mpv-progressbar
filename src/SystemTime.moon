@@ -1,4 +1,4 @@
-class SystemTime extends TopSubscriber
+class SystemTime extends UIElement
 
 	offscreen_position = settings['system-time-offscreen-pos']
 	top_margin = settings['system-time-top-margin']

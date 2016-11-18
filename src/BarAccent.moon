@@ -1,4 +1,4 @@
-class BarAccent extends Subscriber
+class BarAccent extends UIElement
 	barSize = settings['bar-height-active']
 
 	updateSize: ( w, h ) =>

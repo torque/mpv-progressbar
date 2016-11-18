@@ -1,4 +1,4 @@
-class Chapters extends Subscriber
+class Chapters extends UIElement
 
 	minHeight = settings['bar-height-inactive']*100
 
