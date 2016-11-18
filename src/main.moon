@@ -36,10 +36,10 @@ if settings['enable-hover-time']
 	hoverTime = HoverTime!
 	eventLoop\addSubscriber hoverTime
 
-playlist = nil
+title = nil
 if settings['enable-title']
-	playlist = Playlist!
-	eventLoop\addSubscriber playlist
+	title = Title!
+	eventLoop\addSubscriber title
 
 if settings['enable-system-time']
 	systemTime = SystemTime!
@@ -74,8 +74,8 @@ initDraw = ->
 	width, height = mp.get_osd_size!
 	if chapters
 		chapters\createMarkers width, height
-	if playlist
-		playlist\updatePlaylistInfo!
+	if title
+		title\updatePlaylistInfo!
 	notFrameStepping = true
 	-- duration is nil for streams of indeterminate length
 	duration = mp.get_property 'duration'

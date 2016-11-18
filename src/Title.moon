@@ -1,6 +1,6 @@
-class Playlist extends TopSubscriber
+class Title extends TopSubscriber
 
-	new: ( @animationQueue ) =>
+	new: =>
 		super!
 		offscreenPos = settings['title-offscreen-pos']
 		@line = {

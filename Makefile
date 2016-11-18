@@ -19,7 +19,7 @@ SOURCES += src/TimeElapsed.moon
 SOURCES += src/TimeRemaining.moon
 SOURCES += src/HoverTime.moon
 SOURCES += src/PauseIndicator.moon
-SOURCES += src/Playlist.moon
+SOURCES += src/Title.moon
 SOURCES += src/SystemTime.moon
 SOURCES += src/main.moon
 
