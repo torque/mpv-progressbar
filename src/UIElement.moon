@@ -5,28 +5,19 @@ class UIElement
 	new: =>
 		@needsUpdate = false
 		@active = false
-		@deactivate = ->
-			@active = false
 
 	stringify: =>
-		return "" if not @active
-		return table.concat @line
+		if not @active
+			return ""
+		else
+			return table.concat @line
 
-	update: ( inputState ) =>
-		with inputState
-			update = @needsUpdate
-			@needsUpdate = false
-			if (.mouseInWindow or .displayRequested) and @hoverCondition inputState
-				unless @hovered
-					update = true
-					@hovered = true
-					@animation\interrupt false
-					@active = true
-			else
-				if @hovered
-					update = true
-					@hovered = false
-					@animation\interrupt true
-					@animation.finishedCb = @deactivate
+	activate: ( activate ) =>
+		if activate == true
+			@animation\interrupt false
+		else
+			@animation\interrupt true
+			@animation.finishedCb = ->
+				@active = false
 
-			return update
+		@active = activate

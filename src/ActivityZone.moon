@@ -3,7 +3,7 @@ class ActivityZone extends Rect
 	addSubscriber: ( subscriber ) =>
 		table.insert @subscribers, subscriber
 
-	hitCheck: ( inputState ) =>
+	activityCheck: ( inputState ) =>
 		if inputState.displayRequested
 			return true
 
@@ -12,4 +12,19 @@ class ActivityZone extends Rect
 		else
 			return false
 
+	update: ( inputState, needsResize ) =>
+		nowActive = @activityCheck inputState
+
+		if @active != nowActive
+			@active = nowActive
+			for id, element in ipairs @elements
+				if needsResize == true
+					@element.resize!
+				@element.activate nowActive
+				@element.update!
+		else
+			for id, element in ipairs @elements
+				if needsResize == true
+					@element.resize!
+				@element.update!
 

@@ -71,11 +71,17 @@ class EventLoop
 
 		needsResize = Window\update!
 
-		for index, subscriber in ipairs @subscribers
+		needsRedraw = false
+		for index, zone in @activityZones
+			if zone\update( @inputState, needsResize ) and not needsRedraw
+				needsRedraw = true
+
+		if needsRedraw
+			AnimationQueue.animate!
+			for index, subscriber in ipairs @subscribers
 			if subscriber.needsUpdate
 				@script[sub] = subscriber\stringify!
-				unless needsRedraw
-					needsRedraw = true
+			mp.set_osd_ass @w, @h, table.concat @script, '\n'
 		-- for sub = 1, @subscriberCount
 		-- 	theSub = @subscribers[sub]
 		-- 	update = false
@@ -87,9 +93,6 @@ class EventLoop
 		-- 			@script[sub] = ""
 		-- 		else
 		-- 			@script[sub] = theSub\stringify!
-
-		if needsRedraw
-			mp.set_osd_ass @w, @h, table.concat @script, '\n'
 
 	pause: ( event, @paused ) =>
 		if @paused
