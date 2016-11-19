@@ -1,33 +1,30 @@
--- This is now an ugly singleton thing.
 class AnimationQueue
 
-	list = {}
-	animationCount = 0
+	animationList = {}
 
 	@registerAnimation: ( animation ) ->
-		@animationCount += 1
-		animation.index = @animationCount
+		table.insert animationList, animation
+		animation.index = #animationList
 		animation.isRegistered = true
-		table.insert @list, animation
 
 	@unregisterAnimation: ( animation ) ->
-		@unregisterAnimationByIndex animation.index
+		AnimationQueue.unregisterAnimationByIndex animation.index
 
 	@unregisterAnimationByIndex: ( index ) ->
-		@animationCount -= 1
-		animation = table.remove @list, index
+		animation = table.remove animationList, index
 		animation.index = nil
 		animation.isRegistered = false
+		for i = index, #animationList
+			animationList[i].index = i
 
 	@destroyAnimationStack: ->
-		currentAnimation = @list
-		for i = @animationCount, 1, -1
-			@unregisterAnimationByIndex i
+		for i = #animationList, 1, -1
+			AnimationQueue.unregisterAnimationByIndex i
 
 	@animate: ->
-		if @animationCount == 0
+		if #animationList == 0
 			return
 		currentTime = mp.get_time!
-		for i = @animationCount, 1, -1
-			if @list[i]\update currentTime
-				@unregisterAnimationByIndex i
+		for i = #animationList, 1, -1
+			if animationList[i]\update currentTime
+				AnimationQueue.unregisterAnimationByIndex i
