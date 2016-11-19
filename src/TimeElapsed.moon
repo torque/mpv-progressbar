@@ -14,8 +14,8 @@ class TimeElapsed extends BarAccent
 		@position = offscreenPos
 		@animation = Animation offscreenPos, settings['elapsed-left-margin'], 0.25, @\animatePos, nil, 0.25
 
-	updateSize: ( w, h ) =>
-		super w, h
+	updateSize: =>
+		super!
 		@line[2] = ([[%g,%g]])\format @position, @yPos - settings['elapsed-bottom-margin']
 		return true
 

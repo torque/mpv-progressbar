@@ -2,6 +2,7 @@
 SOURCES := src/requires.moon
 SOURCES += src/log.moon
 SOURCES += src/settings.moon
+SOURCES += src/Window.moon
 SOURCES += src/EventLoop.moon
 SOURCES += src/AnimationQueue.moon
 SOURCES += src/Animation.moon

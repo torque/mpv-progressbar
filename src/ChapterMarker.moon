@@ -25,8 +25,8 @@ class ChapterMarker
 	stringify: =>
 		return table.concat @line
 
-	updateSize: ( w, h ) =>
-		@line[2] = [[%d,%d]]\format math.floor( @position*w ), h
+	updateSize: =>
+		@line[2] = [[%d,%d]]\format math.floor( @position*Window.w ), Window.h
 		return true
 
 	animateSize: ( value ) =>

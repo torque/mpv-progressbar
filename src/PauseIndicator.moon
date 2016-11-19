@@ -39,8 +39,8 @@ class PauseIndicator
 	stringify: =>
 		return table.concat @line
 
-	updateSize: ( w, h ) =>
-		w, h = 0.5*w, 0.5*h
+	updateSize: =>
+		w, h = 0.5*Window.w, 0.5*Window.h
 		@line[6]  = [[%g,%g]]\format w, h
 		@line[14] = [[%g,%g]]\format w, h
 		return true

@@ -69,10 +69,7 @@ class EventLoop
 			if .mouseDead and (oldX != .mouseX or oldY != .mouseY)
 				.mouseDead = false
 
-		w, h = mp.get_osd_size!
-		if w != @w or h != @h
-			@w, @h = w, h
-			@forceResize!
+		needsResize = Window\update!
 
 		for index, subscriber in ipairs @subscribers
 			if subscriber.needsUpdate

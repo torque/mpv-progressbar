@@ -24,10 +24,6 @@ class HoverTime extends BarAccent
 		@line[4] = ([[%02X]])\format value
 		@needsUpdate = true
 
-	updateSize: ( w, h ) =>
-		super w, h
-		@yposChanged = true
-
 	hoverCondition: ( inputState ) =>
 		with inputState
 			return .mouseInWindow and not .mouseDead and @zone\containsPoint .mouseX, .mouseY
@@ -38,7 +34,7 @@ class HoverTime extends BarAccent
 
 			if update or @hovered
 				if .mouseX != @lastX or @sizeChanged
-					@line[2] = ("%g,%g")\format math.min( @zone.w - rightMargin, math.max( leftMargin, .mouseX ) ), @yPos - settings['hover-time-bottom-margin']
+					@line[2] = ("%g,%g")\format math.min( Window.w - rightMargin, math.max( leftMargin, .mouseX ) ), @yPos - settings['hover-time-bottom-margin']
 					@sizeChanged = false
 
 					@lastX = .mouseX

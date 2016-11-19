@@ -14,14 +14,14 @@ class TimeRemaining extends BarAccent
 		@position = offscreenPos
 		@animation = Animation offscreenPos, settings['remaining-right-margin'], 0.25, @\animatePos, nil, 0.25
 
-	updateSize: ( w, h ) =>
-		super w, h
-		@position = @zone.w - @animation.value
+	updateSize: =>
+		super!
+		@position = Window.w - @animation.value
 		@line[2] = ([[%g,%g]])\format @position, @yPos - settings['remaining-bottom-margin']
 		return true
 
 	animatePos: ( animation, value ) =>
-		@position = @zone.w - value
+		@position = Window.w - value
 		@line[2] = ([[%g,%g]])\format @position, @yPos - settings['remaining-bottom-margin']
 		@needsUpdate = true
 

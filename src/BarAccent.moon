@@ -1,10 +1,8 @@
 class BarAccent extends UIElement
 	barSize = settings['bar-height-active']
 
-	updateSize: ( w, h ) =>
-		super w, h
-		@yPos = h - barSize
-		@sizeChanged = true
+	updateSize: =>
+		@yPos = Window.h - barSize
 
 	-- this is really weird because barSize is a local property of this
 	-- class, which means that if this method is called on a single
