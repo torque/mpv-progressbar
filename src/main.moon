@@ -18,7 +18,7 @@ if settings['enable-bar']
 				mp.commandv "seek", x*100/progressBar.zone.w, "absolute-percent+#{settings['seek-precision']}"
 
 	mp.add_key_binding "c", "toggle-inactive-bar", ->
-		eventLoop\toggleInactiveVisibility!
+		BarBase.toggleInactiveVisibility!
 
 if settings['enable-chapter-markers']
 	chapters = Chapters!

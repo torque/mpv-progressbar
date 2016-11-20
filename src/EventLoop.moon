@@ -5,11 +5,8 @@ class EventLoop
 		@subscribers = { }
 		@inputState = {
 			mouseX: -1, mouseY: -1, mouseInWindow: false, mouseDead: true,
-			displayRequested: false, hideInactive: settings['hide-inactive']
+			displayRequested: false
 		}
-		@subscriberCount = 0
-		@w = 0
-		@h = 0
 
 		@updateTimer = mp.add_periodic_timer settings['redraw-period'], @\update
 
