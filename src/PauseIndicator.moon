@@ -1,5 +1,7 @@
 class PauseIndicator
 
+	scaleMultiplier = settings['pause-indicator-scale']
+
 	new: ( queue, @aggregator, paused ) =>
 		w, h = mp.get_osd_size!
 		w, h = 0.5*w, 0.5*h
@@ -47,11 +49,10 @@ class PauseIndicator
 	update: ->
 		return true
 
-	scaleTags = [[\fscx%g\fscy%g]]
 	animate: ( animation, value ) =>
-		scale = value*50 + 100
-		scaleStr = scaleTags\format scale, scale
-		alphaStr = ("%02X")\format value*255
+		scale = (value*50 + 100)*scaleMultiplier
+		scaleStr = [[\fscx%g\fscy%g]]\format scale, scale
+		alphaStr = '%02X'\format value*value*255
 		@line[2]  = scaleStr
 		@line[10] = scaleStr
 		@line[4]  = alphaStr

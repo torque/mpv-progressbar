@@ -100,6 +100,10 @@ settings = {
 	--[=[ pause indicator options ]=]--
 	-- Flash an icon in the center of the screen when pausing/unpausing.
 	'pause-indicator': true
+	-- Acts as a multiplier for the scale of the pause indicator. Number.
+	-- For example, a value of 2 would make it twice the default size,
+	-- whereas a value of 0.5 would make it half the default size.
+	'pause-indicator-scale': 1
 	-- Pause indicator foreground and background colors. BGR hex.
 	'pause-indicator-foreground': FG_PLACEHOLDER
 	'pause-indicator-background': BG_PLACEHOLDER
