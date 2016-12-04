@@ -13,7 +13,8 @@ class Chapters extends Subscriber
 		@line = { }
 		@markers = { }
 
-		totalTime = mp.get_property_number 'length', 0
+		-- small number to avoid division by 0
+		totalTime = mp.get_property_number 'duration', 0.01
 		chapters = mp.get_property_native 'chapter-list', { }
 
 		for chapter in *chapters
