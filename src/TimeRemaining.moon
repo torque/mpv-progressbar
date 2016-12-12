@@ -25,10 +25,8 @@ class TimeRemaining extends BarAccent
 		@line[2] = ([[%g,%g]])\format @position, @yPos - settings['remaining-bottom-margin']
 		@needsUpdate = true
 
-	update: ( inputState ) =>
-		update = super inputState
-
-		if update or @hovered
+	update: =>
+		if @active
 			timeRemaining = math.floor mp.get_property_number 'playtime-remaining', 0
 			if timeRemaining != @lastTime
 				update = true

@@ -1,7 +1,7 @@
 class ActivityZone extends Rect
 
-	addSubscriber: ( subscriber ) =>
-		table.insert @subscribers, subscriber
+	addUIElement: ( element ) =>
+		table.insert @elements, element
 
 	activityCheck: ( inputState ) =>
 		if inputState.displayRequested

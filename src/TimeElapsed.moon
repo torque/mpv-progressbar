@@ -17,7 +17,7 @@ class TimeElapsed extends BarAccent
 	updateSize: =>
 		super!
 		@line[2] = ([[%g,%g]])\format @position, @yPos - settings['elapsed-bottom-margin']
-		return true
+		@needsUpdate = true
 
 	animatePos: ( animation, value ) =>
 		@position = value

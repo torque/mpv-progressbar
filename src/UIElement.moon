@@ -1,7 +1,5 @@
 class UIElement
 
-	active_height = settings['hover-zone-height']
-
 	new: =>
 		@needsUpdate = false
 		@active = false

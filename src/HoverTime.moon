@@ -24,10 +24,6 @@ class HoverTime extends BarAccent
 		@line[4] = ([[%02X]])\format value
 		@needsUpdate = true
 
-	hoverCondition: ( inputState ) =>
-		with inputState
-			return .mouseInWindow and not .mouseDead and @zone\containsPoint .mouseX, .mouseY
-
 	update: ( inputState ) =>
 		with inputState
 			update = super inputState
