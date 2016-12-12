@@ -8,8 +8,7 @@ class ProgressBarCache extends BarBase
 		-- maxHeight = settings['bar-height-active']*50
 		-- @animation = Animation minHeight, maxHeight, 0.25, @\animateHeight
 
-	update: ( inputState ) =>
-		update = super inputState
+	update: =>
 
 		-- Raw file size, bytes
 		totalSize = mp.get_property_number 'file-size', 0
