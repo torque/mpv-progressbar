@@ -4,7 +4,7 @@ class TimeRemaining extends BarAccent
 		super!
 
 		@line = {
-			[[{\fn%s\bord2\fs%d\pos(]]\format settings.font, settings['time-font-size']
+			[[{\fn%s\bord%g\fs%d\pos(]]\format settings.font, settings['time-font-border'], settings['time-font-size']
 			[[-100,0]]
 			[[)\c&H%s&\3c&H%s&\an3}]]\format settings['remaining-foreground'], settings['remaining-background']
 			0

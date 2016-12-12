@@ -5,7 +5,7 @@ class TimeElapsed extends BarAccent
 
 		offscreenPos = settings['elapsed-offscreen-pos']
 		@line = {
-			[[{\fn%s\bord2\fs%d\pos(]]\format settings.font, settings['time-font-size']
+			[[{\fn%s\bord%g\fs%d\pos(]]\format settings.font, settings['time-font-border'], settings['time-font-size']
 			[[%g,0]]\format offscreenPos
 			[[)\c&H%s&\3c&H%s&\an1}]]\format settings['elapsed-foreground'], settings['elapsed-background']
 			0

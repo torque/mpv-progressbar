@@ -4,7 +4,7 @@ class Title extends TopSubscriber
 		super!
 		offscreenPos = settings['title-offscreen-pos']
 		@line = {
-			[[{\fn%s\bord2\fs%d\pos(]]\format settings.font, settings['title-font-size']
+			[[{\fn%s\bord%g\fs%d\pos(]]\format settings.font, settings['title-font-border'], settings['title-font-size']
 			[[%g,%g]]\format settings['title-left-margin'], offscreenPos
 			[[)\c&H%s&\3c&H%s&\an7}]]\format settings['title-foreground'], settings['title-background']
 			0

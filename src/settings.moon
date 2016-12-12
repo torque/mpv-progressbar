@@ -78,6 +78,7 @@ settings = {
 	'title-top-margin': 0
 	-- Font size for the title. Integer.
 	'title-font-size': 30
+	'title-font-border': 2
 	-- Title/playlist foreground and background colors. BGR hex.
 	'title-foreground': FG_PLACEHOLDER
 	'title-background': BG_PLACEHOLDER
@@ -94,6 +95,7 @@ settings = {
 	'system-time-right-margin': 4
 	'system-time-top-margin': 0
 	'system-time-font-size': 30
+	'system-time-font-border': 2
 	'system-time-foreground': FG_PLACEHOLDER
 	'system-time-background': BG_PLACEHOLDER
 
@@ -143,8 +145,10 @@ settings = {
 	'font': 'Source Sans Pro Semibold'
 	-- Font size for time elapsed and remaining.
 	'time-font-size': 30
+	'time-font-border': 2
 	-- Font size for hover time.
 	'hover-time-font-size': 26
+	'hover-time-font-border': 2
 	-- These primarily affect animations. If the script thinks the items
 	-- are off screen, they won't be drawn. Positive numbers will look
 	-- goofy.
