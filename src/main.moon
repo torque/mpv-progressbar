@@ -80,6 +80,7 @@ initDraw = ->
 	-- duration is nil for streams of indeterminate length
 	duration = mp.get_property 'duration'
 	if not (streamMode or duration)
+		BarAccent.changeBarSize 0
 		if progressBar
 			eventLoop\removeSubscriber progressBar.index
 			eventLoop\removeSubscriber barCache.index
@@ -90,11 +91,9 @@ initDraw = ->
 			eventLoop\removeSubscriber hoverTime.index
 		if remainingTime
 			eventLoop\removeSubscriber remainingTime.index
-		if elapsedTime
-			elapsedTime\changeBarSize 0
-			eventLoop\forceResize!
 		streamMode = true
 	elseif streamMode and duration
+		BarAccent.changeBarSize settings['bar-height-active']
 		if progressBar
 			eventLoop\addSubscriber barBackground
 			eventLoop\addSubscriber barCache
@@ -105,8 +104,6 @@ initDraw = ->
 			eventLoop\addSubscriber hoverTime
 		if remainingTime
 			eventLoop\addSubscriber remainingTime
-		if elapsedTime
-			elapsedTime\changeBarSize settings['bar-height-active']
 		eventLoop\forceResize!
 		streamMode = false
 

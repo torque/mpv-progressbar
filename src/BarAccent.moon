@@ -9,5 +9,5 @@ class BarAccent extends UIElement
 	-- instance of a child of this class, it affects all instances of all
 	-- children of this class. Really good programming technique here, and
 	-- I'm sure this won't come back to bite me.
-	changeBarSize: ( size ) =>
+	@changeBarSize: ( size ) ->
 		barSize = size
