@@ -9,8 +9,7 @@ class Title extends TopSubscriber
 			[[)\c&H%s&\3c&H%s&\an7}]]\format settings['title-foreground'], settings['title-background']
 			0
 		}
-
-		@animation = Animation offscreenPos, settings['title-top-margin'], 0.25, @\animatePos, nil, 0.25
+		@animation = Animation offscreenPos, settings['title-top-margin'], @animationDuration, @\animatePos, nil, 0.25
 
 	animatePos: ( animation, value ) =>
 		@line[2] = [[%g,%g]]\format settings['title-left-margin'], value

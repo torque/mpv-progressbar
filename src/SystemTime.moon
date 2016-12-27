@@ -15,7 +15,7 @@ class SystemTime extends UIElement
 		}
 		@lastTime = -1
 		@position = offscreen_position
-		@animation = Animation offscreen_position, settings['system-time-right-margin'], 0.25, @\animatePos, nil, 0.25
+		@animation = Animation offscreen_position, settings['system-time-right-margin'], @animationDuration, @\animatePos, nil, 0.25
 
 	updateSize: ( w, h ) =>
 		super w, h

@@ -1,6 +1,7 @@
 class UIElement
 
 	new: =>
+		@animationDuration = settings['animation-duration']
 		@needsUpdate = false
 		@active = false
 
@@ -11,11 +12,12 @@ class UIElement
 			return table.concat @line
 
 	activate: ( activate ) =>
-		if activate == true
-			@animation\interrupt false
-		else
-			@animation\interrupt true
-			@animation.finishedCb = ->
-				@active = false
+		if @animationDuration > 0
+			if activate == true
+				@animation\interrupt false
+			else
+				@animation\interrupt true
+				@animation.finishedCb = ->
+					@active = false
 
 		@active = activate

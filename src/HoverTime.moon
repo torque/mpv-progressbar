@@ -18,7 +18,7 @@ class HoverTime extends BarAccent
 		@lastTime = 0
 		@lastX = -1
 		@position = -100
-		@animation = Animation 255, 0, 0.25, @\animateAlpha
+		@animation = Animation 255, 0, @animationDuration, @\animateAlpha
 
 	animateAlpha: ( animation, value ) =>
 		@line[4] = ([[%02X]])\format value

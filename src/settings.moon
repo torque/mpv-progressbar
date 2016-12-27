@@ -137,6 +137,7 @@ settings = {
 	-- update speed appears to be locked to the video framerate though, so
 	-- even with a small value this may end up looking fairly jerky.
 	'redraw-period': 0.03
+	'animation-duration': 0.25
 
 	--[=[ /!\ FONT SIZE/METRICS STUFF. CHANGE AT YOUR OWN RISK /!\ ]=]--
 	-- Font for displaying the title and times. Changing this may warrant

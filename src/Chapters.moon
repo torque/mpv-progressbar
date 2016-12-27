@@ -7,7 +7,7 @@ class Chapters extends UIElement
 
 		@line = { }
 		@markers = { }
-		@animation = Animation 0, 1, 0.25, @\animateSize
+		@animation = Animation 0, 1, @animationDuration, @\animateSize
 
 	createMarkers: ( w, h ) =>
 		@line = { }

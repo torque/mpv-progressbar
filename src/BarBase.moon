@@ -20,7 +20,7 @@ class BarBase extends UIElement
 			0                           -- 8
 		}
 
-		@animation = Animation minHeight, maxHeight, 0.25, @\animateHeight
+		@animation = Animation minHeight, maxHeight, @animationDuration, @\animateHeight
 
 	stringify: =>
 		if hideInactive and not @active

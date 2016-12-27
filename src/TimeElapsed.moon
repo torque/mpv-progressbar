@@ -12,7 +12,7 @@ class TimeElapsed extends BarAccent
 		}
 		@lastTime = -1
 		@position = offscreenPos
-		@animation = Animation offscreenPos, settings['elapsed-left-margin'], 0.25, @\animatePos, nil, 0.25
+		@animation = Animation offscreenPos, settings['elapsed-left-margin'], @animationDuration, @\animatePos, nil, 0.25
 
 	updateSize: =>
 		super!
