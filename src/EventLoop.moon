@@ -2,7 +2,8 @@ class EventLoop
 
 	new: =>
 		@script = { }
-		@subscribers = { }
+		@subscribers = Stack!
+		@activityZones = Stack!
 		@inputState = {
 			mouseX: -1, mouseY: -1, mouseInWindow: false, mouseDead: true,
 			displayRequested: false
@@ -40,24 +41,30 @@ class EventLoop
 						@inputState.displayRequested = false,
 			{ complex: true }
 
+	addZone: ( zone ) =>
+		if zone == nil
+			return
+		@activityZones\insert zone
+
+	removeZone: ( zone ) =>
+		if zone == nil
+			return
+		@activityZones\remove zone
+
 	addSubscriber: ( subscriber ) =>
-		return if not subscriber
-		@subscriberCount += 1
-		subscriber.index = @subscriberCount
-		@subscribers[@subscriberCount] = subscriber
-		@script[@subscriberCount] = subscriber\stringify!
+		if subscriber == nil
+			return
+		@subscribers\insert subscriber
+		table.insert @script, ''
 
-	removeSubscriber: ( index ) =>
-		table.remove @subscribers, index
-		table.remove @script, index
-		@subscriberCount -= 1
-
-		for i = index, @subscriberCount
-			@subscribers[i].index = i
-
-	forceResize: =>
-		for index, subscriber in ipairs @subscribers
-			subscriber\updateSize @w, @h
+	removeSubscriber: ( subscriber ) =>
+		if subscriber == nil
+			return
+		-- this is kind of janky as it relies on an implementation detail of Stack
+		-- (i.e. that it stores the element index in the under the hashtable key of
+		-- the stack instance itself)
+		table.remove @script, subscriber[@subscribers]
+		@subscribers\remove subscriber
 
 	update: ( needsRedraw ) =>
 		with @inputState
@@ -76,9 +83,16 @@ class EventLoop
 		if needsRedraw
 			AnimationQueue.animate!
 			for index, subscriber in ipairs @subscribers
-			if subscriber.needsUpdate
-				@script[sub] = subscriber\stringify!
-			mp.set_osd_ass @w, @h, table.concat @script, '\n'
+				if subscriber.needsUpdate
+					@script[index] = subscriber\stringify!
+			mp.set_osd_ass Window.w, Window.h, table.concat @script, '\n'
+
+		-- 		@script[sub] = subscriber\stringify!
+		-- for index, subscriber in ipairs @subscribers
+		-- 	if subscriber.needsUpdate
+		-- 		@script[sub] = subscriber\stringify!
+		-- 		unless needsRedraw
+		-- 			needsRedraw = true
 		-- for sub = 1, @subscriberCount
 		-- 	theSub = @subscribers[sub]
 		-- 	update = false
@@ -91,17 +105,14 @@ class EventLoop
 		-- 		else
 		-- 			@script[sub] = theSub\stringify!
 
-	pause: ( event, @paused ) =>
-		if @paused
-			@updateTimer\stop!
-		else
-			@updateTimer\resume!
+	-- pause: ( event, @paused ) =>
+	-- 	if @paused
+	-- 		@updateTimer\stop!
+	-- 	else
+	-- 		@updateTimer\resume!
 
-	forceUpdate: =>
-		@updateTimer\kill!
-		@update true
-		unless @paused
-			@updateTimer\resume!
-
-	toggleInactiveVisibility: =>
-		@inputState.hideInactive = not @inputState.hideInactive
+	-- forceUpdate: =>
+	-- 	@updateTimer\kill!
+	-- 	@update true
+	-- 	unless @paused
+	-- 		@updateTimer\resume!
