@@ -2,7 +2,7 @@ class ProgressBar extends BarBase
 
 	new: =>
 		super!
-		@line[1] = @line[1]\format settings['bar-foreground']
+		@line[7] = @line[7]\format settings['bar-foreground-style']
 		@lastPosition = 0
 
 	update: ( inputState ) =>

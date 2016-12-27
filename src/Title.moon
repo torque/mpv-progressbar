@@ -4,9 +4,9 @@ class Title extends TopSubscriber
 		super!
 		offscreenPos = settings['title-offscreen-pos']
 		@line = {
-			[[{\fn%s\bord%g\fs%d\pos(]]\format settings.font, settings['title-font-border'], settings['title-font-size']
+			[[{\pos(]]
 			[[%g,%g]]\format settings['title-left-margin'], offscreenPos
-			[[)\c&H%s&\3c&H%s&\an7}]]\format settings['title-foreground'], settings['title-background']
+			[[)\an7%s%s}]]\format settings['default-style'], settings['title-style']
 			0
 		}
 		@animation = Animation offscreenPos, settings['title-top-margin'], @animationDuration, @\animatePos, nil, 0.25

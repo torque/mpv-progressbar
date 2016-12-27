@@ -2,11 +2,7 @@ class ProgressBarCache extends BarBase
 
 	new: =>
 		super!
-		@line[1] = @line[1]\format settings['bar-cache-color']
-
-		-- minHeight = settings['bar-height-inactive']*50
-		-- maxHeight = settings['bar-height-active']*50
-		-- @animation = Animation minHeight, maxHeight, 0.25, @\animateHeight
+		@line[7] = @line[7]\format settings['bar-cache-style']
 
 	update: =>
 

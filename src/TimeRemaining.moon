@@ -3,13 +3,13 @@ class TimeRemaining extends BarAccent
 	new: =>
 		super!
 
+		offscreenPos = settings['remaining-offscreen-pos']
 		@line = {
-			[[{\fn%s\bord%g\fs%d\pos(]]\format settings.font, settings['time-font-border'], settings['time-font-size']
-			[[-100,0]]
-			[[)\c&H%s&\3c&H%s&\an3}]]\format settings['remaining-foreground'], settings['remaining-background']
+			[[{\pos(]]
+			[[%g,0]]\format offscreenPos
+			[[)\an3%s%s}]]\format settings['default-style'], settings['remaining-style']
 			0
 		}
-		offscreenPos = settings['remaining-offscreen-pos']
 		@lastTime = -1
 		@position = offscreenPos
 		@animation = Animation offscreenPos, settings['remaining-right-margin'], @animationDuration, @\animatePos, nil, 0.25

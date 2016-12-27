@@ -3,32 +3,29 @@ class PauseIndicator
 	scaleMultiplier = settings['pause-indicator-scale']
 
 	new: ( @eventLoop, paused ) =>
-		w, h = mp.get_osd_size!
-		w, h = 0.5*w, 0.5*h
+		w, h = 0.5*Window.w, 0.5*Window.h
 		@line = {
-			[[{\an5\bord0\c&H%s&]]\format settings['pause-indicator-background']
-			[[\fscx0\fscy0]]           --  2
-			[[\alpha&H]]               --  3
-			0                          --  4
-			[[&\pos(]]                 --  5
-			[[%g,%g]]\format w, h      --  6
-			[[)\p1}]]                  --  7
-			0                          --  8
-			[[{\an5\bord0\c&H%s&]]\format settings['pause-indicator-foreground']
-			[[\fscx0\fscy0]]           -- 10
-			[[\alpha&H]]               -- 11
-			0                          -- 12
-			[[&\pos(]]                 -- 13
-			[[%g,%g]]\format w, h      -- 14
-			[[)\p1}]]                  -- 15
-			0                          -- 16
+			[[{\fscx0\fscy0]]          --  1
+			[[\alpha&H]]               --  2
+			0                          --  3
+			[[&\pos(]]                 --  4
+			[[%g,%g]]\format w, h      --  5
+			[[)\an5\bord0%s\p1}]]\format settings['pause-indicator-background-style']
+			0                          --  7
+			[[{\fscx0\fscy0]]          --  8
+			[[\alpha&H]]               --  9
+			0                          -- 10
+			[[&\pos(]]                 -- 11
+			[[%g,%g]]\format w, h      -- 12
+			[[)\an5\bord0%s\p1}]]\format settings['pause-indicator-foreground-style']
+			0                          -- 14
 		}
 		if paused
-			@line[8]  = 'm 75 37.5 b 75 58.21 58.21 75 37.5 75 16.79 75 0 58.21 0 37.5 0 16.79 16.79 0 37.5 0 58.21 0 75 16.79 75 37.5 m 23 20 l 23 55 33 55 33 20 m 42 20 l 42 55 52 55 52 20\n'
-			@line[16] = 'm 0 0 m 75 75 m 23 20 l 23 55 33 55 33 20 m 42 20 l 42 55 52 55 52 20'
+			@line[7]  = 'm 75 37.5 b 75 58.21 58.21 75 37.5 75 16.79 75 0 58.21 0 37.5 0 16.79 16.79 0 37.5 0 58.21 0 75 16.79 75 37.5 m 23 20 l 23 55 33 55 33 20 m 42 20 l 42 55 52 55 52 20\n'
+			@line[14] = 'm 0 0 m 75 75 m 23 20 l 23 55 33 55 33 20 m 42 20 l 42 55 52 55 52 20'
 		else
-			@line[8]  = 'm 75 37.5 b 75 58.21 58.21 75 37.5 75 16.79 75 0 58.21 0 37.5 0 16.79 16.79 0 37.5 0 58.21 0 75 16.79 75 37.5 m 25.8333 17.18 l 25.8333 57.6 60.8333 37.39\n'
-			@line[16] = 'm 0 0 m 75 75 m 25.8333 17.18 l 25.8333 57.6 60.8333 37.39'
+			@line[7]  = 'm 75 37.5 b 75 58.21 58.21 75 37.5 75 16.79 75 0 58.21 0 37.5 0 16.79 16.79 0 37.5 0 58.21 0 75 16.79 75 37.5 m 25.8333 17.18 l 25.8333 57.6 60.8333 37.39\n'
+			@line[14] = 'm 0 0 m 75 75 m 25.8333 17.18 l 25.8333 57.6 60.8333 37.39'
 
 		@animationCb = @\animate
 		@finishedCb = @\destroy
@@ -41,8 +38,8 @@ class PauseIndicator
 
 	updateSize: =>
 		w, h = 0.5*Window.w, 0.5*Window.h
-		@line[6]  = [[%g,%g]]\format w, h
-		@line[14] = [[%g,%g]]\format w, h
+		@line[5]  = [[%g,%g]]\format w, h
+		@line[12] = [[%g,%g]]\format w, h
 		return true
 
 	update: ->
@@ -50,12 +47,12 @@ class PauseIndicator
 
 	animate: ( animation, value ) =>
 		scale = (value*50 + 100)*scaleMultiplier
-		scaleStr = [[\fscx%g\fscy%g]]\format scale, scale
+		scaleStr = [[{\fscx%g\fscy%g]]\format scale, scale
 		alphaStr = '%02X'\format value*value*255
-		@line[2]  = scaleStr
-		@line[10] = scaleStr
-		@line[4]  = alphaStr
-		@line[12] = alphaStr
+		@line[1]  = scaleStr
+		@line[8] = scaleStr
+		@line[3]  = alphaStr
+		@line[10] = alphaStr
 
 	destroy: ( animation ) =>
 		@eventLoop\removeSubscriber @eventLoopIndex

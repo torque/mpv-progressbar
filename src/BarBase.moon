@@ -10,14 +10,14 @@ class BarBase extends UIElement
 		super!
 
 		@line = {
-			[[{\an1\bord0\c&H%s&\pos(]] -- 1
-			0                           -- 2
-			[[)\fscy]]                  -- 3
-			minHeight                   -- 4
-			[[\fscx]]                   -- 5
-			0.001                       -- 6
-			[[\p1}m 0 0 l ]]            -- 7
-			0                           -- 8
+			[[{\pos(]]                                                                                 -- 1
+			0                                                                                          -- 2
+			[[)\fscy]]                                                                                 -- 3
+			minHeight                                                                                  -- 4
+			[[\fscx]]                                                                                  -- 5
+			0.001                                                                                      -- 6
+			[[\an1%s%s%s\p1}m 0 0 l ]]\format settings['default-style'], settings['bar-default-style'] -- 7
+			0                                                                                          -- 8
 		}
 
 		@animation = Animation minHeight, maxHeight, @animationDuration, @\animateHeight

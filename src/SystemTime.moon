@@ -8,9 +8,9 @@ class SystemTime extends UIElement
 		super!
 
 		@line = {
-			[[{\fn%s\bord%g\fs%d\pos(]]\format settings.font, settings['system-time-font-border'], settings['system-time-font-size']
+			[[{\pos(]]
 			[[-100,0]]
-			[[)\c&H%s&\3c&H%s&\an9}]]\format settings['system-time-foreground'], settings['system-time-background']
+			[[)\an9%s%s}]]\format settings['default-style'], settings['system-time-style']
 			0
 		}
 		@lastTime = -1

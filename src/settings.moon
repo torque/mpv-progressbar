@@ -1,7 +1,3 @@
--- Placeholders for default foreground and background color settings
-FG_PLACEHOLDER = '__FG__'
-BG_PLACEHOLDER = '__BG__'
-
 -- default options
 settings = {
 	--[=[ mouse zone settings ]=]--
@@ -12,12 +8,10 @@ settings = {
 	-- name when the mouse is hovered over it. Pixels.
 	'top-hover-zone-height': 40
 
-	--[=[ default color settings ]=]--
-	-- Default foreground and background colors. Will be used for all color
-	-- settings (except chapter-marker-before) unless set explicitly.
-	-- Format is BGR hex because ASS is dumb.
-	'foreground': 'FC799E'
-	'background': '2D2D2D'
+	--[=[ Default override ]=]--
+	-- Changing the font will likely require changing the hover-time margin
+	-- settings and the offscreen-pos settings.
+	'default-style': [[\fnSource Sans Pro\b1\bord2\fs30\c&HFC799E&\3c&H2D2D2D&]]
 
 	--[=[ progress bar options ]=]--
 	-- whether or not to draw the progress bar at all.
@@ -36,15 +30,14 @@ settings = {
 	'seek-precision': 'exact'
 	-- [[ bar color options ]] --
 	-- Progress bar foreground color. BGR hex.
-	'bar-foreground': FG_PLACEHOLDER
-	'bar-cache-color': '515151'
-	'bar-background': BG_PLACEHOLDER
+	'bar-default-style': [[\bord0]]
+	'bar-foreground-style': ''
+	'bar-cache-style': [[\c&H515151&]]
+	'bar-background-style': [[\c&H2D2D2D&]]
 
 	--[=[ elapsed time options ]=]--
 	'enable-elapsed-time': true
-	-- Elapsed time foreground and background colors. BGR hex.
-	'elapsed-foreground': FG_PLACEHOLDER
-	'elapsed-background': BG_PLACEHOLDER
+	'elapsed-style': ''
 	-- margins
 	'elapsed-left-margin': 2
 	-- This is actually added on top of the height of the progress bar.
@@ -52,9 +45,7 @@ settings = {
 
 	--[=[ remaining time options ]=]--
 	'enable-remaining-time': true
-	-- Remaining time foreground and background colors. BGR hex.
-	'remaining-foreground': FG_PLACEHOLDER
-	'remaining-background': BG_PLACEHOLDER
+	'remaining-style': ''
 	-- margins
 	'remaining-right-margin': 4
 	-- This is actually added on top of the height of the progress bar.
@@ -62,9 +53,7 @@ settings = {
 
 	--[=[ hover time options ]=]--
 	'enable-hover-time': true
-	-- Hover time foreground and background colors. BGR hex.
-	'hover-time-foreground': FG_PLACEHOLDER
-	'hover-time-background': BG_PLACEHOLDER
+	'hover-time-style': [[\fs26]]
 	-- margins
 	'hover-time-left-margin': 120
 	'hover-time-right-margin': 130
@@ -73,31 +62,22 @@ settings = {
 
 	--[=[ title display options ]=]--
 	'enable-title': true
+	-- ASS override tags for styling the title.
+	'title-style': ''
 	-- margins
 	'title-left-margin': 4
 	'title-top-margin': 0
-	-- Font size for the title. Integer.
-	'title-font-size': 30
-	'title-font-border': 2
-	-- Title/playlist foreground and background colors. BGR hex.
-	'title-foreground': FG_PLACEHOLDER
-	'title-background': BG_PLACEHOLDER
-	-- This is useful for e.g. leaving behind a record youtube videos
-	-- watched after mpv has closed. This is disabled if `enable-title` is
-	-- false.
 	'title-print-to-cli': true
 
 	--[=[ system time display options ]=]--
 	'enable-system-time': true
+	'system-time-style': ''
 	-- This must be a strftime-compatible format string.
 	'system-time-format': '%H:%M'
 	-- margins
 	'system-time-right-margin': 4
 	'system-time-top-margin': 0
 	'system-time-font-size': 30
-	'system-time-font-border': 2
-	'system-time-foreground': FG_PLACEHOLDER
-	'system-time-background': BG_PLACEHOLDER
 
 	--[=[ pause indicator options ]=]--
 	-- Flash an icon in the center of the screen when pausing/unpausing.
@@ -107,8 +87,8 @@ settings = {
 	-- whereas a value of 0.5 would make it half the default size.
 	'pause-indicator-scale': 1
 	-- Pause indicator foreground and background colors. BGR hex.
-	'pause-indicator-foreground': FG_PLACEHOLDER
-	'pause-indicator-background': BG_PLACEHOLDER
+	'pause-indicator-foreground-style': [[\c&HFC799E&]]
+	'pause-indicator-background-style': [[\c&H2D2D2D&]]
 
 	--[=[ chapter marker options ]=]--
 	-- Enable or disable chapter position markers on the progress bar
@@ -140,16 +120,6 @@ settings = {
 	'animation-duration': 0.25
 
 	--[=[ /!\ FONT SIZE/METRICS STUFF. CHANGE AT YOUR OWN RISK /!\ ]=]--
-	-- Font for displaying the title and times. Changing this may warrant
-	-- modifying some of the font metrics numbers below for proper
-	-- display. Not recommended.
-	'font': 'Source Sans Pro Semibold'
-	-- Font size for time elapsed and remaining.
-	'time-font-size': 30
-	'time-font-border': 2
-	-- Font size for hover time.
-	'hover-time-font-size': 26
-	'hover-time-font-border': 2
 	-- These primarily affect animations. If the script thinks the items
 	-- are off screen, they won't be drawn. Positive numbers will look
 	-- goofy.
@@ -160,16 +130,6 @@ settings = {
 }
 
 options.read_options settings, script_name
-
--- Post-process settings and replace placeholder
--- values with their base color pendants
-for key, value in pairs settings
-	if key\match('-foreground') or key == 'chapter-marker-before'
-		if value == FG_PLACEHOLDER
-			settings[key] = settings.foreground
-	elseif key\match('-background') or key == 'chapter-marker-after'
-		if value == BG_PLACEHOLDER
-			settings[key] = settings.background
 
 if settings['bar-height-inactive'] <= 0
 	settings['hide-inactive'] = true
