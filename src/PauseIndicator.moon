@@ -1,7 +1,4 @@
 class PauseIndicator
-
-	scaleMultiplier = settings['pause-indicator-scale']
-
 	new: ( @eventLoop, paused ) =>
 		w, h = 0.5*Window.w, 0.5*Window.h
 		@line = {
@@ -46,8 +43,9 @@ class PauseIndicator
 		return true
 
 	animate: ( animation, value ) =>
-		scale = (value*50 + 100)*scaleMultiplier
+		scale = value*50 + 100
 		scaleStr = [[{\fscx%g\fscy%g]]\format scale, scale
+		-- I think this nonlinear behavior looks a little nicer.
 		alphaStr = '%02X'\format value*value*255
 		@line[1]  = scaleStr
 		@line[8] = scaleStr

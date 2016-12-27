@@ -7,6 +7,10 @@ settings = {
 	-- The height of the area at the top of the screen that shows the file
 	-- name when the mouse is hovered over it. Pixels.
 	'top-hover-zone-height': 40
+	-- Effectively acts as a multiplier, increasing OSC display size. This is
+	-- useful for high-dpi displays, which change the relative video-resolution-
+	-- to-osd-resolution ratio, at least on some platforms (macOS)
+	'display-scale-factor': 1
 
 	--[=[ Default override ]=]--
 	-- Changing the font will likely require changing the hover-time margin
@@ -82,10 +86,6 @@ settings = {
 	--[=[ pause indicator options ]=]--
 	-- Flash an icon in the center of the screen when pausing/unpausing.
 	'pause-indicator': true
-	-- Acts as a multiplier for the scale of the pause indicator. Number.
-	-- For example, a value of 2 would make it twice the default size,
-	-- whereas a value of 0.5 would make it half the default size.
-	'pause-indicator-scale': 1
 	-- Pause indicator foreground and background colors. BGR hex.
 	'pause-indicator-foreground-style': [[\c&HFC799E&]]
 	'pause-indicator-background-style': [[\c&H2D2D2D&]]
