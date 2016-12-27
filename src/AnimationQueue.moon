@@ -23,3 +23,6 @@ class AnimationQueue
 				table.insert deletionQueue, animation
 
 		animationList\removeSortedList deletionQueue
+
+	@active: ->
+		return #animationList > 0

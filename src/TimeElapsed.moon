@@ -12,26 +12,24 @@ class TimeElapsed extends BarAccent
 		}
 		@lastTime = -1
 		@position = offscreenPos
-		@animation = Animation offscreenPos, settings['elapsed-left-margin'], @animationDuration, @\animatePos, nil, 0.25
+		@animation = Animation offscreenPos, settings['elapsed-left-margin'], @animationDuration, @\animate, nil, 0.25
 
-	updateSize: =>
+	resize: =>
 		super!
 		@line[2] = ([[%g,%g]])\format @position, @yPos - settings['elapsed-bottom-margin']
-		@needsUpdate = true
 
-	animatePos: ( animation, value ) =>
+	animate: ( animation, value ) =>
 		@position = value
 		@line[2] = ([[%g,%g]])\format @position, @yPos - settings['elapsed-bottom-margin']
 		@needsUpdate = true
 
-	update: ( inputState ) =>
-		update = super inputState
-
-		if update or @hovered
+	redraw: =>
+		if @active
 			timeElapsed = math.floor mp.get_property_number 'time-pos', 0
 			if timeElapsed != @lastTime
 				update = true
 				@line[4] = ([[%d:%02d:%02d]])\format math.floor( timeElapsed/3600 ), math.floor( (timeElapsed/60)%60 ), math.floor( timeElapsed%60 )
 				@lastTime = timeElapsed
+				@needsUpdate = true
 
-		return update
+		return @needsUpdate

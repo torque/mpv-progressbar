@@ -12,25 +12,25 @@ class TimeRemaining extends BarAccent
 		}
 		@lastTime = -1
 		@position = offscreenPos
-		@animation = Animation offscreenPos, settings['remaining-right-margin'], @animationDuration, @\animatePos, nil, 0.25
+		@animation = Animation offscreenPos, settings['remaining-right-margin'], @animationDuration, @\animate, nil, 0.25
 
-	updateSize: =>
+	resize: =>
 		super!
 		@position = Window.w - @animation.value
 		@line[2] = ([[%g,%g]])\format @position, @yPos - settings['remaining-bottom-margin']
-		return true
 
-	animatePos: ( animation, value ) =>
+	animate: ( animation, value ) =>
 		@position = Window.w - value
 		@line[2] = ([[%g,%g]])\format @position, @yPos - settings['remaining-bottom-margin']
 		@needsUpdate = true
 
-	update: =>
+	redraw: =>
 		if @active
 			timeRemaining = math.floor mp.get_property_number 'playtime-remaining', 0
 			if timeRemaining != @lastTime
 				update = true
 				@line[4] = ([[–%d:%02d:%02d]])\format math.floor( timeRemaining/3600 ), math.floor( (timeRemaining/60)%60 ), math.floor( timeRemaining%60 )
 				@lastTime = timeRemaining
+				@needsUpdate = true
 
-		return update
+		return @needsUpdate

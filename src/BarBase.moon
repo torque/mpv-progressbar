@@ -10,29 +10,30 @@ class BarBase extends UIElement
 		super!
 
 		@line = {
-			[[{\pos(]]                                                                                 -- 1
-			0                                                                                          -- 2
-			[[)\fscy]]                                                                                 -- 3
-			minHeight                                                                                  -- 4
-			[[\fscx]]                                                                                  -- 5
-			0.001                                                                                      -- 6
-			[[\an1%s%s%s\p1}m 0 0 l ]]\format settings['default-style'], settings['bar-default-style'] -- 7
-			0                                                                                          -- 8
+			[[{\pos(]] -- 1
+			0          -- 2
+			[[)\fscy]] -- 3
+			minHeight  -- 4
+			[[\fscx]]  -- 5
+			0.001      -- 6
+			[[\an1%s%s%s\p1}m 0 0 l ]]\format settings['default-style'], settings['bar-default-style']
+			0          -- 8
 		}
 
-		@animation = Animation minHeight, maxHeight, @animationDuration, @\animateHeight
+		@animation = Animation minHeight, maxHeight, @animationDuration, @\animate
 
 	stringify: =>
+		@needsUpdate = false
 		if hideInactive and not @active
 			return ""
 		else
 			return table.concat @line
 
-	updateSize: =>
+	resize: =>
 		@line[2] = [[%d,%d]]\format 0, Window.h
-		@line[6] = [[%d 0 %d 1 0 1]]\format Window.w, Window.w
+		@line[8] = [[%d 0 %d 1 0 1]]\format Window.w, Window.w
 		@needsUpdate = true
 
-	animateHeight: ( animation, value ) =>
+	animate: ( animation, value ) =>
 		@line[4] = ([[%g]])\format value
 		@needsUpdate = true

@@ -7,17 +7,17 @@ class ChapterMarker
 	beforeColor = settings['chapter-marker-before']
 	afterColor = settings['chapter-marker-after']
 
-	new: ( @position, w, h ) =>
+	new: ( @position ) =>
 		@line = {
-			[[{\an2\bord0\p1\pos(]]                       -- 1
-			[[%d,%d]]\format math.floor( @position*w ), h -- 2
-			[[)\fscx]]                                    -- 3
-			minWidth                                      -- 4
-			[[\fscy]]                                     -- 5
-			minHeight                                     -- 6
-			[[\c&H]]                                      -- 7
-			beforeColor                                   -- 8
-			[[&}m 0 0 l 1 0 1 1 0 1]]                     -- 9
+			[[{\an2\bord0\p1\pos(]]   -- 1
+			[[%g,%g]]\format @position*Window.w, Window.h
+			[[)\fscx]]                -- 3
+			minWidth                  -- 4
+			[[\fscy]]                 -- 5
+			minHeight                 -- 6
+			[[\c&H]]                  -- 7
+			beforeColor               -- 8
+			[[&}m 0 0 l 1 0 1 1 0 1]] -- 9
 		}
 
 		@passed = false
@@ -25,15 +25,14 @@ class ChapterMarker
 	stringify: =>
 		return table.concat @line
 
-	updateSize: =>
+	resize: =>
 		@line[2] = [[%d,%d]]\format math.floor( @position*Window.w ), Window.h
-		return true
 
-	animateSize: ( value ) =>
+	animate: ( value ) =>
 		@line[4] = [[%g]]\format (maxWidth - minWidth)*value + minWidth
 		@line[6] = [[%g]]\format (maxHeight*maxHeightFrac - minHeight)*value + minHeight
 
-	update: ( position ) =>
+	redraw: ( position ) =>
 		update = false
 
 		if not @passed and (position > @position)

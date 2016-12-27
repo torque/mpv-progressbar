@@ -4,7 +4,7 @@ class ProgressBarCache extends BarBase
 		super!
 		@line[7] = @line[7]\format settings['bar-cache-style']
 
-	update: =>
+	redraw: =>
 
 		-- Raw file size, bytes
 		totalSize = mp.get_property_number 'file-size', 0
@@ -27,7 +27,7 @@ class ProgressBarCache extends BarBase
 			fileDuration = mp.get_property_number 'duration', 0.001
 			demuxerCacheContribution = demuxerCacheDuration/fileDuration
 
-			update = true
 			@line[6] = (networkCacheContribution + demuxerCacheContribution)*100 + position
+			@needsUpdate = true
 
-		return update
+		return @needsUpdate

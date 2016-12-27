@@ -1,4 +1,4 @@
-class Chapters extends UIElement
+class Chapters extends BarBase
 
 	minHeight = settings['bar-height-inactive']*100
 
@@ -7,9 +7,9 @@ class Chapters extends UIElement
 
 		@line = { }
 		@markers = { }
-		@animation = Animation 0, 1, @animationDuration, @\animateSize
+		@animation = Animation 0, 1, @animationDuration, @\animate
 
-	createMarkers: ( w, h ) =>
+	createMarkers: =>
 		@line = { }
 		@markers = { }
 
@@ -18,7 +18,7 @@ class Chapters extends UIElement
 		chapters = mp.get_property_native 'chapter-list', { }
 
 		for chapter in *chapters
-			marker = ChapterMarker chapter.time/totalTime, w, h
+			marker = ChapterMarker chapter.time/totalTime
 			table.insert @markers, marker
 			table.insert @line, marker\stringify!
 
@@ -32,30 +32,24 @@ class Chapters extends UIElement
 		for i, marker in ipairs @markers
 			@line[i] = marker\stringify!
 
-	updateSize: ( w, h ) =>
-		super w, h
-
+	resize: =>
 		for i, marker in ipairs @markers
-			marker\updateSize w, h
+			marker\resize w, h
 			@line[i] = marker\stringify!
 
-		return true
-
-	animateSize: ( animation, value ) =>
+	animate: ( animation, value ) =>
 		for i, marker in ipairs @markers
-			marker\animateSize value
+			marker\animate value
 			@line[i] = marker\stringify!
 
 		@needsUpdate = true
 
-	update: ( inputState ) =>
-		update = super inputState
-
+	redraw: =>
 		currentPosition = mp.get_property_number( 'percent-pos', 0 )*0.01
 
 		for i, marker in ipairs @markers
-			if marker\update currentPosition
+			if marker\redraw currentPosition
 				@redrawMarker i
 				update = true
 
-		return update
+		return @needsUpdate or update

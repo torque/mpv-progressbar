@@ -6,8 +6,9 @@ class UIElement
 		@active = false
 
 	stringify: =>
+		@needsUpdate = false
 		if not @active
-			return ""
+			return ''
 		else
 			return table.concat @line
 
@@ -19,5 +20,10 @@ class UIElement
 				@animation\interrupt true
 				@animation.finishedCb = ->
 					@active = false
+				return
 
 		@active = activate
+
+	resize: => error 'UIElement updateSize called'
+
+	redraw: => return @needsUpdate

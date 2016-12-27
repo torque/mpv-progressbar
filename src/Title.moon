@@ -1,4 +1,4 @@
-class Title extends TopSubscriber
+class Title extends UIElement
 
 	new: =>
 		super!
@@ -9,9 +9,11 @@ class Title extends TopSubscriber
 			[[)\an7%s%s}]]\format settings['default-style'], settings['title-style']
 			0
 		}
-		@animation = Animation offscreenPos, settings['title-top-margin'], @animationDuration, @\animatePos, nil, 0.25
+		@animation = Animation offscreenPos, settings['title-top-margin'], @animationDuration, @\animate, nil, 0.25
 
-	animatePos: ( animation, value ) =>
+	resize: =>
+
+	animate: ( animation, value ) =>
 		@line[2] = [[%g,%g]]\format settings['title-left-margin'], value
 		@needsUpdate = true
 
