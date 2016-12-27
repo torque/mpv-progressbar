@@ -23,11 +23,5 @@ class ActivityZone extends Rect
 			@active = nowActive
 			for id, element in ipairs @elements
 				element\activate nowActive
-				element\update!
-		else
-			for id, element in ipairs @elements
-				if needsResize == true
-					element\resize!
-				element\update!
 
 		return nowActive
