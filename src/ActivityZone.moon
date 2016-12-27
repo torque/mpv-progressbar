@@ -1,30 +1,33 @@
 class ActivityZone extends Rect
+	new: ( x, y, w, h, @activityCheck ) =>
+		super x, y, w, h
+		@active = false
+		@elements = Stack!
 
 	addUIElement: ( element ) =>
-		table.insert @elements, element
+		@elements\insert element
 
-	activityCheck: ( inputState ) =>
-		if inputState.displayRequested
+	activityCheck: ( displayRequested ) =>
+		if displayRequested
 			return true
 
-		if inputState.mouseInWindow or not inputState.mouseDead
-			return @containsPoint inputState.mouseX, inputState.mouseY
+		if Mouse.inWindow or not Mouse.dead
+			return @containsPoint Mouse.x, Mouse.y
 		else
 			return false
 
-	update: ( inputState, needsResize ) =>
-		nowActive = @activityCheck inputState
+	update: ( displayRequested, clickPending ) =>
+		nowActive = @activityCheck displayRequested
 
 		if @active != nowActive
 			@active = nowActive
 			for id, element in ipairs @elements
-				if needsResize == true
-					@element.resize!
-				@element.activate nowActive
-				@element.update!
+				element\activate nowActive
+				element\update!
 		else
 			for id, element in ipairs @elements
 				if needsResize == true
-					@element.resize!
-				@element.update!
+					element\resize!
+				element\update!
 
+		return nowActive
