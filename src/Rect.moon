@@ -9,7 +9,7 @@
 -- h (Rect): height. (pixels)
 
 class Rect
-	new: ( @x, @y, @w, @h ) =>
+	new: ( @x = -1, @y = -1, @w = -1, @h = -1 ) =>
 		@cacheMaxBounds!
 
 	cacheMaxBounds: =>
