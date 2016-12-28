@@ -7,6 +7,16 @@ class ActivityZone extends Rect
 	addUIElement: ( element ) =>
 		@elements\insert element
 
+	-- bottom-up click propagation does not deal with mouse down/up events.
+	clickHandler: =>
+		unless @containsPoint Mouse.clickX, Mouse.clickY
+			return
+
+		for _, element in ipairs @elements
+			-- if clickHandler returns false, the click stops propagating.
+			if element.clickHandler and not element\clickHandler!
+				break
+
 	activityCheck: ( displayRequested ) =>
 		if displayRequested
 			return true
@@ -23,5 +33,8 @@ class ActivityZone extends Rect
 			@active = nowActive
 			for id, element in ipairs @elements
 				element\activate nowActive
+
+		if clickPending
+			@clickHandler!
 
 		return nowActive
