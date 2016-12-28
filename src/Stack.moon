@@ -25,7 +25,7 @@ class Stack
 			element[@containmentKey] = false
 
 	reindex = ( start = 1 ) =>
-		for i = start, #@
+		for i, element in ipairs @
 			element[@] = i
 
 	removeByIndex = ( index ) =>
@@ -47,12 +47,16 @@ class Stack
 
 	-- This function mutates the table passed to it.
 	removeSortedList: ( elementList ) =>
+		if #elementList < 1
+			return
+
 		for i = 1, #elementList - 1
 			element = table.remove elementList
 			table.remove @, element[@]
 			removeElementMetadata @, element
 
 		lastElement = table.remove elementList
+		table.remove @, lastElement[@]
 		reindex @, lastElement[@]
 		removeElementMetadata @, lastElement
 
