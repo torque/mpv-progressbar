@@ -1,6 +1,6 @@
 class ActivityZone extends Rect
-	new: ( x, y, w, h, @activityCheck ) =>
-		super x, y, w, h
+	new: ( @resize, @activityCheck ) =>
+		super!
 		@active = false
 		@elements = Stack!
 

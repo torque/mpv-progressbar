@@ -56,6 +56,8 @@ class EventLoop
 		needsResize = Window\update!
 
 		for index, zone in @activityZones
+			if needsResize
+				zone\resize!
 			if zone\update( @displayRequested, clickPending ) and not forceRedraw
 				forceRedraw = true
 
