@@ -2,13 +2,15 @@
 SOURCES := src/requires.moon
 SOURCES += src/log.moon
 SOURCES += src/settings.moon
+SOURCES += src/Stack.moon
 SOURCES += src/Window.moon
-SOURCES += src/EventLoop.moon
+SOURCES += src/Mouse.moon
+SOURCES += src/ActivityZone.moon
 SOURCES += src/AnimationQueue.moon
+SOURCES += src/EventLoop.moon
 SOURCES += src/Animation.moon
 SOURCES += src/Rect.moon
 SOURCES += src/UIElement.moon
-SOURCES += src/TopSubscriber.moon
 SOURCES += src/BarAccent.moon
 SOURCES += src/BarBase.moon
 SOURCES += src/ProgressBar.moon
