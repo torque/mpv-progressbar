@@ -9,8 +9,13 @@ class Stack
 	new: ( @containmentKey ) =>
 
 	insert: ( element, index ) =>
-		table.insert @, element, index
-		element[@] = index or #@
+		if index
+			table.insert @, index, element
+			element[@] = index
+		else
+			table.insert @, element
+			element[@] = #@
+
 		if @containmentKey
 			element[@containmentKey] = true
 
