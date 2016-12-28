@@ -36,15 +36,23 @@ class EventLoop
 			return
 		@activityZones\remove zone
 
+	generateUIFromZones: =>
+		seenUIElements = { }
+		for _, zone in ipairs @activityZones
+			for _, uiElement in ipairs zone.elements
+				unless seenUIElements[uiElement]
+					@addUIElement uiElement
+					seenUIElements[uiElement] = true
+
 	addUIElement: ( uiElement ) =>
 		if uiElement == nil
-			return
+			error 'nil UIElement added.'
 		@uiElements\insert uiElement
 		table.insert @script, ''
 
 	removeUIElement: ( uiElement ) =>
 		if uiElement == nil
-			return
+			error 'nil UIElement removed.'
 		-- this is kind of janky as it relies on an implementation detail of Stack
 		-- (i.e. that it stores the element index in the under the hashtable key of
 		-- the stack instance itself)

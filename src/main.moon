@@ -1,4 +1,16 @@
 eventLoop = EventLoop!
+activeHeight = settings['hover-zone-height']
+bottomZone = ActivityZone =>
+	@reset 0, Window.h - activeHeight, Window.w, activeHeight
+
+topZone = ActivityZone =>
+		@reset 0, 0, Window.w, activeHeight,
+	=>
+		if Mouse.inWindow or not Mouse.dead
+			return @containsPoint Mouse.x, Mouse.y
+		else
+			return false
+
 -- This is kind of ugly but I have gone insane and don't care any more.
 -- Watch the rapidly declining quality of this codebase in realtime.
 local chapters, progressBar, barCache, barBackground, elapsedTime, remainingTime, hoverTime
@@ -7,52 +19,54 @@ if settings['enable-bar']
 	progressBar = ProgressBar!
 	barCache = ProgressBarCache!
 	barBackground = ProgressBarBackground!
-	eventLoop\addSubscriber barBackground
-	eventLoop\addSubscriber progressBar
-	eventLoop\addSubscriber barCache
-
-	mp.add_key_binding "mouse_btn0", "seek-to-mouse", ->
-		x, y = mp.get_mouse_pos!
-		mp.add_timeout 0.001, ->
-			if not eventLoop.inputState.mouseDead and progressBar.zone\containsPoint x, y
-				mp.commandv "seek", x*100/progressBar.zone.w, "absolute-percent+#{settings['seek-precision']}"
+	bottomZone\addUIElement barBackground
+	bottomZone\addUIElement progressBar
+	bottomZone\addUIElement barCache
 
 	mp.add_key_binding "c", "toggle-inactive-bar", ->
 		BarBase.toggleInactiveVisibility!
 
 if settings['enable-chapter-markers']
 	chapters = Chapters!
-	eventLoop\addSubscriber chapters
+	bottomZone\addUIElement chapters
 
 if settings['enable-elapsed-time']
 	elapsedTime = TimeElapsed!
-	eventLoop\addSubscriber elapsedTime
+	bottomZone\addUIElement elapsedTime
 
 if settings['enable-remaining-time']
 	remainingTime = TimeRemaining!
-	eventLoop\addSubscriber remainingTime
+	bottomZone\addUIElement remainingTime
 
 if settings['enable-hover-time']
 	hoverTime = HoverTime!
-	eventLoop\addSubscriber hoverTime
+	bottomZone\addUIElement hoverTime
 
 title = nil
 if settings['enable-title']
 	title = Title!
-	eventLoop\addSubscriber title
+	bottomZone\addUIElement title
+	topZone\addUIElement title
 
 if settings['enable-system-time']
 	systemTime = SystemTime!
-	eventLoop\addSubscriber systemTime
+	bottomZone\addUIElement systemTime
+	topZone\addUIElement title
+
+-- The order of these is important, because the order that elements are added to
+-- eventLoop matters, because that controls how they are layered (first element
+-- on the bottom).
+eventLoop\addZone bottomZone
+eventLoop\addZone topZone
+eventLoop\generateUIFromZones!
 
 notFrameStepping = false
 if settings['pause-indicator']
 	PauseIndicatorWrapper = ( event, paused ) ->
 		if notFrameStepping
 			PauseIndicator eventLoop, paused
-		else
-			if paused
-				notFrameStepping = true
+		elseif paused
+			notFrameStepping = true
 
 	mp.add_key_binding '.', 'step-forward',
 		->
@@ -71,9 +85,10 @@ if settings['pause-indicator']
 streamMode = false
 initDraw = ->
 	mp.unregister_event initDraw
-	width, height = mp.get_osd_size!
+	-- this forces sizing activityzones and ui elements
+	eventLoop\update!
 	if chapters
-		chapters\createMarkers width, height
+		chapters\createMarkers!
 	if title
 		title\updatePlaylistInfo!
 	notFrameStepping = true
