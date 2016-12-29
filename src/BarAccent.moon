@@ -3,6 +3,12 @@ class BarAccent extends UIElement
 
 	resize: =>
 		@yPos = Window.h - barSize
+		@needsUpdate = true
+
+	redraw: =>
+		if @barSize != barSize
+			@barSize = barSize
+			@resize!
 
 	-- This is still weird although perhaps somewhat less semantically confusing.
 	-- Moonscript subclasses do inherit class methods.

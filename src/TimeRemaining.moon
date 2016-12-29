@@ -26,6 +26,7 @@ class TimeRemaining extends BarAccent
 
 	redraw: =>
 		if @active
+			super!
 			timeRemaining = math.floor mp.get_property_number 'playtime-remaining', 0
 			if timeRemaining != @lastTime
 				update = true

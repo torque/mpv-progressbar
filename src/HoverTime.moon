@@ -31,6 +31,7 @@ class HoverTime extends BarAccent
 
 	redraw: =>
 		if @active
+			super!
 			if Mouse.x != @lastX
 				@line[2] = ("%g,%g")\format math.min( Window.w - rightMargin, math.max( leftMargin, Mouse.x ) ), @yPos - bottomMargin
 				@lastX = Mouse.x

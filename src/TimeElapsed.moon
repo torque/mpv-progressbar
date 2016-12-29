@@ -25,6 +25,7 @@ class TimeElapsed extends BarAccent
 
 	redraw: =>
 		if @active
+			super!
 			timeElapsed = math.floor mp.get_property_number 'time-pos', 0
 			if timeElapsed != @lastTime
 				update = true
