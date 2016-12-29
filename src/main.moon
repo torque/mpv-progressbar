@@ -29,8 +29,8 @@ if settings['enable-bar']
 	barCache = ProgressBarCache!
 	barBackground = ProgressBarBackground!
 	bottomZone\addUIElement barBackground
-	bottomZone\addUIElement progressBar
 	bottomZone\addUIElement barCache
+	bottomZone\addUIElement progressBar
 
 	mp.add_key_binding "c", "toggle-inactive-bar", ->
 		BarBase.toggleInactiveVisibility!
@@ -60,7 +60,7 @@ if settings['enable-title']
 if settings['enable-system-time']
 	systemTime = SystemTime!
 	bottomZone\addUIElement systemTime
-	topZone\addUIElement title
+	topZone\addUIElement systemTime
 
 -- The order of these is important, because the order that elements are added to
 -- eventLoop matters, because that controls how they are layered (first element
@@ -96,7 +96,7 @@ streamMode = false
 initDraw = ->
 	mp.unregister_event initDraw
 	-- this forces sizing activityzones and ui elements
-	eventLoop\update!
+	eventLoop\redraw!
 	if chapters
 		chapters\createMarkers!
 	if title
