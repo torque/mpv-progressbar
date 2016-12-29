@@ -18,13 +18,13 @@ class ActivityZone extends Rect
 				break
 
 	activityCheck: ( displayRequested ) =>
-		if displayRequested
+		if displayRequested == true
 			return true
-
-		if Mouse.inWindow or not Mouse.dead
-			return @containsPoint Mouse.x, Mouse.y
-		else
+		unless Mouse.inWindow
 			return false
+		if Mouse.dead
+			return false
+		return @containsPoint Mouse.x, Mouse.y
 
 	update: ( displayRequested, clickPending ) =>
 		nowActive = @activityCheck displayRequested
