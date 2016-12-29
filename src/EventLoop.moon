@@ -11,19 +11,28 @@ class EventLoop
 		mp.register_event 'shutdown', ->
 			@updateTimer\kill!
 
+		local displayRequestTimer
 		displayDuration = settings['request-display-duration']
-		displayRequestTimer = mp.add_timeout 0, ->
+
 		mp.add_key_binding "tab", "request-display",
 			( event ) ->
+				-- Complex bindings will always fire repeat events and the best we can
+				-- do is to quickly return.
+				if event.event == "repeat"
+					return
 				-- The "press" event happens when a simulated keypress happens through
 				-- the JSON IPC, the client API and through the mpv command interface. I
 				-- don't know if it will ever happen with an actual key event.
 				if event.event == "down" or event.event == "press"
-					displayRequestTimer\kill!
+					if displayRequestTimer
+						displayRequestTimer\kill!
 					@displayRequested = true
 				if event.event == "up" or event.event == "press"
-					displayRequestTimer = mp.add_timeout displayDuration, ->
-						@displayRequested = false,
+					if displayDuration == 0
+						@displayRequested = false
+					else
+						displayRequestTimer = mp.add_timeout displayDuration, ->
+							@displayRequested = false,
 			{ complex: true }
 
 	addZone: ( zone ) =>
