@@ -22,7 +22,8 @@ class AnimationQueue
 			if animation\update currentTime
 				table.insert deletionQueue, animation
 
-		animationList\removeSortedList deletionQueue
+		if #deletionQueue > 0
+			animationList\removeSortedList deletionQueue
 
 	@active: ->
 		return #animationList > 0
