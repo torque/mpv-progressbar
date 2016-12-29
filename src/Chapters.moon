@@ -21,9 +21,6 @@ class Chapters extends BarBase
 			table.insert @markers, marker
 			table.insert @line, marker\stringify!
 
-	stringify: =>
-		return table.concat @line, '\n'
-
 	redrawMarker: ( i ) =>
 		@line[i] = @markers[i]\stringify!
 

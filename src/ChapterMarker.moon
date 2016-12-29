@@ -16,7 +16,7 @@ class ChapterMarker
 			[[\fscy]]                 -- 5
 			minHeight                 -- 6
 			beforeStyle               -- 7
-			[[}m 0 0 l 1 0 1 1 0 1]]  -- 8
+			'}m 0 0 l 1 0 1 1 0 1\n'  -- 8
 		}
 
 		@passed = false
