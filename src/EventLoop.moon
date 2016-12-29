@@ -68,21 +68,24 @@ class EventLoop
 		table.remove @script, uiElement[@uiElements]
 		@uiElements\remove uiElement
 
+	resize: =>
+		for _, zone in ipairs @activityZones
+			zone\resize!
+		for _, uiElement in ipairs @uiElements
+			uiElement\resize!
+
 	redraw: ( forceRedraw ) =>
 		clickPending = Mouse\update!
-		needsResize = Window\update!
+		if Window\update!
+			@resize!
 
-		for index, zone in @activityZones
-			if needsResize
-				zone\resize!
-			if zone\update( @displayRequested, clickPending ) and not forceRedraw
+		for index, zone in ipairs @activityZones
+			if zone\update @displayRequested, clickPending
 				forceRedraw = true
 
 		if forceRedraw or AnimationQueue.active!
 			AnimationQueue.animate!
 			for index, uiElement in ipairs @uiElements
-				if uiElement.active and uiElement\redraw!
-					if needsResize
-						uiElement\resize!
+				if uiElement\redraw!
 					@script[index] = uiElement\stringify!
 			mp.set_osd_ass Window.w, Window.h, table.concat @script, '\n'
