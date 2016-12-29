@@ -81,7 +81,6 @@ settings = {
 	-- margins
 	'system-time-right-margin': 4
 	'system-time-top-margin': 0
-	'system-time-font-size': 30
 
 	--[=[ pause indicator options ]=]--
 	-- Flash an icon in the center of the screen when pausing/unpausing.
