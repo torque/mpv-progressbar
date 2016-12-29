@@ -1,15 +1,24 @@
 eventLoop = EventLoop!
 activeHeight = settings['hover-zone-height']
+
+ignoreRequestDisplay = =>
+	unless Mouse.inWindow
+		return false
+	if Mouse.dead
+		return false
+	return @containsPoint Mouse.x, Mouse.y
+
 bottomZone = ActivityZone =>
 	@reset 0, Window.h - activeHeight, Window.w, activeHeight
 
+hoverTimeZone = ActivityZone =>
+		@reset 0, Window.h - activeHeight, Window.w, activeHeight,
+	ignoreRequestDisplay
+
 topZone = ActivityZone =>
 		@reset 0, 0, Window.w, activeHeight,
-	=>
-		if Mouse.inWindow or not Mouse.dead
-			return @containsPoint Mouse.x, Mouse.y
-		else
-			return false
+	ignoreRequestDisplay
+
 
 -- This is kind of ugly but I have gone insane and don't care any more.
 -- Watch the rapidly declining quality of this codebase in realtime.
@@ -40,7 +49,7 @@ if settings['enable-remaining-time']
 
 if settings['enable-hover-time']
 	hoverTime = HoverTime!
-	bottomZone\addUIElement hoverTime
+	hoverTimeZone\addUIElement hoverTime
 
 title = nil
 if settings['enable-title']
@@ -57,6 +66,7 @@ if settings['enable-system-time']
 -- eventLoop matters, because that controls how they are layered (first element
 -- on the bottom).
 eventLoop\addZone bottomZone
+eventLoop\addZone hoverTimeZone
 eventLoop\addZone topZone
 eventLoop\generateUIFromZones!
 
