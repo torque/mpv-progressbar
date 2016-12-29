@@ -80,12 +80,10 @@ class EventLoop
 			@resize!
 
 		for index, zone in ipairs @activityZones
-			if zone\update @displayRequested, clickPending
-				forceRedraw = true
+			zone\update @displayRequested, clickPending
 
-		if forceRedraw or AnimationQueue.active!
-			AnimationQueue.animate!
-			for index, uiElement in ipairs @uiElements
-				if uiElement\redraw!
-					@script[index] = uiElement\stringify!
-			mp.set_osd_ass Window.w, Window.h, table.concat @script, '\n'
+		AnimationQueue.animate!
+		for index, uiElement in ipairs @uiElements
+			if uiElement\redraw!
+				@script[index] = uiElement\stringify!
+		mp.set_osd_ass Window.w, Window.h, table.concat @script, '\n'
