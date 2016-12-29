@@ -107,29 +107,28 @@ initDraw = ->
 	if not (streamMode or duration)
 		BarAccent.changeBarSize 0
 		if progressBar
-			eventLoop\removeSubscriber progressBar.index
-			eventLoop\removeSubscriber barCache.index
-			eventLoop\removeSubscriber barBackground.index
+			eventLoop\removeUIElement progressBar
+			eventLoop\removeUIElement barCache
+			eventLoop\removeUIElement barBackground
 		if chapters
-			eventLoop\removeSubscriber chapters.index
+			eventLoop\removeUIElement chapters
 		if hoverTime
-			eventLoop\removeSubscriber hoverTime.index
+			eventLoop\removeUIElement hoverTime
 		if remainingTime
-			eventLoop\removeSubscriber remainingTime.index
+			eventLoop\removeUIElement remainingTime
 		streamMode = true
 	elseif streamMode and duration
 		BarAccent.changeBarSize settings['bar-height-active']
 		if progressBar
-			eventLoop\addSubscriber barBackground
-			eventLoop\addSubscriber barCache
-			eventLoop\addSubscriber progressBar
+			eventLoop\addUIElement barBackground
+			eventLoop\addUIElement barCache
+			eventLoop\addUIElement progressBar
 		if chapters
-			eventLoop\addSubscriber chapters
+			eventLoop\addUIElement chapters
 		if hoverTime
-			eventLoop\addSubscriber hoverTime
+			eventLoop\addUIElement hoverTime
 		if remainingTime
-			eventLoop\addSubscriber remainingTime
-		eventLoop\forceResize!
+			eventLoop\addUIElement remainingTime
 		streamMode = false
 
 	mp.command 'script-message-to osc disable-osc'
