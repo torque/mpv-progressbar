@@ -4,8 +4,8 @@ class ChapterMarker
 	minHeight = settings['bar-height-inactive']*100
 	maxHeight = settings['bar-height-active']*100
 	maxHeightFrac = settings['chapter-marker-active-height-fraction']
-	beforeColor = settings['chapter-marker-before']
-	afterColor = settings['chapter-marker-after']
+	beforeStyle = settings['chapter-marker-before-style']
+	afterStyle = settings['chapter-marker-after-style']
 
 	new: ( @position ) =>
 		@line = {
@@ -15,9 +15,8 @@ class ChapterMarker
 			minWidth                  -- 4
 			[[\fscy]]                 -- 5
 			minHeight                 -- 6
-			[[\c&H]]                  -- 7
-			beforeColor               -- 8
-			[[&}m 0 0 l 1 0 1 1 0 1]] -- 9
+			beforeStyle               -- 7
+			[[}m 0 0 l 1 0 1 1 0 1]]  -- 8
 		}
 
 		@passed = false
@@ -36,11 +35,11 @@ class ChapterMarker
 		update = false
 
 		if not @passed and (position > @position)
-			@line[8] = afterColor
+			@line[7] = afterStyle
 			@passed = true
 			update = true
 		elseif @passed and (position < @position)
-			@line[8] = beforeColor
+			@line[7] = beforeStyle
 			@passed = false
 			update = true
 

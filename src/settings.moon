@@ -105,8 +105,8 @@ settings = {
 	'chapter-marker-active-height-fraction': 1
 	-- [[ chapter marker color options ]] --
 	-- color of chapter marker before/after it has been passed. BGR hex.
-	'chapter-marker-before': FG_PLACEHOLDER
-	'chapter-marker-after': BG_PLACEHOLDER
+	'chapter-marker-before-style': [[\c&HFC799E&]]
+	'chapter-marker-after-style': [[\c&H2D2D2D&]]
 
 	--[=[ timing options ]=]--
 	-- Amount of time (in seconds) to display OSD when button is pressed.

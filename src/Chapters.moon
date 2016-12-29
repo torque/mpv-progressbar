@@ -4,6 +4,8 @@ class Chapters extends BarBase
 
 	new: =>
 		super!
+		@line = { }
+		@markers = { }
 		@animation = Animation 0, 1, @animationDuration, @\animate
 
 	createMarkers: =>

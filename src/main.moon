@@ -96,11 +96,11 @@ streamMode = false
 initDraw = ->
 	mp.unregister_event initDraw
 	-- this forces sizing activityzones and ui elements
-	eventLoop\redraw!
 	if chapters
 		chapters\createMarkers!
 	if title
 		title\updatePlaylistInfo!
+	eventLoop\redraw!
 	notFrameStepping = true
 	-- duration is nil for streams of indeterminate length
 	duration = mp.get_property 'duration'
