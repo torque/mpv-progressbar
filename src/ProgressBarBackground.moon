@@ -5,4 +5,5 @@ class ProgressBarBackground extends BarBase
 
 	new: =>
 		super!
+		@line[6] = 100
 		@line[7] = @line[7]\format settings['bar-background-style']

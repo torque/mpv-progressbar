@@ -16,7 +16,7 @@ class BarBase extends UIElement
 			minHeight  -- 4
 			[[\fscx]]  -- 5
 			0.001      -- 6
-			[[\an1%s%s%s\p1}m 0 0 l ]]\format settings['default-style'], settings['bar-default-style']
+			[[\an1%s%s%s\p1}m 0 0 l ]]\format settings['default-style'], settings['bar-default-style'], '%s'
 			0          -- 8
 		}
 
@@ -37,3 +37,6 @@ class BarBase extends UIElement
 	animate: ( animation, value ) =>
 		@line[4] = ([[%g]])\format value
 		@needsUpdate = true
+
+	redraw: =>
+		return @needsUpdate

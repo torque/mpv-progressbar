@@ -13,7 +13,7 @@ class ProgressBar extends BarBase
 	redraw: =>
 		position = mp.get_property_number 'percent-pos', 0
 		if position != @lastPosition
-			@line[6] = [[%g]]\format position
+			@line[6] = position
 			@lastPosition = position
 			@needsUpdate = true
 
