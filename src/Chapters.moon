@@ -21,13 +21,6 @@ class Chapters extends BarBase
 			table.insert @markers, marker
 			table.insert @line, marker\stringify!
 
-	redrawMarker: ( i ) =>
-		@line[i] = @markers[i]\stringify!
-
-	redrawMarkers: =>
-		for i, marker in ipairs @markers
-			@line[i] = marker\stringify!
-
 	resize: =>
 		for i, marker in ipairs @markers
 			marker\resize w, h
@@ -42,10 +35,10 @@ class Chapters extends BarBase
 
 	redraw: =>
 		currentPosition = mp.get_property_number( 'percent-pos', 0 )*0.01
-
+		update = false
 		for i, marker in ipairs @markers
 			if marker\redraw currentPosition
-				@redrawMarker i
+				@line[i] = marker\stringify!
 				update = true
 
 		return @needsUpdate or update
