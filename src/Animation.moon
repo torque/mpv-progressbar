@@ -22,7 +22,7 @@ class Animation
 		else
 			@value = (1 - progress) * @initialValue + progress * @endValue
 
-		@updateCb @value
+		@.updateCb @value
 
 		if @isFinished and @finishedCb
 			@finishedCb!

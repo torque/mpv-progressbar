@@ -13,7 +13,7 @@ class Title extends UIElement
 
 	resize: =>
 
-	animate: ( animation, value ) =>
+	animate: ( value ) =>
 		@line[2] = [[%g,%g]]\format settings['title-left-margin'], value
 		@needsUpdate = true
 

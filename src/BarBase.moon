@@ -39,8 +39,7 @@ class BarBase extends UIElement
 		@line[8] = [[%d 0 %d 1 0 1]]\format Window.w, Window.w
 		@needsUpdate = true
 
-	animate: ( animation, value ) =>
-		@line[4] = ([[%g]])\format  (maxHeight - animationMinHeight)*value + animationMinHeight
+	animate: ( value ) =>
 		@needsUpdate = true
 
 	redraw: =>

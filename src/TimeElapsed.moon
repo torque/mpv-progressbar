@@ -18,7 +18,7 @@ class TimeElapsed extends BarAccent
 		super!
 		@line[2] = ([[%g,%g]])\format @position, @yPos - settings['elapsed-bottom-margin']
 
-	animate: ( animation, value ) =>
+	animate: ( value ) =>
 		@position = value
 		@line[2] = ([[%g,%g]])\format @position, @yPos - settings['elapsed-bottom-margin']
 		@needsUpdate = true

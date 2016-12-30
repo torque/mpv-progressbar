@@ -25,7 +25,7 @@ class HoverTime extends BarAccent
 		super!
 		@line[2] = ("%g,%g")\format math.min( Window.w - rightMargin, math.max( leftMargin, Mouse.x ) ), @yPos - bottomMargin
 
-	animate: ( animation, value ) =>
+	animate: ( value ) =>
 		@line[4] = ([[%02X]])\format value
 		@needsUpdate = true
 

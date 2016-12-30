@@ -21,7 +21,7 @@ class SystemTime extends UIElement
 		@position = Window.w - @animation.value
 		@line[2] = ([[%g,%g]])\format @position, top_margin
 
-	animate: ( animation, value ) =>
+	animate: ( value ) =>
 		@position = Window.w - value
 		@line[2] = ([[%g,%g]])\format @position, top_margin
 		@needsUpdate = true

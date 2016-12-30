@@ -19,7 +19,7 @@ class TimeRemaining extends BarAccent
 		@position = Window.w - @animation.value
 		@line[2] = ([[%g,%g]])\format @position, @yPos - settings['remaining-bottom-margin']
 
-	animate: ( animation, value ) =>
+	animate: ( value ) =>
 		@position = Window.w - value
 		@line[2] = ([[%g,%g]])\format @position, @yPos - settings['remaining-bottom-margin']
 		@needsUpdate = true

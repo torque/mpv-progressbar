@@ -38,7 +38,7 @@ class PauseIndicator
 	redraw: ->
 		return true
 
-	animate: ( animation, value ) =>
+	animate: ( value ) =>
 		scale = value*50 + 100
 		scaleStr = [[{\fscx%g\fscy%g]]\format scale, scale
 		-- I think this nonlinear behavior looks a little nicer.
