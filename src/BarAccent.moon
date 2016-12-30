@@ -1,6 +1,10 @@
 class BarAccent extends UIElement
 	barSize = settings['bar-height-active']
 
+	new: =>
+		super!
+		@yPos = Window.h - barSize
+
 	resize: =>
 		@yPos = Window.h - barSize
 		@needsUpdate = true

@@ -68,7 +68,6 @@ if settings['enable-system-time']
 eventLoop\addZone bottomZone
 eventLoop\addZone hoverTimeZone
 eventLoop\addZone topZone
-eventLoop\generateUIFromZones!
 
 notFrameStepping = false
 if settings['pause-indicator']
@@ -100,38 +99,40 @@ initDraw = ->
 		chapters\createMarkers!
 	if title
 		title\updatePlaylistInfo!
-	eventLoop\redraw!
 	notFrameStepping = true
 	-- duration is nil for streams of indeterminate length
 	duration = mp.get_property 'duration'
 	if not (streamMode or duration)
 		BarAccent.changeBarSize 0
 		if progressBar
-			eventLoop\removeUIElement progressBar
-			eventLoop\removeUIElement barCache
-			eventLoop\removeUIElement barBackground
+			bottomZone\removeUIElement progressBar
+			bottomZone\removeUIElement barCache
+			bottomZone\removeUIElement barBackground
 		if chapters
-			eventLoop\removeUIElement chapters
+			bottomZone\removeUIElement chapters
 		if hoverTime
-			eventLoop\removeUIElement hoverTime
+			hoverTimeZone\removeUIElement hoverTime
 		if remainingTime
-			eventLoop\removeUIElement remainingTime
+			bottomZone\removeUIElement remainingTime
 		streamMode = true
 	elseif streamMode and duration
 		BarAccent.changeBarSize settings['bar-height-active']
 		if progressBar
-			eventLoop\addUIElement barBackground
-			eventLoop\addUIElement barCache
-			eventLoop\addUIElement progressBar
+			bottomZone\addUIElement barBackground
+			bottomZone\addUIElement barCache
+			bottomZone\addUIElement progressBar
 		if chapters
-			eventLoop\addUIElement chapters
+			bottomZone\addUIElement chapters
 		if hoverTime
-			eventLoop\addUIElement hoverTime
+			hoverTimeZone\addUIElement hoverTime
 		if remainingTime
-			eventLoop\addUIElement remainingTime
+			bottomZone\addUIElement remainingTime
 		streamMode = false
 
 	mp.command 'script-message-to osc disable-osc'
+	eventLoop\generateUIFromZones!
+	eventLoop\resize!
+	eventLoop\redraw!
 
 fileLoaded = ->
 	mp.register_event 'playback-restart', initDraw

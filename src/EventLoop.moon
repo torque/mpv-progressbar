@@ -7,6 +7,7 @@ class EventLoop
 		@displayRequested = false
 
 		@updateTimer = mp.add_periodic_timer settings['redraw-period'], @\redraw
+		@updateTimer\stop!
 
 		mp.register_event 'shutdown', ->
 			@updateTimer\kill!
@@ -47,11 +48,15 @@ class EventLoop
 
 	generateUIFromZones: =>
 		seenUIElements = { }
+		@script = { }
+		@uiElements\clear!
 		for _, zone in ipairs @activityZones
 			for _, uiElement in ipairs zone.elements
 				unless seenUIElements[uiElement]
 					@addUIElement uiElement
 					seenUIElements[uiElement] = true
+
+		@updateTimer\resume!
 
 	addUIElement: ( uiElement ) =>
 		if uiElement == nil

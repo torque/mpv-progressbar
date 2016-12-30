@@ -6,6 +6,10 @@ class ActivityZone extends Rect
 
 	addUIElement: ( element ) =>
 		@elements\insert element
+		element\activate @active
+
+	removeUIElement: ( element ) =>
+		@elements\remove element
 
 	-- bottom-up click propagation does not deal with mouse down/up events.
 	clickHandler: =>
