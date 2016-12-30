@@ -13,16 +13,13 @@ class UIElement
 			return table.concat @line
 
 	activate: ( activate ) =>
-		if @animationDuration > 0
-			if activate == true
-				@animation\interrupt false
-			else
-				@animation\interrupt true
-				@animation.finishedCb = ->
-					@active = false
-				return
-
-		@active = activate
+		if activate == true
+			@animation\interrupt false
+			@active = true
+		else
+			@animation\interrupt true
+			@animation.finishedCb = ->
+				@active = false
 
 	resize: => error 'UIElement updateSize called'
 
