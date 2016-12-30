@@ -18,8 +18,10 @@ class Chapters extends BarBase
 		totalTime = mp.get_property_number 'duration', 0.01
 		chapters = mp.get_property_native 'chapter-list', { }
 
+		markerHeight = @active and maxHeight*maxHeightFrac or BarBase.animationMinHeight
+		markerWidth = @active and maxWidth or minWidth
 		for chapter in *chapters
-			marker = ChapterMarker chapter.time/totalTime, minWidth, BarBase.animationMinHeight
+			marker = ChapterMarker chapter.time/totalTime, markerWidth, markerHeight
 			table.insert @markers, marker
 			table.insert @line, marker\stringify!
 		@needsUpdate = true
