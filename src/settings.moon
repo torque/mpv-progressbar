@@ -43,7 +43,7 @@ settings = {
 	'enable-elapsed-time': true
 	'elapsed-style': ''
 	-- margins
-	'elapsed-left-margin': 2
+	'elapsed-left-margin': 4
 	-- This is actually added on top of the height of the progress bar.
 	'elapsed-bottom-margin': 0
 
