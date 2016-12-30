@@ -6,7 +6,7 @@ class Animation
 		@lastUpdate = mp.get_time!
 		@durationR = 1/@duration
 		@isFinished = (@duration <= 0)
-		@isRegistered = false
+		@active = false
 		@isReversed = false
 
 	update: ( @currentTime ) =>

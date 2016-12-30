@@ -1,14 +1,14 @@
 class AnimationQueue
 
-	animationList = Stack 'isRegistered'
+	animationList = Stack 'active'
 	deletionQueue = { }
 
-	@registerAnimation: ( animation ) ->
-		unless animation.isRegistered
+	@addAnimation: ( animation ) ->
+		unless animation.active
 			animationList\insert animation
 
-	@unregisterAnimation: ( animation ) ->
-		if animation.isRegistered
+	@removeAnimation: ( animation ) ->
+		if animation.active
 			animationList\remove animation
 
 	@destroyAnimationStack: ->

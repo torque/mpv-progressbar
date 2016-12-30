@@ -24,7 +24,7 @@ class PauseIndicator
 			@line[7]  = 'm 75 37.5 b 75 58.21 58.21 75 37.5 75 16.79 75 0 58.21 0 37.5 0 16.79 16.79 0 37.5 0 58.21 0 75 16.79 75 37.5 m 25.8333 17.18 l 25.8333 57.6 60.8333 37.39\n'
 			@line[14] = 'm 0 0 m 75 75 m 25.8333 17.18 l 25.8333 57.6 60.8333 37.39'
 
-		AnimationQueue.registerAnimation Animation 0, 1, 0.3, @\animate, @\destroy
+		AnimationQueue.addAnimation Animation 0, 1, settings['animation-duration'], @\animate, @\destroy
 		@eventLoop\addUIElement @
 
 	stringify: =>
