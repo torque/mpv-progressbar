@@ -11,6 +11,7 @@ class ProgressBar extends BarBase
 		mp.commandv "seek", Mouse.clickX*100/Window.w, seekString
 
 	redraw: =>
+		super!
 		position = mp.get_property_number 'percent-pos', 0
 		if position != @lastPosition
 			@line[6] = position

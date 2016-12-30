@@ -1,15 +1,15 @@
 class BarBase extends UIElement
 	minHeight = settings['bar-height-inactive']*100
-	animationMinHeight = minHeight
+	@@animationMinHeight = minHeight
 	maxHeight = settings['bar-height-active']*100
 	hideInactive = settings['hide-inactive']
 
 	@toggleInactiveVisibility: ->
 		hideInactive = not hideInactive
 		if hideInactive
-			animationMinHeight = 0
+			BarBase.animationMinHeight = 0
 		else
-			animationMinHeight = minHeight
+			BarBase.animationMinHeight = minHeight
 
 	new: =>
 		super!
@@ -40,7 +40,13 @@ class BarBase extends UIElement
 		@needsUpdate = true
 
 	animate: ( value ) =>
+		@line[4] = ([[%g]])\format (maxHeight - @@animationMinHeight)*value + @@animationMinHeight, value
 		@needsUpdate = true
 
 	redraw: =>
+		if @hideInactive != hideInactive
+			@hideInactive = hideInactive
+			unless @active
+				@animate 0
+
 		return @needsUpdate

@@ -1,6 +1,8 @@
 class Chapters extends BarBase
-
-	minHeight = settings['bar-height-inactive']*100
+	minWidth = settings['chapter-marker-width']*100
+	maxWidth = settings['chapter-marker-width-active']*100
+	maxHeight = settings['bar-height-active']*100
+	maxHeightFrac = settings['chapter-marker-active-height-fraction']
 
 	new: =>
 		super!
@@ -17,23 +19,28 @@ class Chapters extends BarBase
 		chapters = mp.get_property_native 'chapter-list', { }
 
 		for chapter in *chapters
-			marker = ChapterMarker chapter.time/totalTime
+			marker = ChapterMarker chapter.time/totalTime, minWidth, BarBase.animationMinHeight
 			table.insert @markers, marker
 			table.insert @line, marker\stringify!
+		@needsUpdate = true
 
 	resize: =>
 		for i, marker in ipairs @markers
-			marker\resize w, h
+			marker\resize!
 			@line[i] = marker\stringify!
+		@needsUpdate = true
 
-	animate: ( animation, value ) =>
+	animate: ( value ) =>
+		width = (maxWidth - minWidth)*value + minWidth
+		height = (maxHeight*maxHeightFrac - BarBase.animationMinHeight)*value + BarBase.animationMinHeight
 		for i, marker in ipairs @markers
-			marker\animate value
+			marker\animate width, height
 			@line[i] = marker\stringify!
 
 		@needsUpdate = true
 
 	redraw: =>
+		super!
 		currentPosition = mp.get_property_number( 'percent-pos', 0 )*0.01
 		update = false
 		for i, marker in ipairs @markers
