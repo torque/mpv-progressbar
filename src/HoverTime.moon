@@ -8,11 +8,11 @@ class HoverTime extends BarAccent
 		super!
 
 		@line = {
-			[[{\pos(]]
+			[[{%s%s\pos(]]\format settings['default-style'], settings['hover-time-style']
 			[[-100,0]]
 			[[)\alpha&H]]
 			[[FF]]
-			[[&\an2%s%s}]]\format settings['default-style'], settings['hover-time-style']
+			[[&\an2}]]
 			0
 		}
 
