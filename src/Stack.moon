@@ -25,14 +25,13 @@ class Stack
 			element[@containmentKey] = false
 
 	reindex = ( start = 1 ) =>
-		for i, element in ipairs @
-			element[@] = i
-
-	removeByIndex = ( index ) =>
-		table.remove @, index
+		for i = start, #@
+			(@[i])[@] = i
 
 	remove: ( element ) =>
-		removeByIndex @, element[@]
+		if element[@] == nil
+			error "Trying to remove an element that doesn't exist in this stack."
+		table.remove @, element[@]
 		reindex @, element[@]
 		removeElementMetadata @, element
 
