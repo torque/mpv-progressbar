@@ -12,7 +12,7 @@ class TimeRemaining extends BarAccent
 		}
 		@lastTime = -1
 		@position = offscreenPos
-		@animation = Animation offscreenPos, settings['remaining-right-margin'], @animationDuration, @\animate, nil, 0.25
+		@animation = Animation offscreenPos, settings['remaining-right-margin'], @animationDuration, @\animate, nil, 0.5
 
 	resize: =>
 		super!

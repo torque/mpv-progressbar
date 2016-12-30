@@ -9,7 +9,7 @@ class Title extends UIElement
 			[[)\an7%s%s}]]\format settings['default-style'], settings['title-style']
 			0
 		}
-		@animation = Animation offscreenPos, settings['title-top-margin'], @animationDuration, @\animate, nil, 0.25
+		@animation = Animation offscreenPos, settings['title-top-margin'], @animationDuration, @\animate, nil, 0.5
 
 	resize: =>
 
