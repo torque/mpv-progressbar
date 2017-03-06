@@ -15,11 +15,13 @@ convertToValue = ( value ) ->
 			value
 
 combined = {}
-for setting, value in pairs settings
+for setting in *settings.__keys
+	value = settings[setting]
 	comment = convertToComment helpText[setting]
 	settingString = setting .. '=' .. convertToValue value
 	table.insert combined, comment
 	table.insert combined, settingString
+table.insert combined, ''
 
 file = io.open arg[1], 'wb'
 file\write table.concat combined, '\n'

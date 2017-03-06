@@ -1,5 +1,4 @@
--- default options
-settings = { }
+
 helpText = { }
 
 settings['hover-zone-height'] = 40
@@ -18,7 +17,7 @@ file name and system time when the mouse is hovered over it.
 settings['display-scale-factor'] = 1
 helpText['display-scale-factor'] = [[
 Acts as a multiplier to increase the size of every UI element. Useful for high-
-dpi displays that cause the UI to be rendered too small (happens at least on
+DPI displays that cause the UI to be rendered too small (happens at least on
 macOS).
 ]]
 
@@ -50,7 +49,7 @@ fullscreen contexts, depending on the default setting.
 settings['bar-height-inactive'] = 2
 helpText['bar-height-inactive'] = [[
 Sets the height of the bar display when the mouse is not in the active zone and
-there is no request-display active. A value of 0 or less will cause bar- hide-
+there is no request-display active. A value of 0 or less will cause bar-hide-
 inactive to be set to true and the bar height to be set to 1. This should result
 in the desired behavior while avoiding annoying debug logging in mpv (libass
 does not like zero-height objects).
@@ -235,7 +234,7 @@ positioned.
 settings['pause-indicator'] = true
 helpText['pause-indicator'] = [[
 Sets whether or not the pause indicator is displayed. The pause indicator is a
-momentary icon the flashes in the middle of the screen, similar to youtube.
+momentary icon that flashes in the middle of the screen, similar to youtube.
 ]]
 
 settings['pause-indicator-foreground-style'] = [[\c&HFC799E&]]

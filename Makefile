@@ -43,20 +43,25 @@ DEFAULTS  := torque-progressbar.conf
 all: $(OUTPUT) $(DEFAULTS)
 
 $(DEFAULTS): $(JOINEDSET)
+	@printf 'Generating %s\n' $@
 	@moon $^ $@
 
 $(OUTPUT): $(JOINEDSRC) $(RESULTS)
-	@moonc -o $@ $<
+	@printf 'Building %s\n' $@
+	@moonc -o $@ $< 2>/dev/null
 
 $(JOINEDSRC): $(SOURCES) | $(TMPDIR)
+	@printf 'Generating %s\n' $@
 	@cat $^ > $@
 
 $(JOINEDSET): $(SETTINGS) | $(TMPDIR)
+	@printf 'Generating %s\n' $@
 	@cat $^ > $@
 
 $(RESULTS): | $(TMPDIR)/src/
 $(TMPDIR)/%.lua: %.moon
-	@moonc -o $@ $<
+	@printf 'Building %s\n' $@
+	@moonc -o $@ $< 2>/dev/null
 
 $(TMPDIR):
 	@mkdir -p $@
