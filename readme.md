@@ -41,7 +41,7 @@ these must be manually rebound in `~~/input.conf`. The defaults are:
 , script-binding progressbar/step-backward
 c script-binding progressbar/toggle-inactive-bar
 tab script-binding progressbar/request-display
-mouse_btn0 script-binding progressbar/seek-to-mouse
+mouse_btn0 script-binding progressbar/left-click
 ```
 
 #### Building
