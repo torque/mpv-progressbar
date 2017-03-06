@@ -26,19 +26,32 @@ SOURCES += src/Title.moon
 SOURCES += src/SystemTime.moon
 SOURCES += src/main.moon
 
+SETTINGS := tools/ReadOptionsStub.moon
+SETTINGS += src/settings.moon
+SETTINGS += tools/DefaultConfigGenerator.moon
+
+
 TMPDIR    := build
+JOINEDSET := $(TMPDIR)/DefaultConfigGenerator.moon
 JOINEDSRC := $(TMPDIR)/progressbar.moon
 OUTPUT    := $(JOINEDSRC:.moon=.lua)
 RESULTS   := $(addprefix $(TMPDIR)/, $(SOURCES:.moon=.lua))
+DEFAULTS  := torque-progressbar.conf
 
 .PHONY: all clean
 
-all: $(OUTPUT)
+all: $(OUTPUT) $(DEFAULTS)
+
+$(DEFAULTS): $(JOINEDSET)
+	@moon $^ $@
 
 $(OUTPUT): $(JOINEDSRC) $(RESULTS)
 	@moonc -o $@ $<
 
 $(JOINEDSRC): $(SOURCES) | $(TMPDIR)
+	@cat $^ > $@
+
+$(JOINEDSET): $(SETTINGS) | $(TMPDIR)
 	@cat $^ > $@
 
 $(RESULTS): | $(TMPDIR)/src/

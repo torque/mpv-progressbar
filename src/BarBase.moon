@@ -2,7 +2,7 @@ class BarBase extends UIElement
 	minHeight = settings['bar-height-inactive']*100
 	@@animationMinHeight = minHeight
 	maxHeight = settings['bar-height-active']*100
-	hideInactive = settings['hide-inactive']
+	hideInactive = settings['bar-hide-inactive']
 
 	@toggleInactiveVisibility: ->
 		hideInactive = not hideInactive
