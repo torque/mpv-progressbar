@@ -21,12 +21,30 @@ DPI displays that cause the UI to be rendered too small (happens at least on
 macOS).
 ]]
 
-settings['default-style'] = [[\fnSource Sans Pro\b1\bord2\fs30\c&HFC799E&\3c&H2D2D2D&]]
+settings['default-style'] = [[\fnSource Sans Pro\b1\bord2\shad0\fs30\c&HFC799E&\3c&H2D2D2D&]]
 helpText['default-style'] = [[
 Default style that is applied to all UI elements. A string of ASS override tags.
 Individual elements have their own style settings which override the tags here.
 Changing the font will likely require changing the hover-time margin settings
 and the offscreen-pos settings.
+
+Here are some useful ASS override tags (omit square brackets):
+\fn[Font Name]: sets the font to the named font.
+\fs[number]: sets the font size to the given number.
+\b[1/0]: sets the text bold or not (\b1 is bold, \b0 is regular weight).
+\i[1/0]: sets the text italic or not (same semantics as bold).
+\bord[number]: sets the outline width to the given number (in pixels).
+\shad[number]: sets the shadow size to the given number (pixels).
+\c&H[BBGGRR]&: sets the fill color for the text to the given color (hex pairs in
+	             the order, blue, green, red).
+\3c&H[BBGGRR]&: sets the outline color of the text to the given color.
+\4c&H[BBGGRR]&: sets the shadow color of the text to the given color.
+\alpha&H[AA]&: sets the line's transparency as a hex pair. 00 is fully opaque
+               and FF is fully transparent. Some UI elements are composed of
+               multiple layered lines, so adding transparency may not look good.
+               For further granularity, \1a&H[AA]& controls the fill opacity,
+               \3a&H[AA]& controls the outline opacity, and \4a&H[AA]& controls
+               the shadow opacity.
 ]]
 
 settings['enable-bar'] = true
@@ -73,7 +91,7 @@ any of the arguments supported by mpv, though the ones above are the only ones
 that really make sense.
 ]]
 
-settings['bar-default-style'] = [[\bord0]]
+settings['bar-default-style'] = [[\bord0\shad0]]
 helpText['bar-default-style'] = [[
 A string of ASS override tags that get applied to all three layers of the bar:
 progress, cache, and background. You probably don't want to remove \bord0 unless
