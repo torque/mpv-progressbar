@@ -50,6 +50,7 @@ class EventLoop
 		seenUIElements = { }
 		@script = { }
 		@uiElements\clear!
+		AnimationQueue.destroyAnimationStack!
 		for _, zone in ipairs @activityZones
 			for _, uiElement in ipairs zone.elements
 				unless seenUIElements[uiElement]
