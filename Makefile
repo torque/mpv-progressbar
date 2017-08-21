@@ -1,6 +1,6 @@
 # The order of the sources does matter.
-SOURCES := src/requires.moon
-SOURCES += src/log.moon
+SOURCES := src/log.moon
+SOURCES += src/requires.moon
 SOURCES += src/settings.moon
 SOURCES += src/Stack.moon
 SOURCES += src/Window.moon
@@ -29,7 +29,6 @@ SOURCES += src/main.moon
 SETTINGS := tools/ReadOptionsStub.moon
 SETTINGS += src/settings.moon
 SETTINGS += tools/DefaultConfigGenerator.moon
-
 
 TMPDIR    := build
 JOINEDSET := $(TMPDIR)/DefaultConfigGenerator.moon

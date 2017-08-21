@@ -1,3 +1,4 @@
+msg = require 'mp.msg'
 
 log = {
 	debug: ( format, ... ) ->
