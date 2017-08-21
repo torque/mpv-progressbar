@@ -4,6 +4,8 @@ class ActivityZone extends Rect
 		@active = false
 		@elements = Stack!
 
+	reconfigure: =>
+
 	addUIElement: ( element ) =>
 		@elements\insert element
 		element\activate @active

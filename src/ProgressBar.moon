@@ -4,9 +4,14 @@ class ProgressBar extends BarBase
 
 	new: =>
 		super!
-		@line[8] = @line[8]\format settings['bar-foreground-style']
 		@lastPosition = 0
+
+	reconfigure: =>
+		super!
+		seekString = 'absolute-percent+%s'\format settings['seek-precision']
 		@barWidth = settings['progress-bar-width']
+		@line[7] = [[]]
+		@line[8] = @line[8]\format settings['bar-foreground-style']
 
 	clickHandler: =>
 		mp.commandv "seek", Mouse.clickX*100/Window.w, seekString

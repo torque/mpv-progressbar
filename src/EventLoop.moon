@@ -36,6 +36,15 @@ class EventLoop
 							@displayRequested = false,
 			{ complex: true }
 
+		mp.add_key_binding 'ctrl+r', 'reconfigure', @\reconfigure, { repeatable: false }
+
+	reconfigure: =>
+		settings\reload!
+		for _, zone in ipairs @activityZones
+			zone\reconfigure!
+		for _, element in ipairs @uiElements
+			element\reconfigure!
+
 	addZone: ( zone ) =>
 		if zone == nil
 			return

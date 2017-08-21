@@ -368,10 +368,4 @@ will disappear without animating all the way off-screen. Positive values will
 cause the display to animate the wrong direction.
 ]]
 
-options.read_options settings, script_name .. '/main'
-
-if settings['bar-height-inactive'] <= 0
-	settings['bar-hide-inactive'] = true
-	-- This is set to 1 so that we don't end up with libass spamming messages
-	-- about failing to stroke zero-height object.
-	settings['bar-height-inactive'] = 1
+settings\reload!

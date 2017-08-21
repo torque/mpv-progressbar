@@ -1,7 +1,7 @@
 class BarBase extends UIElement
 	minHeight = settings['bar-height-inactive']*100
 	@@animationMinHeight = minHeight
-	maxHeight = settings['bar-height-active']*100
+	@@maxHeight = settings['bar-height-active']*100
 	hideInactive = settings['bar-hide-inactive']
 
 	@toggleInactiveVisibility: ->
@@ -11,8 +11,9 @@ class BarBase extends UIElement
 		else
 			BarBase.animationMinHeight = minHeight
 
+	lineBaseTemplate = [[\an1%s%s%s\p1}m 0 0 l ]]
+
 	new: =>
-		super!
 
 		@line = {
 			[[{\pos(]] -- 1
@@ -22,9 +23,23 @@ class BarBase extends UIElement
 			[[\fscx]]  -- 5
 			0.001      -- 6
 			[[]]       -- 7
-			[[\an1%s%s%s\p1}m 0 0 l ]]\format settings['default-style'], settings['bar-default-style'], '%s'
+			lineBaseTemplate
 			0          -- 9
 		}
+
+		super!
+
+	reconfigure: =>
+		super!
+		minHeight = settings['bar-height-inactive']*100
+		@@maxHeight = settings['bar-height-active']*100
+		hideInactive = settings['bar-hide-inactive']
+		if hideInactive
+			@@animationMinHeight = 0
+		else
+			@@animationMinHeight = minHeight
+		@line[4] = minHeight
+		@line[8] = lineBaseTemplate\format settings['default-style'], settings['bar-default-style'], '%s'
 
 		@animation = Animation 0, 1, @animationDuration, @\animate
 
@@ -41,7 +56,7 @@ class BarBase extends UIElement
 		@needsUpdate = true
 
 	animate: ( value ) =>
-		@line[4] = ([[%g]])\format (maxHeight - @@animationMinHeight)*value + @@animationMinHeight, value
+		@line[4] = ([[%g]])\format (@@maxHeight - @@animationMinHeight)*value + @@animationMinHeight, value
 		@needsUpdate = true
 
 	redraw: =>

@@ -8,6 +8,14 @@ mp.get_osd_size = mp.get_osd_size or mp.get_screen_size
 
 -- This is here so I can do bad things in the config generator tool.
 settings = { }
+settings.reload = =>
+	options.read_options @, script_name .. '/main'
+
+	if @['bar-height-inactive'] <= 0
+		@['bar-hide-inactive'] = true
+		-- This is set to 1 so that we don't end up with libass spamming messages
+		-- about failing to stroke zero-height object.
+		@['bar-height-inactive'] = 1
 
 settings.migrate = =>
 	oldConfig = mp.find_config_file 'lua-settings/%s.conf'\format script_name

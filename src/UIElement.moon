@@ -1,9 +1,9 @@
 class UIElement
 
 	new: =>
-		@animationDuration = settings['animation-duration']
 		@needsUpdate = false
 		@active = false
+		@reconfigure!
 
 	stringify: =>
 		@needsUpdate = false
@@ -20,6 +20,10 @@ class UIElement
 			@animation\interrupt true
 			@animation.finishedCb = ->
 				@active = false
+
+	reconfigure: =>
+		@needsUpdate = true
+		@animationDuration = settings['animation-duration']
 
 	resize: => error 'UIElement updateSize called'
 
