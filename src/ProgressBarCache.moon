@@ -2,7 +2,7 @@ class ProgressBarCache extends BarBase
 
 	new: =>
 		super!
-		@line[7] = @line[7]\format settings['bar-cache-style']
+		@line[8] = @line[8]\format settings['bar-cache-style']
 
 	redraw: =>
 		super!

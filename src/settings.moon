@@ -80,6 +80,12 @@ request-display is active. There is no logic attached to this, so 0 or negative
 values may have unexpected results.
 ]]
 
+settings['progress-bar-width'] = 0
+helpText['progress-bar-width'] = [[
+If greater than zero, changes the progress bar style to be a small segment
+rather than a continuous bar and sets its width.
+]]
+
 settings['seek-precision'] = 'exact'
 helpText['seek-precision'] = [[
 Affects precision of seeks due to clicks on the progress bar. Should be 'exact' or
