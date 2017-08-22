@@ -124,6 +124,10 @@ helpText['bar-height-active'] = [[Sets the height of the bar display when the mo
 request-display is active. There is no logic attached to this, so 0 or negative
 values may have unexpected results.
 ]]
+settings['progress-bar-width'] = 0
+helpText['progress-bar-width'] = [[If greater than zero, changes the progress bar style to be a small segment
+rather than a continuous bar and sets its width.
+]]
 settings['seek-precision'] = 'exact'
 helpText['seek-precision'] = [[Affects precision of seeks due to clicks on the progress bar. Should be 'exact' or
 'keyframes'. Exact is slightly slower, but won't jump around between two
@@ -1029,7 +1033,7 @@ do
     end,
     resize = function(self)
       self.line[2] = ([[%d,%d]]):format(0, Window.h)
-      self.line[8] = ([[%d 0 %d 1 0 1]]):format(Window.w, Window.w)
+      self.line[9] = ([[%d 0 %d 1 0 1]]):format(Window.w, Window.w)
       self.needsUpdate = true
     end,
     animate = function(self, value)
@@ -1058,6 +1062,7 @@ do
         minHeight,
         [[\fscx]],
         0.001,
+        [[]],
         ([[\an1%s%s%s\p1}m 0 0 l ]]):format(settings['default-style'], settings['bar-default-style'], '%s'),
         0
       }
@@ -1123,6 +1128,10 @@ do
       local position = mp.get_property_number('percent-pos', 0)
       if position ~= self.lastPosition then
         self.line[6] = position
+        if self.barWidth > 0 then
+          local followingEdge = Window.w * position * 1e-2 - self.barWidth
+          self.line[7] = ([[\clip(m %g 0 l %g 0 %g %g %g %g)]]):format(followingEdge, Window.w, Window.w, Window.h, followingEdge, Window.h)
+        end
         self.lastPosition = position
         self.needsUpdate = true
       end
@@ -1134,8 +1143,9 @@ do
   _class_0 = setmetatable({
     __init = function(self)
       _class_0.__parent.__init(self)
-      self.line[7] = self.line[7]:format(settings['bar-foreground-style'])
+      self.line[8] = self.line[8]:format(settings['bar-foreground-style'])
       self.lastPosition = 0
+      self.barWidth = settings['progress-bar-width']
     end,
     __base = _base_0,
     __name = "ProgressBar",
@@ -1192,7 +1202,7 @@ do
   _class_0 = setmetatable({
     __init = function(self)
       _class_0.__parent.__init(self)
-      self.line[7] = self.line[7]:format(settings['bar-cache-style'])
+      self.line[8] = self.line[8]:format(settings['bar-cache-style'])
     end,
     __base = _base_0,
     __name = "ProgressBarCache",
@@ -1224,7 +1234,6 @@ end
 local ProgressBarBackground
 do
   local _class_0
-  local minHeight, maxHeight
   local _parent_0 = BarBase
   local _base_0 = { }
   _base_0.__index = _base_0
@@ -1233,7 +1242,7 @@ do
     __init = function(self)
       _class_0.__parent.__init(self)
       self.line[6] = 100
-      self.line[7] = self.line[7]:format(settings['bar-background-style'])
+      self.line[8] = self.line[8]:format(settings['bar-background-style'])
     end,
     __base = _base_0,
     __name = "ProgressBarBackground",
@@ -1257,9 +1266,6 @@ do
     end
   })
   _base_0.__class = _class_0
-  local self = _class_0
-  minHeight = settings['bar-height-inactive'] * 100
-  maxHeight = settings['bar-height-active'] * 100
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
