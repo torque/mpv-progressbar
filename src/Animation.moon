@@ -9,8 +9,7 @@ class Animation
 		@active = false
 		@isReversed = false
 
-	update: ( @currentTime ) =>
-		now = mp.get_time!
+	update: ( now ) =>
 		if @isReversed
 			@linearProgress = math.max 0, math.min 1, @linearProgress + (@lastUpdate - now)*@durationR
 			if @linearProgress == 0
