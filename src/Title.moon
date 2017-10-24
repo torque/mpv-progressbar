@@ -7,7 +7,7 @@ class Title extends UIElement
 			[[{\pos(]]
 			[[%g,%g]]\format settings['title-left-margin'], offscreenPos
 			[[)\an7%s%s}]]\format settings['default-style'], settings['title-style']
-			0
+			[[????]]
 		}
 		@position = offscreenPos
 		@animation = Animation offscreenPos, settings['title-top-margin'], @animationDuration, @\animate, nil, 0.5

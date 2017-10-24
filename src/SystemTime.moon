@@ -11,7 +11,7 @@ class SystemTime extends UIElement
 			[[{\pos(]]
 			[[-100,0]]
 			[[)\an9%s%s}]]\format settings['default-style'], settings['system-time-style']
-			0
+			[[????]]
 		}
 		@lastTime = -1
 		@position = offscreenPosition

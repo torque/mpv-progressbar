@@ -11,7 +11,7 @@ class TimeElapsed extends BarAccent
 			[[{\pos(]]
 			[[%g,0]]\format offscreenPos
 			[[)\an1%s%s}]]\format settings['default-style'], settings['elapsed-style']
-			0
+			[[????]]
 		}
 		@lastTime = -1
 		@position = offscreenPos

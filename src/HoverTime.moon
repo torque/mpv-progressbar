@@ -13,7 +13,7 @@ class HoverTime extends BarAccent
 			[[)\alpha&H]]
 			[[FF]]
 			[[&\an2}]]
-			0
+			[[????]]
 		}
 
 		@lastTime = 0

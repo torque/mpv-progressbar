@@ -10,7 +10,7 @@ class TimeRemaining extends BarAccent
 			[[{\pos(]]
 			[[%g,0]]\format offscreenPos
 			[[)\an3%s%s}]]\format settings['default-style'], settings['remaining-style']
-			0
+			[[????]]
 		}
 		@lastTime = -1
 		@position = offscreenPos
