@@ -368,4 +368,4 @@ will disappear without animating all the way off-screen. Positive values will
 cause the display to animate the wrong direction.
 ]]
 
-settings\reload!
+settings\__reload!

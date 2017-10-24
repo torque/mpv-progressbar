@@ -29,6 +29,8 @@ class BarBase extends UIElement
 
 		super!
 
+		@reconfigure!
+
 	reconfigure: =>
 		super!
 		minHeight = settings['bar-height-inactive']*100

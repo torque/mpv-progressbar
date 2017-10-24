@@ -21,6 +21,15 @@ class HoverTime extends BarAccent
 		@position = -100
 		@animation = Animation 255, 0, @animationDuration, @\animate
 
+	reconfigure: =>
+		super!
+		rightMargin = settings['hover-time-right-margin']
+		leftMargin = settings['hover-time-left-margin']
+		bottomMargin = settings['hover-time-bottom-margin']
+		@line[2] = ('%g,%g')\format math.min( Window.w - rightMargin, math.max( leftMargin, Mouse.x ) ), @yPos - bottomMargin
+		@line[1] = ([[{%s%s\pos(]])\format settings['default-style'], settings['hover-time-style']
+		@animation = Animation 255, 0, @animationDuration, @\animate
+
 	resize: =>
 		super!
 		@line[2] = ("%g,%g")\format math.min( Window.w - rightMargin, math.max( leftMargin, Mouse.x ) ), @yPos - bottomMargin

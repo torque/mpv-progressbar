@@ -26,6 +26,19 @@ class Chapters extends BarBase
 			table.insert @line, marker\stringify!
 		@needsUpdate = true
 
+	reconfigure: =>
+		-- Need to call the UIElement reconfigure implementation, but can't use
+		-- super because calling the BarBase reconfigure on this class would break a
+		-- lot. This should probably not be a subclass of BarBase.
+		UIElement.reconfigure @
+		minWidth = settings['chapter-marker-width']*100
+		maxWidth = settings['chapter-marker-width-active']*100
+		maxHeight = settings['bar-height-active']*100
+		maxHeightFrac = settings['chapter-marker-active-height-fraction']
+		ChapterMarker\reconfigure!
+		@createMarkers!
+		@animation = Animation 0, 1, @animationDuration, @\animate
+
 	resize: =>
 		for i, marker in ipairs @markers
 			marker\resize!

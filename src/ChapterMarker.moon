@@ -2,6 +2,10 @@ class ChapterMarker
 	beforeStyle = settings['chapter-marker-before-style']
 	afterStyle = settings['chapter-marker-after-style']
 
+	@reconfigure: =>
+		beforeStyle = settings['chapter-marker-before-style']
+		afterStyle = settings['chapter-marker-after-style']
+
 	new: ( @position, minWidth, minHeight ) =>
 		@line = {
 			[[{\an2\bord0\p1\pos(]]   -- 1
@@ -20,15 +24,13 @@ class ChapterMarker
 		return table.concat @line
 
 	resize: =>
-		@line[2] = [[%d,%d]]\format math.floor( @position*Window.w ), Window.h
+		@line[2] = ('%d,%d')\format math.floor( @position*Window.w ), Window.h
 
 	animate: ( width, height ) =>
-		@line[4] = [[%g]]\format width
-		@line[6] = [[%g]]\format height
+		@line[4] = ('%g')\format width
+		@line[6] = ('%g')\format height
 
-	redraw: ( position ) =>
-		update = false
-
+	redraw: ( position, update = false ) =>
 		if not @passed and (position > @position)
 			@line[7] = afterStyle
 			@passed = true

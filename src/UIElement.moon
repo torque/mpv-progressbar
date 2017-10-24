@@ -3,7 +3,7 @@ class UIElement
 	new: =>
 		@needsUpdate = false
 		@active = false
-		@reconfigure!
+		@animationDuration = settings['animation-duration']
 
 	stringify: =>
 		@needsUpdate = false

@@ -1,6 +1,6 @@
 class ProgressBar extends BarBase
 
-	seekString = 'absolute-percent+%s'\format settings['seek-precision']
+	seekString = ('absolute-percent+%s')\format settings['seek-precision']
 
 	new: =>
 		super!
@@ -8,7 +8,7 @@ class ProgressBar extends BarBase
 
 	reconfigure: =>
 		super!
-		seekString = 'absolute-percent+%s'\format settings['seek-precision']
+		seekString = ('absolute-percent+%s')\format settings['seek-precision']
 		@barWidth = settings['progress-bar-width']
 		@line[7] = [[]]
 		@line[8] = @line[8]\format settings['bar-foreground-style']
