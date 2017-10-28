@@ -65,8 +65,8 @@ if settings['enable-system-time']
 -- The order of these is important, because the order that elements are added to
 -- eventLoop matters, because that controls how they are layered (first element
 -- on the bottom).
-eventLoop\addZone bottomZone
 eventLoop\addZone hoverTimeZone
+eventLoop\addZone bottomZone
 eventLoop\addZone topZone
 
 notFrameStepping = false

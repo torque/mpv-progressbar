@@ -350,6 +350,15 @@ display will disappear without animating all the way off-screen. Positive values
 will cause the display to animate the wrong direction.
 ]]
 
+settings['hover-time-offscreen-pos'] = -50
+helpText['hover-time-offscreen-pos'] = [[
+Controls how far off the bottom of the window the mouse hover time display tries
+to move when it is inactive. If you use a non-default font, this value may need
+to be tweaked. If this value is not far enough off-screen, the elapsed
+display will disappear without animating all the way off-screen. Positive values
+will cause the display to animate the wrong direction.
+]]
+
 settings['system-time-offscreen-pos'] = -100
 helpText['system-time-offscreen-pos'] = [[
 Controls how far off the left side of the window the system time display tries
