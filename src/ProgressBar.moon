@@ -19,7 +19,7 @@ class ProgressBar extends BarBase
 	redraw: =>
 		super!
 		position = mp.get_property_number 'percent-pos', 0
-		if position != @lastPosition
+		if position != @lastPosition or @needsUpdate
 			@line[6] = position
 			if @barWidth > 0
 				followingEdge = Window.w*position*1e-2 - @barWidth
