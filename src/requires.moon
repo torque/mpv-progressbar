@@ -9,15 +9,15 @@ mp.get_osd_size = mp.get_osd_size or mp.get_screen_size
 -- This is here instead of in settings.moon because it would conflict with the
 -- default settings generator tool if it were placed in settings, and this is
 -- the only file that goes before settings.
-settings = { __defaults: { } }
+settings = { _defaults: { } }
 
 -- These methods are jammed in a metatable so that they can't be overridden from
 -- the configuration file.
 settingsMeta = {
-	__reload: =>
+	_reload: =>
 		-- Shallow copy should be good. This is necessary to reset values to the
 		-- defaults so that removing a configuration key has an effect.
-		for key, value in pairs @__defaults
+		for key, value in pairs @_defaults
 			settings[key] = value
 
 		options.read_options @, script_name .. '/main'
@@ -28,7 +28,7 @@ settingsMeta = {
 			-- about failing to stroke zero-height object.
 			@['bar-height-inactive'] = 1
 
-	__migrate: =>
+	_migrate: =>
 		oldConfig = mp.find_config_file 'lua-settings/%s.conf'\format script_name
 		newConfigFile = 'lua-settings/%s/main.conf'\format script_name
 		newConfig = mp.find_config_file newConfigFile
@@ -59,11 +59,11 @@ settingsMeta = {
 				log.info 'Configuration successfully migrated.'
 
 	__newindex: ( key, value ) =>
-		@__defaults[key] = value
+		@_defaults[key] = value
 		rawset @, key, value
 }
 settingsMeta.__index = settingsMeta
 
 setmetatable settings, settingsMeta
 
-settings\__migrate!
+settings\_migrate!

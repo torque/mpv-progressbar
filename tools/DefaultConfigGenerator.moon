@@ -1,24 +1,24 @@
 convertToComment = ( text ) ->
-	result = { '' }
+	result = { }
 	text\gsub '(.-)\n', ( line ) ->
 		table.insert result, '# ' .. line
 
-	table.concat result, '\n'
+	return table.concat result, '\n'
 
 convertToValue = ( value ) ->
 	switch type value
 		when 'boolean'
-			value and 'yes' or 'no'
+			return value and 'yes' or 'no'
 		when 'number'
-			tostring value
+			return tostring value
 		else
-			value
+			return value
 
 combined = {}
-for setting in *settings.__keys
+for setting in *settings._keys
 	value = settings[setting]
 	comment = convertToComment helpText[setting]
-	settingString = setting .. '=' .. convertToValue value
+	settingString = setting .. '=' .. convertToValue( value ) .. '\n'
 	table.insert combined, comment
 	table.insert combined, settingString
 table.insert combined, ''

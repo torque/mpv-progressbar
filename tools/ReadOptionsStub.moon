@@ -1,5 +1,6 @@
 options = { read_options: -> }
-settings =  { __keys: { }, __reload: => }
-setmetatable settings, __newindex: ( key, value ) =>
-	table.insert @__keys, key
+settings =  { _keys: { }, _reload: => }
+setmetatable settings, { __newindex: ( key, value ) =>
+	table.insert @_keys, key
 	rawset @, key, value
+}
