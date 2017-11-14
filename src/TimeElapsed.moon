@@ -2,28 +2,24 @@ class TimeElapsed extends BarAccent
 
 	bottomMargin = settings['elapsed-bottom-margin']
 
-	new: =>
-		super!
 
-		offscreenPos = settings['elapsed-offscreen-pos']
-
-		@line = {
-			[[{\pos(]]
-			[[%g,0]]\format offscreenPos
-			[[)\an1%s%s}]]\format settings['default-style'], settings['elapsed-style']
-			[[????]]
-		}
-		@lastTime = -1
-		@position = offscreenPos
-		@animation = Animation offscreenPos, settings['elapsed-left-margin'], @animationDuration, @\animate, nil, 0.5
+	lastTime: -1
+	position: settings['elapsed-offscreen-pos']
+	line: {
+		[[{\pos(]],
+		[[]],
+		[[]],
+		[[????]]
+	}
 
 	reconfigure: =>
 		super!
 		bottomMargin = settings['elapsed-bottom-margin']
-		offscreenPos = settings['elapsed-offscreen-pos']
 		@line[2] = ('%g,%g')\format @position, @yPos - bottomMargin
 		@line[3] = ([[)\an1%s%s}]])\format settings['default-style'], settings['elapsed-style']
-		@animation = Animation offscreenPos, settings['elapsed-left-margin'], @animationDuration, @\animate, nil, 0.5
+		@animation = Animation settings['elapsed-offscreen-pos'],
+			settings['elapsed-left-margin'],
+			@animationDuration, @\animate, nil, 0.5
 
 	resize: =>
 		super!

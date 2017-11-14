@@ -2,33 +2,27 @@ class HoverTime extends BarAccent
 
 	rightMargin = settings['hover-time-right-margin']
 	leftMargin = settings['hover-time-left-margin']
-	bottomMargin = settings['hover-time-bottom-margin']
-	offScreenPos = settings['hover-time-offscreen-pos']
 
-	new: =>
-		super!
 
-		@line = {
-			[[{%s%s\pos(]]\format settings['default-style'], settings['hover-time-style']
-			[[-100,0]]
-			[[)\an2}]]
-			[[????]]
-		}
-
-		@lastTime = 0
-		@lastX = -1
-		@position = offScreenPos
-		@animation = Animation offScreenPos, bottomMargin, @animationDuration, @\animate, nil, 0.5
+	lastTime: 0
+	lastX: -1
+	position: settings['hover-time-offscreen-pos']
+	line: {
+		[[]]
+		[[]]
+		[[)\an2}]]
+		[[????]]
+	}
 
 	reconfigure: =>
 		super!
 		rightMargin = settings['hover-time-right-margin']
 		leftMargin = settings['hover-time-left-margin']
-		bottomMargin = settings['hover-time-bottom-margin']
-		offScreenPos = settings['hover-time-offscreen-pos']
-		@line[2] = ('%g,%g')\format math.min( Window.w - rightMargin, math.max( leftMargin, Mouse.x ) ), @position
+
 		@line[1] = ([[{%s%s\pos(]])\format settings['default-style'], settings['hover-time-style']
-		@animation = Animation offScreenPos, bottomMargin, @animationDuration, @\animate, nil, 0.5
+		@line[2] = ('%g,%g')\format math.min( Window.w - rightMargin, math.max( leftMargin, Mouse.x ) ), @position
+		@animation = Animation settings['hover-time-offscreen-pos'],
+			settings['hover-time-bottom-margin'], @animationDuration, @\animate, nil, 0.5
 
 	resize: =>
 		super!

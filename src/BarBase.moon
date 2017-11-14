@@ -1,9 +1,9 @@
 class BarBase extends UIElement
 	minHeight = settings['bar-height-inactive']*100
-	@@animationMinHeight = minHeight
-	@@maxHeight = settings['bar-height-active']*100
 	hideInactive = settings['bar-hide-inactive']
 
+	@animationMinHeight: minHeight
+	@maxHeight: settings['bar-height-active']*100
 	@toggleInactiveVisibility: ->
 		hideInactive = not hideInactive
 		if hideInactive
@@ -13,23 +13,17 @@ class BarBase extends UIElement
 
 	lineBaseTemplate = [[\an1%s%s%s\p1}m 0 0 l ]]
 
-	new: =>
-
-		@line = {
-			[[{\pos(]] -- 1
-			0          -- 2
-			[[)\fscy]] -- 3
-			minHeight  -- 4
-			[[\fscx]]  -- 5
-			0.001      -- 6
-			[[]]       -- 7
-			lineBaseTemplate
-			0          -- 9
-		}
-
-		super!
-
-		@reconfigure!
+	line: {
+		[[{\pos(]] -- 1
+		0          -- 2
+		[[)\fscy]] -- 3
+		minHeight  -- 4
+		[[\fscx]]  -- 5
+		0.001      -- 6
+		[[]]       -- 7
+		lineBaseTemplate
+		0          -- 9
+	}
 
 	reconfigure: =>
 		super!

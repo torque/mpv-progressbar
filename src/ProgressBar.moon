@@ -2,10 +2,7 @@ class ProgressBar extends BarBase
 
 	seekString = ('absolute-percent+%s')\format settings['seek-precision']
 
-	new: =>
-		-- super calls reconfigure which sets barShift.
-		super!
-		@lastPosition = 0
+	lastPosition: 0.1
 
 	reconfigure: =>
 		super!

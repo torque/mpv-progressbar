@@ -2,27 +2,24 @@ class TimeRemaining extends BarAccent
 
 	bottomMargin = settings['remaining-bottom-margin']
 
-	new: =>
-		super!
 
-		offscreenPos = settings['remaining-offscreen-pos']
-		@line = {
-			[[{\pos(]]
-			[[%g,0]]\format offscreenPos
-			[[)\an3%s%s}]]\format settings['default-style'], settings['remaining-style']
-			[[????]]
-		}
-		@lastTime = -1
-		@position = offscreenPos
-		@animation = Animation offscreenPos, settings['remaining-right-margin'], @animationDuration, @\animate, nil, 0.5
+	lastTime: -1
+	position: settings['remaining-offscreen-pos']
+	line: {
+		[[{\pos(]],
+		[[]],
+		[[]],
+		[[????]]
+	}
 
 	reconfigure: =>
 		super!
 		bottomMargin = settings['remaining-bottom-margin']
-		offscreenPos = settings['remaining-offscreen-pos']
 		@line[2] = ('%g,%g')\format @position, @yPos - bottomMargin
 		@line[3] = ([[)\an3%s%s}]])\format settings['default-style'], settings['remaining-style']
-		@animation = Animation offscreenPos, settings['remaining-right-margin'], @animationDuration, @\animate, nil, 0.5
+		@animation = Animation settings['remaining-offscreen-pos'],
+			settings['remaining-right-margin'],
+			@animationDuration, @\animate, nil, 0.5
 
 	resize: =>
 		super!

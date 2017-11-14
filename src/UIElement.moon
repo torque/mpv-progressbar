@@ -1,9 +1,14 @@
 class UIElement
 
+	enabled: true
+	active: false
+	needsUpdate: false
+	animationDuration: settings['animation-duration']
+
+	_containers: {}
+
 	new: =>
-		@needsUpdate = false
-		@active = false
-		@animationDuration = settings['animation-duration']
+		@reconfigure!
 
 	stringify: =>
 		@needsUpdate = false
@@ -23,6 +28,7 @@ class UIElement
 
 	reconfigure: =>
 		@needsUpdate = true
+		@active = false
 		@animationDuration = settings['animation-duration']
 
 	resize: => error 'UIElement updateSize called'

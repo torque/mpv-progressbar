@@ -1,16 +1,12 @@
 class Title extends UIElement
 
-	new: =>
-		super!
-		offscreenPos = settings['title-offscreen-pos']
-		@line = {
-			[[{\pos(]]
-			[[%g,%g]]\format settings['title-left-margin'], offscreenPos
-			[[)\an7%s%s}]]\format settings['default-style'], settings['title-style']
-			[[????]]
-		}
-		@position = offscreenPos
-		@animation = Animation offscreenPos, settings['title-top-margin'], @animationDuration, @\animate, nil, 0.5
+	position: settings['title-offscreen-pos']
+	line: {
+		[[{\pos(]],
+		[[%g,%g]],
+		[[)\an7%s%s}]],
+		[[????]]
+	}
 
 	reconfigure: =>
 		super!
