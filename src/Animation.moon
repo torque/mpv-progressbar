@@ -1,40 +1,28 @@
 class Animation
 
-	new: ( @initialValue, @endValue, @duration, @updateCb, @finishedCb, @accel = 1 ) =>
-		@value = @initialValue
+	new: ( @initialValue, endValue, duration, @animatable, @accel = 1 ) =>
+		@deltaValue = endValue - @initialValue
 		@linearProgress = 0
-		@lastUpdate = mp.get_time!
-		@durationR = 1/@duration
-		@isFinished = (@duration <= 0)
+		@durationR = 1/duration
 		@active = false
-		@isReversed = false
+		@reversed = false
 
-	update: ( now ) =>
-		if @isReversed
-			@linearProgress = math.max 0, math.min 1, @linearProgress + (@lastUpdate - now)*@durationR
-			if @linearProgress == 0
-				@isFinished = true
-		else
-			@linearProgress = math.max 0, math.min 1, @linearProgress + (now - @lastUpdate)*@durationR
-			if @linearProgress == 1
-				@isFinished = true
-		@lastUpdate = now
+	update: ( timeDelta ) =>
+		@linearProgress = math.max 0, math.min 1, @linearProgress + timeDelta*@durationR
+		@animatable\animate @initialValue + math.pow( @linearProgress, @accel )*@deltaValue
 
-		progress = math.pow @linearProgress, @accel
+		return @reversed and @linearProgress == 0 or @linearProgress == 1
 
-		@value = (1 - progress) * @initialValue + progress * @endValue
+	reset: =>
+		@linearProgress = @reversed and 1 or 0
 
-		@.updateCb @value
-
-		if @isFinished and @finishedCb
-			@finishedCb!
-
-		return @isFinished
+		unless @active
+			AnimationQueue.addAnimation @
 
 	interrupt: ( reverse ) =>
-		@finishedCb = nil
-		@lastUpdate = mp.get_time!
-		@isReversed = reverse
+		if @reversed != reverse
+			@durationR = -@durationR
+			@reversed = reverse
+
 		unless @active
-			@isFinished = false
 			AnimationQueue.addAnimation @
