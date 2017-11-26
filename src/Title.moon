@@ -1,5 +1,9 @@
 class Title extends UIElement
 
+	@enableKey: 'enable-title'
+
+	layer: 300
+	enabled: settings['enable-title']
 	position: settings['title-offscreen-pos']
 	line: {
 		[[{\pos(]],
@@ -13,7 +17,7 @@ class Title extends UIElement
 		offscreenPos = settings['title-offscreen-pos']
 		@line[2] = ('%g,%g')\format settings['title-left-margin'], @animation.value
 		@line[3] = [[)\an7%s%s}]]\format settings['default-style'], settings['title-style']
-		@animation = Animation offscreenPos, settings['title-top-margin'], @animationDuration, @\animate, nil, 0.5
+		@animation = Animation offscreenPos, settings['title-top-margin'], @animationDuration, @, 0.5
 
 	resize: =>
 

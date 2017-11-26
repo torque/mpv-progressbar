@@ -4,6 +4,8 @@ class BarBase extends UIElement
 
 	@animationMinHeight: minHeight
 	@maxHeight: settings['bar-height-active']*100
+	@enableKey: 'enable-bar'
+
 	@toggleInactiveVisibility: ->
 		hideInactive = not hideInactive
 		if hideInactive
@@ -37,7 +39,7 @@ class BarBase extends UIElement
 		@line[4] = minHeight
 		@line[8] = lineBaseTemplate\format settings['default-style'], settings['bar-default-style'], '%s'
 
-		@animation = Animation 0, 1, @animationDuration, @\animate
+		@animation = Animation 0, 1, @animationDuration, @
 
 	stringify: =>
 		@needsUpdate = false

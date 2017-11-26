@@ -2,7 +2,10 @@ class TimeElapsed extends BarAccent
 
 	bottomMargin = settings['elapsed-bottom-margin']
 
+	@enableKey: 'enable-elapsed-time'
 
+	layer: 300
+	enabled: settings['enable-elapsed-time']
 	lastTime: -1
 	position: settings['elapsed-offscreen-pos']
 	line: {
@@ -19,7 +22,7 @@ class TimeElapsed extends BarAccent
 		@line[3] = ([[)\an1%s%s}]])\format settings['default-style'], settings['elapsed-style']
 		@animation = Animation settings['elapsed-offscreen-pos'],
 			settings['elapsed-left-margin'],
-			@animationDuration, @\animate, nil, 0.5
+			@animationDuration, @, 0.5
 
 	resize: =>
 		super!

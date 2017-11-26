@@ -4,11 +4,15 @@ class Chapters extends BarBase
 	maxHeight = settings['bar-height-active']*100
 	maxHeightFrac = settings['chapter-marker-active-height-fraction']
 
+	@enableKey: 'enable-chapter-markers'
+
+	layer: 503
+
 	new: =>
 		super!
 		@line = { }
 		@markers = { }
-		@animation = Animation 0, 1, @animationDuration, @\animate
+		@animation = Animation 0, 1, @animationDuration, @
 
 	createMarkers: =>
 		@line = { }

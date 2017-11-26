@@ -2,7 +2,10 @@ class TimeRemaining extends BarAccent
 
 	bottomMargin = settings['remaining-bottom-margin']
 
+	@enableKey: 'enable-remaining-time'
 
+	layer: 300
+	enabled: settings['enable-remaining-time']
 	lastTime: -1
 	position: settings['remaining-offscreen-pos']
 	line: {
@@ -19,7 +22,7 @@ class TimeRemaining extends BarAccent
 		@line[3] = ([[)\an3%s%s}]])\format settings['default-style'], settings['remaining-style']
 		@animation = Animation settings['remaining-offscreen-pos'],
 			settings['remaining-right-margin'],
-			@animationDuration, @\animate, nil, 0.5
+			@animationDuration, @, 0.5
 
 	resize: =>
 		super!

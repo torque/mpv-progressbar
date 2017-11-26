@@ -1,19 +1,19 @@
 class ProgressBar extends BarBase
 
-	seekString = ('absolute-percent+%s')\format settings['seek-precision']
-
+	layer: 502
 	lastPosition: 0.1
 
 	reconfigure: =>
 		super!
-		seekString = ('absolute-percent+%s')\format settings['seek-precision']
+		@seekString = ('absolute-percent+%s')\format settings['seek-precision']
 		@barShift = settings['progress-bar-width']/2.0
 		@resize!
 		@line[7] = [[]]
 		@line[8] = @line[8]\format settings['bar-foreground-style']
 
-	clickHandler: =>
-		mp.commandv "seek", Mouse.clickX*100/Window.w, seekString
+	click: ( x, y ) =>
+		mp.commandv "seek", x*100/Window.w, @seekString
+		return false -- stop the click from propagating.
 
 	resize: =>
 		super!
@@ -22,7 +22,7 @@ class ProgressBar extends BarBase
 
 	redraw: =>
 		super!
-		position = mp.get_property_number 'percent-pos', 0
+		position = mp.get_property_number 'percent-pos', 0.1
 		if position != @lastPosition or @needsUpdate
 			@line[6] = position
 			if @barShift > 0

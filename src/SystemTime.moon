@@ -2,7 +2,9 @@ class SystemTime extends UIElement
 
 	topMargin = settings['system-time-top-margin']
 
+	@enableKey: 'enable-system-time'
 
+	layer: 300
 	lastTime: -1
 	position: settings['system-time-offscreen-pos']
 	format: settings['system-time-format']
@@ -22,7 +24,7 @@ class SystemTime extends UIElement
 		@line[3] = [[)\an9%s%s}]]\format settings['default-style'], settings['system-time-style']
 		@animation = Animation settings['system-time-offscreen-pos'],
 			settings['system-time-right-margin'],
-			@animationDuration, @\animate, nil, 0.5
+			@animationDuration, @, 0.5
 
 	resize: =>
 		@position = Window.w - @animation.value

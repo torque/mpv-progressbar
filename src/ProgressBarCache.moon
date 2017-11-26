@@ -1,5 +1,7 @@
 class ProgressBarCache extends BarBase
 
+	layer: 501
+
 	reconfigure: =>
 		super!
 		@line[8] = @line[8]\format settings['bar-cache-style']

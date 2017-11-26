@@ -1,13 +1,24 @@
-class UIElement
+class UIElement extends MouseResponder
+
+	@enableKey: nil
 
 	enabled: true
+	layer: 0
+	line: {}
 	active: false
 	needsUpdate: false
 	animationDuration: settings['animation-duration']
 
-	_containers: {}
-
 	new: =>
+		-- Because they are stored in the class metatable as a reference type, the
+		-- instance line needs to be copied into a unique table in the constructor
+		-- to avoid being shared across all instances. This is a really fragile hack
+		-- that I hate.
+		newLine = { }
+		for _, v in ipairs @line
+			table.insert newLine, v
+		@line = newLine
+
 		@reconfigure!
 
 	stringify: =>
@@ -19,18 +30,24 @@ class UIElement
 
 	activate: ( activate ) =>
 		if activate == true
-			@animation\interrupt false
 			@active = true
+			@animation\interrupt false
 		else
 			@animation\interrupt true
-			@animation.finishedCb = ->
-				@active = false
+
+	animate: =>
+		if @animation.linearProgress == 0
+			@active = false
 
 	reconfigure: =>
 		@needsUpdate = true
 		@active = false
 		@animationDuration = settings['animation-duration']
+		@enable settings[@@enableKey]
 
-	resize: => error 'UIElement updateSize called'
+	enable: ( enable ) =>
+		@enabled = enable
+
+	resize: => error 'UIElement resize called'
 
 	redraw: => return @needsUpdate

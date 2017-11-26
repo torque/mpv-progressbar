@@ -1,5 +1,7 @@
 class ProgressBarBackground extends BarBase
 
+	layer: 500
+
 	reconfigure: =>
 		super!
 		@line[6] = 100

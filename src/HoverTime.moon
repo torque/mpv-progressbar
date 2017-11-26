@@ -3,7 +3,9 @@ class HoverTime extends BarAccent
 	rightMargin = settings['hover-time-right-margin']
 	leftMargin = settings['hover-time-left-margin']
 
+	@enableKey: 'enable-hover-time'
 
+	layer: 400
 	lastTime: 0
 	lastX: -1
 	position: settings['hover-time-offscreen-pos']
@@ -22,7 +24,7 @@ class HoverTime extends BarAccent
 		@line[1] = ([[{%s%s\pos(]])\format settings['default-style'], settings['hover-time-style']
 		@line[2] = ('%g,%g')\format math.min( Window.w - rightMargin, math.max( leftMargin, Mouse.x ) ), @position
 		@animation = Animation settings['hover-time-offscreen-pos'],
-			settings['hover-time-bottom-margin'], @animationDuration, @\animate, nil, 0.5
+			settings['hover-time-bottom-margin'], @animationDuration, @, 0.5
 
 	resize: =>
 		super!
