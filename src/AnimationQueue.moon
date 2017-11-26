@@ -1,29 +1,31 @@
 class AnimationQueue
 
-	animationList = Stack 'active'
-	deletionQueue = { }
+	@animationList: List!
 
-	@addAnimation: ( animation ) ->
+	@addAnimation: ( animation ) =>
 		unless animation.active
-			animationList\insert animation
+			animation.active = true
+			@animationList\insert animation
 
-	@removeAnimation: ( animation ) ->
+	@removeAnimation: ( animation ) =>
 		if animation.active
-			animationList\remove animation
+			@animationList\remove animation
+			animation.active = false
 
-	@destroyAnimationStack: ->
+	@destroyAnimationStack: =>
 		animationList\clear!
 
-	@animate: ->
+	@animate: =>
 		if #animationList == 0
 			return
-		currentTime = mp.get_time!
-		for _, animation in ipairs animationList
-			if animation\update currentTime
-				table.insert deletionQueue, animation
 
-		if #deletionQueue > 0
-			animationList\removeSortedList deletionQueue
+		now = mp.get_time!
+		delta = now - @lastTime
+		@lastTime = now
 
-	@active: ->
-		return #animationList > 0
+		for animation, idx in @animationList\loop!
+			if animation\update delta
+				@animationList\pop idx
+
+	@active: =>
+		return #@animationList > 0
