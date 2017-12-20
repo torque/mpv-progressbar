@@ -69,7 +69,8 @@ class List
 
 	clear: =>
 		while table.remove @
-			-- pass
+			-- no empty loops allowed?
+			0
 
 	removeSortedIndices: ( elementList ) =>
 		for idx = #elementList, 1, -1
@@ -79,21 +80,31 @@ class OrderedList extends List
 
 	@FromDict: ( elements, orderKey ) =>
 		elementList = {}
-		for _, val in pairs elements
-			table.insert elementList, val
+		if elements
+			for _, element in pairs elements
+				table.insert elementList, element
 
 		return @ orderKey, elementList
 
 	new: ( orderKey, elements ) =>
-		for idx, value in ipairs elements
-			table.insert @, value
+		if elements
+			for idx, value in ipairs elements
+				table.insert @, value
 
-		table.sort @, ( a, b ) ->
-			a[orderKey] < b[orderKey]
+			table.sort @, ( a, b ) ->
+				a[orderKey] < b[orderKey]
 
+		-- I don't think this should pose a problem because Lua distinguishes the
+		-- hash space from the list space in a table.
 		@orderKey = orderKey
 
 	insert: ( element ) =>
+		if element[@orderKey] == nil
+			error "Element doesn't have member #{@orderKey}"
+
 		for el, idx in @loop!
 			if el[@orderKey] <= element[@orderKey]
 				table.insert @, idx + 1, element
+				return
+
+		table.insert @, 1, element
