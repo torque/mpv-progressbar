@@ -16,7 +16,7 @@ class AnimationQueue
 		animationList\clear!
 
 	@animate: =>
-		if #animationList == 0
+		if #@animationList == 0
 			return
 
 		now = mp.get_time!

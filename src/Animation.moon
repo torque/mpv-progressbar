@@ -17,7 +17,7 @@ class Animation
 		@linearProgress = @reversed and 1 or 0
 
 		unless @active
-			AnimationQueue.addAnimation @
+			AnimationQueue\addAnimation @
 
 	interrupt: ( reverse ) =>
 		if @reversed != reverse
@@ -25,4 +25,4 @@ class Animation
 			@reversed = reverse
 
 		unless @active
-			AnimationQueue.addAnimation @
+			AnimationQueue\addAnimation @
