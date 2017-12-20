@@ -261,6 +261,9 @@ Sets whether or not the pause indicator is displayed. The pause indicator is a
 momentary icon that flashes in the middle of the screen, similar to youtube.
 ]]
 
+settings['command-icon-size'] = 50
+helpText['command-icon-size'] = [[Size of command indicator]]
+
 settings['pause-indicator-foreground-style'] = [[\c&HFC799E&]]
 helpText['pause-indicator-foreground-style'] = [[
 A string of ASS override tags that get applied only to the foreground of the
@@ -328,8 +331,7 @@ unless you have major performance problems.
 
 settings['animation-duration'] = 0.25
 helpText['animation-duration'] = [[
-Controls how long the UI animations take. A value of 0 disables all animations
-(which breaks the pause indicator).
+Controls how long the UI animations take. A value of 0 disables all animations.
 ]]
 
 settings['elapsed-offscreen-pos'] = -100
@@ -343,7 +345,7 @@ cause the display to animate the wrong direction.
 
 settings['remaining-offscreen-pos'] = -100
 helpText['remaining-offscreen-pos'] = [[
-Controls how far off the left side of the window the remaining time display
+Controls how far off the right side of the window the remaining time display
 tries to move when it is inactive. If you use a non-default font, this value may
 need to be tweaked. If this value is not far enough off-screen, the elapsed
 display will disappear without animating all the way off-screen. Positive values
