@@ -125,7 +125,7 @@ mp.add_forced_key_binding "mouse_move", "mouse-move", ->
 
 mp.add_forced_key_binding "mouse_leave", "mouse-leave", ->
 	Mouse.inWindow = false
-	for responder in @hoverHandlers\loop!
+	for responder in Mouse.hoverHandlers\loop!
 		if responder.hovered
 			responder\hover false
 
