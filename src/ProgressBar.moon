@@ -20,7 +20,7 @@ class ProgressBar extends BarBase
 		if @barShift > 0
 			@line[2] = ('%g,%g')\format @barShift, Window.h
 
-	redraw: =>
+	update: =>
 		super!
 		position = mp.get_property_number 'percent-pos', 0.1
 		if position != @lastPosition or @needsUpdate

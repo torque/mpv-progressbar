@@ -6,7 +6,7 @@ class ProgressBarCache extends BarBase
 		super!
 		@line[8] = @line[8]\format settings['bar-cache-style']
 
-	redraw: =>
+	update: =>
 		super!
 		-- Raw file size, bytes
 		totalSize = mp.get_property_number 'file-size', 0

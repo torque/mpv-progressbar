@@ -13,7 +13,7 @@ class BarAccent extends UIElement
 		@yPos = Window.h - barSize
 		@needsUpdate = true
 
-	redraw: =>
+	update: =>
 		if @barSize != barSize
 			@barSize = barSize
 			@resize!

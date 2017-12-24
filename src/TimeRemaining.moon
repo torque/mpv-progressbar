@@ -30,11 +30,12 @@ class TimeRemaining extends BarAccent
 		@line[2] = ('%g,%g')\format @position, @yPos - bottomMargin
 
 	animate: ( value ) =>
+		super!
 		@position = Window.w - value
 		@line[2] = ('%g,%g')\format @position, @yPos - bottomMargin
 		@needsUpdate = true
 
-	redraw: =>
+	update: =>
 		if @active
 			super!
 			timeRemaining = math.floor mp.get_property_number 'playtime-remaining', 0

@@ -41,7 +41,7 @@ class BarBase extends UIElement
 
 		@animation = Animation 0, 1, @animationDuration, @
 
-	stringify: =>
+	draw: =>
 		@needsUpdate = false
 		if hideInactive and not @active
 			return ""
@@ -54,10 +54,11 @@ class BarBase extends UIElement
 		@needsUpdate = true
 
 	animate: ( value ) =>
+		super!
 		@line[4] = ([[%g]])\format (@@maxHeight - @@animationMinHeight)*value + @@animationMinHeight, value
 		@needsUpdate = true
 
-	redraw: =>
+	update: =>
 		if @hideInactive != hideInactive
 			@hideInactive = hideInactive
 			unless @active

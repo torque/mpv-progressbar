@@ -29,11 +29,12 @@ class TimeElapsed extends BarAccent
 		@line[2] = ('%g,%g')\format @position, @yPos - bottomMargin
 
 	animate: ( value ) =>
+		super!
 		@position = value
 		@line[2] = ('%g,%g')\format value, @yPos - bottomMargin
 		@needsUpdate = true
 
-	redraw: =>
+	update: =>
 		if @active
 			super!
 			timeElapsed = math.floor mp.get_property_number 'time-pos', 0

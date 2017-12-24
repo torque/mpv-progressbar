@@ -47,8 +47,7 @@ class CommandIcon extends UIElement
 		@line[9]  = [[)\an5\bord0%s\p1}%s]]\format settings['command-indicator-background-style'], @@BackgroundTemplate
 		@line[19] = [[)\an5\bord0%s\p1}m 0 0 m 1 1 ]]\format settings['command-indicator-foreground-style']
 
-		@animation = Animation 0, 1, settings['command-indicator-animation-duration'], @\animate, ->
-			@active = false
+		@animation = Animation 0, 1, settings['command-indicator-animation-duration'], @\animate
 
 	resize: =>
 		w, h = 0.5*Window.w, 0.5*Window.h
@@ -57,6 +56,7 @@ class CommandIcon extends UIElement
 		@line[18] = pos
 
 	animate: ( value ) =>
+		super!
 		@_setScale value*@scale*0.5 + @scale
 		-- I think this nonlinear behavior looks a little nicer.
 		alphaStr = '%02X'\format value*value*255

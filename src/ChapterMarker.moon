@@ -20,7 +20,7 @@ class ChapterMarker
 
 		@passed = false
 
-	stringify: =>
+	draw: =>
 		return table.concat @line
 
 	resize: =>
@@ -30,7 +30,7 @@ class ChapterMarker
 		@line[4] = ('%g')\format width
 		@line[6] = ('%g')\format height
 
-	redraw: ( position, update = false ) =>
+	update: ( position, update = false ) =>
 		if not @passed and (position > @position)
 			@line[7] = afterStyle
 			@passed = true

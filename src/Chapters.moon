@@ -27,7 +27,7 @@ class Chapters extends BarBase
 		for chapter in *chapters
 			marker = ChapterMarker chapter.time/totalTime, markerWidth, markerHeight
 			table.insert @markers, marker
-			table.insert @line, marker\stringify!
+			table.insert @line, marker\draw!
 		@needsUpdate = true
 
 	reconfigure: =>
@@ -46,25 +46,26 @@ class Chapters extends BarBase
 	resize: =>
 		for i, marker in ipairs @markers
 			marker\resize!
-			@line[i] = marker\stringify!
+			@line[i] = marker\draw!
 		@needsUpdate = true
 
 	animate: ( value ) =>
+		UIElement.animate @
 		width = (maxWidth - minWidth)*value + minWidth
 		height = (maxHeight*maxHeightFrac - BarBase.animationMinHeight)*value + BarBase.animationMinHeight
 		for i, marker in ipairs @markers
 			marker\animate width, height
-			@line[i] = marker\stringify!
+			@line[i] = marker\draw!
 
 		@needsUpdate = true
 
-	redraw: =>
+	update: =>
 		super!
 		currentPosition = mp.get_property_number( 'percent-pos', 0 )*0.01
 		update = false
 		for i, marker in ipairs @markers
-			if marker\redraw currentPosition
-				@line[i] = marker\stringify!
+			if marker\update currentPosition
+				@line[i] = marker\draw!
 				update = true
 
 		return @needsUpdate or update

@@ -31,11 +31,12 @@ class SystemTime extends UIElement
 		@line[2] = ('%g,%g')\format @position, topMargin
 
 	animate: ( value ) =>
+		super!
 		@position = Window.w - value
 		@line[2] = ('%g,%g')\format @position, topMargin
 		@needsUpdate = true
 
-	redraw: =>
+	update: =>
 		if @active
 			systemTime = os.time!
 			if systemTime != @lastTime

@@ -13,12 +13,12 @@ class Compositor
 		-- need to iterate forward in this case
 		for _, element in ipairs @knownElements
 			if element.enabled
-				@lines\insert element\stringify!
+				@lines\insert element\draw!
 				@elements\insert element
 
 	redraw: =>
 		for element, idx in @elements\loop!
-			if element\redraw!
-				@lines[idx] = element\stringify!
+			if element\update!
+				@lines[idx] = element\draw!
 
 		mp.set_osd_ass Window.w, Window.h, table.concat @lines, '\n'

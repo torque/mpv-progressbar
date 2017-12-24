@@ -21,7 +21,7 @@ class UIElement extends MouseResponder
 
 		@reconfigure!
 
-	stringify: =>
+	draw: =>
 		@needsUpdate = false
 		if not @active
 			return ''
@@ -50,4 +50,4 @@ class UIElement extends MouseResponder
 
 	resize: => error 'UIElement resize called'
 
-	redraw: => return @needsUpdate
+	update: => return @needsUpdate
