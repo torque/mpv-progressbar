@@ -3,11 +3,11 @@ class BarAccent extends UIElement
 
 	new: =>
 		super!
-		@yPos = Window.h - barSize
 
 	reconfigure: =>
 		super!
 		barSize = settings['bar-height-active']
+		@yPos = Window.h - barSize
 
 	resize: =>
 		@yPos = Window.h - barSize
