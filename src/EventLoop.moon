@@ -25,5 +25,5 @@ class EventLoop
 	pump: =>
 		Window\update!
 		Mouse\update!
-		AnimationQueue\animate mp.get_time!
+		AnimationQueue\animate!
 		@compositor\redraw!
