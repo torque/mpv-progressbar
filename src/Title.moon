@@ -5,6 +5,8 @@ class Title extends UIElement
 	layer: 300
 	enabled: settings['enable-title']
 	position: settings['title-offscreen-pos']
+	leftMargin: settings['title-left-margin']
+	animationValue: settings['remaining-offscreen-pos']
 	line: {
 		[[{\pos(]],
 		[[%g,%g]],
@@ -15,15 +17,16 @@ class Title extends UIElement
 	reconfigure: =>
 		super!
 		offscreenPos = settings['title-offscreen-pos']
-		@line[2] = ('%g,%g')\format settings['title-left-margin'], @animation.value
+		@leftMargin = settings['title-left-margin']
+		@line[2] = ('%g,%g')\format @leftMargin, @animationValue
 		@line[3] = [[)\an7%s%s}]]\format settings['default-style'], settings['title-style']
 		@animation = Animation offscreenPos, settings['title-top-margin'], @animationDuration, @, 0.5
 
 	resize: =>
 
-	animate: ( value ) =>
+	animate: ( @animationValue ) =>
 		super!
-		@line[2] = ('%g,%g')\format settings['title-left-margin'], value
+		@line[2] = ('%g,%g')\format @leftMargin, @animationValue
 		@needsRedraw = true
 
 	updatePlaylistInfo: =>

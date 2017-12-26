@@ -8,6 +8,7 @@ class TimeRemaining extends BarAccent
 	enabled: settings['enable-remaining-time']
 	lastTime: -1
 	position: settings['remaining-offscreen-pos']
+	animationValue: settings['remaining-offscreen-pos']
 	line: {
 		[[{\pos(]],
 		[[]],
@@ -26,12 +27,12 @@ class TimeRemaining extends BarAccent
 
 	resize: =>
 		super!
-		@position = Window.w - @animation.value
+		@position = Window.w - @animationValue
 		@line[2] = ('%g,%g')\format @position, @yPos - bottomMargin
 
-	animate: ( value ) =>
+	animate: ( @animationValue ) =>
 		super!
-		@position = Window.w - value
+		@position = Window.w - @animationValue
 		@line[2] = ('%g,%g')\format @position, @yPos - bottomMargin
 		@needsRedraw = true
 
