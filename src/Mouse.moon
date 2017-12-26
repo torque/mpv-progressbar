@@ -71,6 +71,8 @@ class Mouse
 						-- A hover off event cannot cancel processing of lower events.
 						responder\hover false
 
+			@x, @y = x, y
+
 	@dispatchClick: ( flavor ) =>
 		responderList, method = switch flavor
 			when @LeftClick
