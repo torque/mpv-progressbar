@@ -17,6 +17,7 @@ class AnimationQueue
 
 	@animate: =>
 		if #@animationList == 0
+			@lastTime = mp.get_time!
 			return
 
 		now = mp.get_time!
@@ -25,6 +26,7 @@ class AnimationQueue
 
 		for animation, idx in @animationList\loop!
 			if animation\update delta
+				animation.active = false
 				@animationList\pop idx
 
 	@active: =>
