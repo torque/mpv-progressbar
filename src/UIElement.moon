@@ -6,7 +6,7 @@ class UIElement extends MouseResponder
 	layer: 0
 	line: {}
 	active: false
-	needsUpdate: false
+	needsRedraw: false
 	animationDuration: settings['animation-duration']
 
 	new: =>
@@ -22,7 +22,7 @@ class UIElement extends MouseResponder
 		@reconfigure!
 
 	draw: =>
-		@needsUpdate = false
+		@needsRedraw = false
 		if not @active
 			return ''
 		else
@@ -40,7 +40,7 @@ class UIElement extends MouseResponder
 			@active = false
 
 	reconfigure: =>
-		@needsUpdate = true
+		@needsRedraw = true
 		@active = false
 		@animationDuration = settings['animation-duration']
 		@enable settings[@@enableKey]
@@ -50,4 +50,4 @@ class UIElement extends MouseResponder
 
 	resize: => error 'UIElement resize called'
 
-	update: => return @needsUpdate
+	update: => return @needsRedraw

@@ -37,6 +37,6 @@ class ProgressBarCache extends BarBase
 				demuxerCacheContribution = demuxerCacheDuration/fileDuration
 
 			@line[6] = (networkCacheContribution + demuxerCacheContribution)*100 + position
-			@needsUpdate = true
+			@needsRedraw = true
 
-		return @needsUpdate
+		return @needsRedraw

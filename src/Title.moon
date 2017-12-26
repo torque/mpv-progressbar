@@ -24,7 +24,7 @@ class Title extends UIElement
 	animate: ( value ) =>
 		super!
 		@line[2] = ('%g,%g')\format settings['title-left-margin'], value
-		@needsUpdate = true
+		@needsRedraw = true
 
 	updatePlaylistInfo: =>
 		title = mp.get_property 'media-title', ''
@@ -37,4 +37,4 @@ class Title extends UIElement
 
 		@line[4] = ('%s%s')\format playlistString, title
 
-		@needsUpdate = true
+		@needsRedraw = true

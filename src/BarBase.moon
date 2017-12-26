@@ -42,7 +42,7 @@ class BarBase extends UIElement
 		@animation = Animation 0, 1, @animationDuration, @
 
 	draw: =>
-		@needsUpdate = false
+		@needsRedraw = false
 		if hideInactive and not @active
 			return ""
 		else
@@ -51,12 +51,12 @@ class BarBase extends UIElement
 	resize: =>
 		@line[2] = [[%d,%d]]\format 0, Window.h
 		@line[9] = [[%d 0 %d 1 0 1]]\format Window.w, Window.w
-		@needsUpdate = true
+		@needsRedraw = true
 
 	animate: ( value ) =>
 		super!
 		@line[4] = ([[%g]])\format (@@maxHeight - @@animationMinHeight)*value + @@animationMinHeight, value
-		@needsUpdate = true
+		@needsRedraw = true
 
 	update: =>
 		if @hideInactive != hideInactive
@@ -64,4 +64,4 @@ class BarBase extends UIElement
 			unless @active
 				@animate 0
 
-		return @needsUpdate
+		return @needsRedraw

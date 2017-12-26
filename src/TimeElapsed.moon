@@ -32,7 +32,7 @@ class TimeElapsed extends BarAccent
 		super!
 		@position = value
 		@line[2] = ('%g,%g')\format value, @yPos - bottomMargin
-		@needsUpdate = true
+		@needsRedraw = true
 
 	update: =>
 		if @active
@@ -42,6 +42,6 @@ class TimeElapsed extends BarAccent
 				update = true
 				@line[4] = ('%d:%02d:%02d')\format math.floor( timeElapsed/3600 ), math.floor( (timeElapsed/60)%60 ), math.floor( timeElapsed%60 )
 				@lastTime = timeElapsed
-				@needsUpdate = true
+				@needsRedraw = true
 
-		return @needsUpdate
+		return @needsRedraw

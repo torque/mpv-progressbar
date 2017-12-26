@@ -33,7 +33,7 @@ class TimeRemaining extends BarAccent
 		super!
 		@position = Window.w - value
 		@line[2] = ('%g,%g')\format @position, @yPos - bottomMargin
-		@needsUpdate = true
+		@needsRedraw = true
 
 	update: =>
 		if @active
@@ -43,6 +43,6 @@ class TimeRemaining extends BarAccent
 				update = true
 				@line[4] = ('–%d:%02d:%02d')\format math.floor( timeRemaining/3600 ), math.floor( (timeRemaining/60)%60 ), math.floor( timeRemaining%60 )
 				@lastTime = timeRemaining
-				@needsUpdate = true
+				@needsRedraw = true
 
-		return @needsUpdate
+		return @needsRedraw

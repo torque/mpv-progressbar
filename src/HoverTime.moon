@@ -33,7 +33,7 @@ class HoverTime extends BarAccent
 	animate: ( value ) =>
 		@position = @yPos - value
 		@line[2] = ("%g,%g")\format math.min( Window.w - rightMargin, math.max( leftMargin, Mouse.x ) ), @position
-		@needsUpdate = true
+		@needsRedraw = true
 
 	update: =>
 		if @active
@@ -47,6 +47,6 @@ class HoverTime extends BarAccent
 					@line[4] = ([[%d:%02d:%02d]])\format math.floor( hoverTime/3600 ), math.floor( (hoverTime/60)%60 ), math.floor( hoverTime%60 )
 					@lastTime = hoverTime
 
-				@needsUpdate = true
+				@needsRedraw = true
 
-		return @needsUpdate
+		return @needsRedraw

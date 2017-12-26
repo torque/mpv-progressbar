@@ -28,7 +28,7 @@ class Chapters extends BarBase
 			marker = ChapterMarker chapter.time/totalTime, markerWidth, markerHeight
 			table.insert @markers, marker
 			table.insert @line, marker\draw!
-		@needsUpdate = true
+		@needsRedraw = true
 
 	reconfigure: =>
 		-- Need to call the UIElement reconfigure implementation, but can't use
@@ -47,7 +47,7 @@ class Chapters extends BarBase
 		for i, marker in ipairs @markers
 			marker\resize!
 			@line[i] = marker\draw!
-		@needsUpdate = true
+		@needsRedraw = true
 
 	animate: ( value ) =>
 		UIElement.animate @
@@ -57,7 +57,7 @@ class Chapters extends BarBase
 			marker\animate width, height
 			@line[i] = marker\draw!
 
-		@needsUpdate = true
+		@needsRedraw = true
 
 	update: =>
 		super!
@@ -68,4 +68,4 @@ class Chapters extends BarBase
 				@line[i] = marker\draw!
 				update = true
 
-		return @needsUpdate or update
+		return @needsRedraw or update

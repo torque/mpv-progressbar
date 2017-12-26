@@ -29,6 +29,6 @@ class ProgressBar extends BarBase
 				followingEdge = Window.w*position*1e-2 - @barShift
 				@line[7] = [[\clip(m %g 0 l %g 0 %g %g %g %g)]]\format followingEdge, Window.w, Window.w, Window.h, followingEdge, Window.h
 			@lastPosition = position
-			@needsUpdate = true
+			@needsRedraw = true
 
-		return @needsUpdate
+		return @needsRedraw

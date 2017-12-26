@@ -34,7 +34,7 @@ class SystemTime extends UIElement
 		super!
 		@position = Window.w - value
 		@line[2] = ('%g,%g')\format @position, topMargin
-		@needsUpdate = true
+		@needsRedraw = true
 
 	update: =>
 		if @active
@@ -43,6 +43,6 @@ class SystemTime extends UIElement
 				update = true
 				@line[4] = os.date @format, systemTime
 				@lastTime = systemTime
-				@needsUpdate = true
+				@needsRedraw = true
 
-		return @needsUpdate
+		return @needsRedraw
