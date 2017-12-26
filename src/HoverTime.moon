@@ -27,8 +27,10 @@ class HoverTime extends BarAccent
 			settings['hover-time-bottom-margin'], @animationDuration, @, 0.5
 
 	resize: =>
+		oldYPos = @yPos
 		super!
-		@line[2] = ("%g,%g")\format math.min( Window.w - rightMargin, math.max( leftMargin, Mouse.x ) ), @yPos - @animation.value
+		@position = @position - oldYPos + @yPos
+		@line[2] = ("%g,%g")\format math.min( Window.w - rightMargin, math.max( leftMargin, Mouse.x ) ), @position
 
 	animate: ( value ) =>
 		@position = @yPos - value
