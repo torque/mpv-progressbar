@@ -8,9 +8,12 @@ class ElementGroup extends MouseResponder
 	resize: =>
 
 	reconfigure: =>
-		super!
 		@elements = List!
 
 		for _, element in ipairs @knownElements
 			if element.enabled
 				@elements\insert element
+
+	hover: ( mouseover ) =>
+		for element in @elements\loop!
+			element\activate mouseover
