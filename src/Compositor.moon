@@ -16,6 +16,12 @@ class Compositor
 				@lines\insert element\draw!
 				@elements\insert element
 
+		@resize!
+
+	resize: =>
+		for element in @elements\loop!
+			element\resize!
+
 	redraw: =>
 		for element, idx in @elements\loop!
 			if element\update!
