@@ -61,15 +61,18 @@ class Mouse
 					-- No need to check for point containment, because hover propagation
 					-- has been stopped at this point, so the only possible event is a
 					-- mouseout.
-					if responder.hovered
+					if responder._mouse_hovered
 						responder\hover false
+						responder._mouse_hovered = false
 				else
 					hit = responder\containsPoint x, y
-					if hit and not responder.hovered
+					if hit and not responder._mouse_hovered
 						hitCanceled = responder\hover true
-					elseif not hit and responder.hovered
+						responder._mouse_hovered = true
+					elseif not hit and responder._mouse_hovered
 						-- A hover off event cannot cancel processing of lower events.
 						responder\hover false
+						responder._mouse_hovered = false
 
 			@x, @y = x, y
 
@@ -128,8 +131,9 @@ mp.add_forced_key_binding "mouse_move", "mouse-move", ->
 mp.add_forced_key_binding "mouse_leave", "mouse-leave", ->
 	Mouse.inWindow = false
 	for responder in Mouse.hoverHandlers\loop!
-		if responder.hovered
+		if responder._mouse_hovered
 			responder\hover false
+			responder._mouse_hovered = false
 
 mp.add_forced_key_binding "mouse_enter", "mouse-enter", ->
 	Mouse.inWindow = true

@@ -1,7 +1,7 @@
 class MouseResponder extends Rect
 
 	layer: 0
-	hovered: false
+	_mouse_hovered: false
 
 	new: ( eventList ) =>
 		for _, event in ipairs eventList
