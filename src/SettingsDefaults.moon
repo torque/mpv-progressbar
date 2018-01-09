@@ -255,25 +255,29 @@ Controls how far from the top edge of the window the system time display is
 positioned.
 ]]
 
-settings['pause-indicator'] = true
-helpText['pause-indicator'] = [[
-Sets whether or not the pause indicator is displayed. The pause indicator is a
-momentary icon that flashes in the middle of the screen, similar to youtube.
+settings['enable-command-icon'] = true
+helpText['enable-command-icon'] = [[
+Sets whether or not an icon is shown on various commands.
 ]]
 
-settings['command-icon-size'] = 50
+settings['command-icon-size'] = 80
 helpText['command-icon-size'] = [[Size of command indicator]]
 
-settings['pause-indicator-foreground-style'] = [[\c&HFC799E&]]
-helpText['pause-indicator-foreground-style'] = [[
+settings['command-icon-foreground-style'] = [[\c&HFC799E&]]
+helpText['command-icon-foreground-style'] = [[
 A string of ASS override tags that get applied only to the foreground of the
 pause indicator.
 ]]
 
-settings['pause-indicator-background-style'] = [[\c&H2D2D2D&]]
-helpText['pause-indicator-background-style'] = [[
+settings['command-icon-background-style'] = [[\c&H2D2D2D&]]
+helpText['command-icon-background-style'] = [[
 A string of ASS override tags that get applied only to the background of the
 pause indicator.
+]]
+
+settings['command-icon-animation-duration'] = 0.5
+helpText['command-icon-animation-duration'] = [[
+The length of time that the command icon is shown on the screen, in seconds.
 ]]
 
 settings['enable-chapter-markers'] = true

@@ -7,10 +7,12 @@ class CommandIcon extends UIElement
 	-- automatically prepended to them, as this forces them to become properly
 	-- centered.
 	@BackgroundTemplate = 'm 1 0.5 b 1 0.776 0.776 1 0.5 1 0.224 1 0 0.776 0 0.5 0 0.224 0.224 0 0.5 0 0.776 0 1 0.224 1 0.5 '
-	@PauseIconTemplate: 'm 0 0 l 0 0.4 0.133 0.4 0.133 0 m 0.267 0 l 0.267 0.4 0.4 0.4 0.4 0'
+	@PauseIconTemplate: 'm 0.3 0.3 l 0.3 0.7 0.433 0.7 0.433 0.3 m 0.567 0.3 l 0.567 0.7 0.7 0.7 0.7 0.3'
 	@PlayIconTemplate: 'm 0.344 0.229 l 0.344 0.768 0.811 0.499'
+	@enableKey: 'enable-command-icon'
 
-	scale: settings['command-indicator-size']*100
+	scale: settings['command-icon-size']*100
+	layer: 1000
 	line: {
 		[[{\fscx]]   -- 1
 		0            -- 2
@@ -41,13 +43,16 @@ class CommandIcon extends UIElement
 		@line[14] = scale
 
 	reconfigure: =>
-		@scale = settings['command-indicator-size']*100
+		@scale = settings['command-icon-size']*100
 		@_setScale @scale
 
-		@line[9]  = [[)\an5\bord0%s\p1}%s]]\format settings['command-indicator-background-style'], @@BackgroundTemplate
-		@line[19] = [[)\an5\bord0%s\p1}m 0 0 m 1 1 ]]\format settings['command-indicator-foreground-style']
+		@line[9]  = [[)\an5\bord0%s\p1}%s]]\format settings['command-icon-background-style'], @@BackgroundTemplate
+		@line[19] = [[)\an5\bord0%s\p1}m 0 0 m 1 1 ]]\format settings['command-icon-foreground-style']
 
-		@animation = Animation 0, 1, settings['command-indicator-animation-duration'], @\animate
+		@animation = Animation 0, 1, settings['command-icon-animation-duration'], @
+
+	activate: =>
+
 
 	resize: =>
 		w, h = 0.5*Window.w, 0.5*Window.h
@@ -56,7 +61,10 @@ class CommandIcon extends UIElement
 		@line[18] = pos
 
 	animate: ( value ) =>
-		super!
+		if @animation.linearProgress == 1
+			@active = false
+			@needsRedraw = true
+
 		@_setScale value*@scale*0.5 + @scale
 		-- I think this nonlinear behavior looks a little nicer.
 		alphaStr = '%02X'\format value*value*255
@@ -72,7 +80,7 @@ class CommandIcon extends UIElement
 				@line[10] = @@PlayIconTemplate
 				@line[20] = @@PlayIconTemplate
 
-		unless @active
-			@activate true
-		else
-			@animation\reset!
+		@active = true
+		@animation\reset!
+
+	update: => return @active or @needsRedraw
