@@ -91,15 +91,15 @@ class EventLoop
 			uiElement\resize!
 
 	redraw: ( forceRedraw ) =>
-		clickPending = Mouse\update!
 		if Window\update!
 			@resize!
 
 		for index, zone in ipairs @activityZones
-			zone\update @displayRequested, clickPending
+			zone\update @displayRequested, false
 
 		AnimationQueue.animate!
 		for index, uiElement in ipairs @uiElements
 			if uiElement\redraw!
 				@script[index] = uiElement\stringify!
+
 		mp.set_osd_ass Window.w, Window.h, table.concat @script, '\n'
