@@ -1,8 +1,4 @@
 local msg = require('mp.msg')
-local options = require('mp.options')
-local script_name = 'torque-progressbar'
-mp.get_osd_size = mp.get_osd_size or mp.get_screen_size
-local settings = { }
 local log = {
   debug = function(format, ...)
     return msg.debug(format:format(...))
@@ -60,6 +56,136 @@ local log = {
     return msg.info(table.concat(result, "\n"))
   end
 }
+local options = require('mp.options')
+local utils = require('mp.utils')
+local script_name = 'torque-progressbar'
+mp.get_osd_size = mp.get_osd_size or mp.get_screen_size
+local settings = {
+  _defaults = { }
+}
+local settingsMeta = {
+  _reload = function(self)
+    for key, value in pairs(self._defaults) do
+      settings[key] = value
+    end
+    options.read_options(self, script_name .. '/main')
+    if self['bar-height-inactive'] <= 0 then
+      self['bar-hide-inactive'] = true
+      self['bar-height-inactive'] = 1
+    end
+  end,
+  _migrate = function(self)
+    local settingsDirectories = {
+      'script-opts',
+      'lua-settings'
+    }
+    local oldConfigFiles
+    do
+      local _accum_0 = { }
+      local _len_0 = 1
+      for _index_0 = 1, #settingsDirectories do
+        local dir = settingsDirectories[_index_0]
+        _accum_0[_len_0] = ('%s/%s.conf'):format(dir, script_name)
+        _len_0 = _len_0 + 1
+      end
+      oldConfigFiles = _accum_0
+    end
+    local newConfigFiles
+    do
+      local _accum_0 = { }
+      local _len_0 = 1
+      for _index_0 = 1, #settingsDirectories do
+        local dir = settingsDirectories[_index_0]
+        _accum_0[_len_0] = ('%s/%s/main.conf'):format(dir, script_name)
+        _len_0 = _len_0 + 1
+      end
+      newConfigFiles = _accum_0
+    end
+    log.dump(oldConfigFiles)
+    log.dump(newConfigFiles)
+    local oldConfig = nil
+    local oldConfigIndex = 1
+    local newConfigFile = nil
+    local newConfig = nil
+    for idx, file in ipairs(oldConfigFiles) do
+      log.debug(('checking for old config "%s"'):format(file))
+      oldConfig = mp.find_config_file(file)
+      if oldConfig then
+        log.debug(('found "%s"'):format(oldConfig))
+        oldConfigIndex = idx
+        break
+      end
+    end
+    if not (oldConfig) then
+      log.debug('No old config file found. Migration finished.')
+      return 
+    end
+    for _index_0 = 1, #newConfigFiles do
+      local file = newConfigFiles[_index_0]
+      log.debug(('checking for new config "%s"'):format(file))
+      newConfig = mp.find_config_file(file)
+      if newConfig then
+        log.debug(('found "%s"'):format(newConfig))
+        newConfigFile = file
+        break
+      end
+    end
+    if oldConfig and not newConfig then
+      log.debug(('Found "%s". Processing migration.'):format(oldConfig))
+      newConfigFile = newConfigFiles[oldConfigIndex]
+      local baseConfigFolder, _ = utils.split_path(oldConfig)
+      local configDir = utils.join_path(baseConfigFolder, script_name)
+      newConfig = utils.join_path(configDir, 'main.conf')
+      log.info(('Old configuration detected. Attempting to migrate "%s" -> "%s"'):format(oldConfig, newConfig))
+      local dirExists = mp.find_config_file(configDir)
+      if dirExists and not utils.readdir(configDir) then
+        log.warn(('Configuration migration failed. "%s" exists and does not appear to be a folder'):format(configDir))
+        return 
+      else
+        if not dirExists then
+          log.debug(('Attempting to create directory "%s"'):format(configDir))
+          local res = utils.subprocess({
+            args = {
+              'mkdir',
+              configDir
+            }
+          })
+          if res.error or res.status ~= 0 then
+            log.warn(('Making directory "%s" failed.'):format(configDir))
+            return 
+          end
+          log.debug('successfully created directory.')
+        else
+          log.debug(('Directory "%s" already exists. Continuing.'):format(configDir))
+        end
+      end
+      log.debug(('Attempting to move "%s" -> "%s"'):format(oldConfig, newConfig))
+      local res = utils.subprocess({
+        args = {
+          'mv',
+          oldConfig,
+          newConfig
+        }
+      })
+      if res.error or res.status ~= 0 then
+        log.warn(('Moving file "%s" -> "%s" failed.'):format(oldConfig, newConfig))
+        return 
+      end
+      if mp.find_config_file(newConfigFile) then
+        return log.info('Configuration successfully migrated.')
+      else
+        return log.warn(('Cannot find "%s". Migration mysteriously failed?'):format(newConfigFile))
+      end
+    end
+  end,
+  __newindex = function(self, key, value)
+    self._defaults[key] = value
+    return rawset(self, key, value)
+  end
+}
+settingsMeta.__index = settingsMeta
+setmetatable(settings, settingsMeta)
+settings:_migrate()
 local helpText = { }
 settings['hover-zone-height'] = 40
 helpText['hover-zone-height'] = [[Sets the height of the rectangular area at the bottom of the screen that expands
@@ -309,6 +435,13 @@ need to be tweaked. If this value is not far enough off-screen, the elapsed
 display will disappear without animating all the way off-screen. Positive values
 will cause the display to animate the wrong direction.
 ]]
+settings['hover-time-offscreen-pos'] = -50
+helpText['hover-time-offscreen-pos'] = [[Controls how far off the bottom of the window the mouse hover time display tries
+to move when it is inactive. If you use a non-default font, this value may need
+to be tweaked. If this value is not far enough off-screen, the elapsed
+display will disappear without animating all the way off-screen. Positive values
+will cause the display to animate the wrong direction.
+]]
 settings['system-time-offscreen-pos'] = -100
 helpText['system-time-offscreen-pos'] = [[Controls how far off the left side of the window the system time display tries
 to move when it is inactive. If you use a non-default font, this value may need
@@ -323,11 +456,7 @@ to be tweaked. If this value is not far enough off-screen, the elapsed display
 will disappear without animating all the way off-screen. Positive values will
 cause the display to animate the wrong direction.
 ]]
-options.read_options(settings, script_name)
-if settings['bar-height-inactive'] <= 0 then
-  settings['bar-hide-inactive'] = true
-  settings['bar-height-inactive'] = 1
-end
+settings:_reload()
 local Stack
 do
   local _class_0
@@ -587,6 +716,9 @@ do
   local _class_0
   local _parent_0 = Rect
   local _base_0 = {
+    reconfigure = function(self)
+      self.active = false
+    end,
     addUIElement = function(self, element)
       self.elements:insert(element)
       return element:activate(self.active)
@@ -724,6 +856,16 @@ local EventLoop
 do
   local _class_0
   local _base_0 = {
+    reconfigure = function(self)
+      settings:__reload()
+      AnimationQueue.destroyAnimationStack()
+      for _, zone in ipairs(self.activityZones) do
+        zone:reconfigure()
+      end
+      for _, element in ipairs(self.uiElements) do
+        element:reconfigure()
+      end
+    end,
     addZone = function(self, zone)
       if zone == nil then
         return 
@@ -810,7 +952,7 @@ do
       end)
       local displayRequestTimer
       local displayDuration = settings['request-display-duration']
-      return mp.add_key_binding("tab", "request-display", function(event)
+      mp.add_key_binding("tab", "request-display", function(event)
         if event.event == "repeat" then
           return 
         end
@@ -832,6 +974,15 @@ do
       end, {
         complex = true
       })
+      return mp.add_key_binding('ctrl+r', 'reconfigure', (function()
+        local _base_1 = self
+        local _fn_0 = _base_1.reconfigure
+        return function(...)
+          return _fn_0(_base_1, ...)
+        end
+      end)(), {
+        repeatable = false
+      })
     end,
     __base = _base_0,
     __name = "EventLoop"
@@ -850,9 +1001,7 @@ local Animation
 do
   local _class_0
   local _base_0 = {
-    update = function(self, currentTime)
-      self.currentTime = currentTime
-      local now = mp.get_time()
+    update = function(self, now)
       if self.isReversed then
         self.linearProgress = math.max(0, math.min(1, self.linearProgress + (self.lastUpdate - now) * self.durationR))
         if self.linearProgress == 0 then
@@ -934,6 +1083,10 @@ do
         end
       end
     end,
+    reconfigure = function(self)
+      self.needsUpdate = true
+      self.animationDuration = settings['animation-duration']
+    end,
     resize = function(self)
       return error('UIElement updateSize called')
     end,
@@ -944,9 +1097,9 @@ do
   _base_0.__index = _base_0
   _class_0 = setmetatable({
     __init = function(self)
-      self.animationDuration = settings['animation-duration']
       self.needsUpdate = false
       self.active = false
+      self.animationDuration = settings['animation-duration']
     end,
     __base = _base_0,
     __name = "UIElement"
@@ -967,6 +1120,10 @@ do
   local barSize
   local _parent_0 = UIElement
   local _base_0 = {
+    reconfigure = function(self)
+      _class_0.__parent.__base.reconfigure(self)
+      barSize = settings['bar-height-active']
+    end,
     resize = function(self)
       self.yPos = Window.h - barSize
       self.needsUpdate = true
@@ -1020,9 +1177,29 @@ end
 local BarBase
 do
   local _class_0
-  local minHeight, maxHeight, hideInactive
+  local minHeight, hideInactive, lineBaseTemplate
   local _parent_0 = UIElement
   local _base_0 = {
+    reconfigure = function(self)
+      _class_0.__parent.__base.reconfigure(self)
+      minHeight = settings['bar-height-inactive'] * 100
+      self.__class.maxHeight = settings['bar-height-active'] * 100
+      hideInactive = settings['bar-hide-inactive']
+      if hideInactive then
+        self.__class.animationMinHeight = 0
+      else
+        self.__class.animationMinHeight = minHeight
+      end
+      self.line[4] = minHeight
+      self.line[8] = lineBaseTemplate:format(settings['default-style'], settings['bar-default-style'], '%s')
+      self.animation = Animation(0, 1, self.animationDuration, (function()
+        local _base_1 = self
+        local _fn_0 = _base_1.animate
+        return function(...)
+          return _fn_0(_base_1, ...)
+        end
+      end)())
+    end,
     stringify = function(self)
       self.needsUpdate = false
       if hideInactive and not self.active then
@@ -1037,7 +1214,7 @@ do
       self.needsUpdate = true
     end,
     animate = function(self, value)
-      self.line[4] = ([[%g]]):format((maxHeight - self.__class.animationMinHeight) * value + self.__class.animationMinHeight, value)
+      self.line[4] = ([[%g]]):format((self.__class.maxHeight - self.__class.animationMinHeight) * value + self.__class.animationMinHeight, value)
       self.needsUpdate = true
     end,
     redraw = function(self)
@@ -1054,7 +1231,6 @@ do
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
     __init = function(self)
-      _class_0.__parent.__init(self)
       self.line = {
         [[{\pos(]],
         0,
@@ -1063,16 +1239,11 @@ do
         [[\fscx]],
         0.001,
         [[]],
-        ([[\an1%s%s%s\p1}m 0 0 l ]]):format(settings['default-style'], settings['bar-default-style'], '%s'),
+        lineBaseTemplate,
         0
       }
-      self.animation = Animation(0, 1, self.animationDuration, (function()
-        local _base_1 = self
-        local _fn_0 = _base_1.animate
-        return function(...)
-          return _fn_0(_base_1, ...)
-        end
-      end)())
+      _class_0.__parent.__init(self)
+      return self:reconfigure()
     end,
     __base = _base_0,
     __name = "BarBase",
@@ -1099,7 +1270,7 @@ do
   local self = _class_0
   minHeight = settings['bar-height-inactive'] * 100
   self.__class.animationMinHeight = minHeight
-  maxHeight = settings['bar-height-active'] * 100
+  self.__class.maxHeight = settings['bar-height-active'] * 100
   hideInactive = settings['bar-hide-inactive']
   self.toggleInactiveVisibility = function()
     hideInactive = not hideInactive
@@ -1109,6 +1280,7 @@ do
       BarBase.animationMinHeight = minHeight
     end
   end
+  lineBaseTemplate = [[\an1%s%s%s\p1}m 0 0 l ]]
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
@@ -1120,16 +1292,30 @@ do
   local seekString
   local _parent_0 = BarBase
   local _base_0 = {
+    reconfigure = function(self)
+      _class_0.__parent.__base.reconfigure(self)
+      seekString = ('absolute-percent+%s'):format(settings['seek-precision'])
+      self.barShift = settings['progress-bar-width'] / 2.0
+      self:resize()
+      self.line[7] = [[]]
+      self.line[8] = self.line[8]:format(settings['bar-foreground-style'])
+    end,
     clickHandler = function(self)
       return mp.commandv("seek", Mouse.clickX * 100 / Window.w, seekString)
+    end,
+    resize = function(self)
+      _class_0.__parent.__base.resize(self)
+      if self.barShift > 0 then
+        self.line[2] = ('%g,%g'):format(self.barShift, Window.h)
+      end
     end,
     redraw = function(self)
       _class_0.__parent.__base.redraw(self)
       local position = mp.get_property_number('percent-pos', 0)
-      if position ~= self.lastPosition then
+      if position ~= self.lastPosition or self.needsUpdate then
         self.line[6] = position
-        if self.barWidth > 0 then
-          local followingEdge = Window.w * position * 1e-2 - self.barWidth
+        if self.barShift > 0 then
+          local followingEdge = Window.w * position * 1e-2 - self.barShift
           self.line[7] = ([[\clip(m %g 0 l %g 0 %g %g %g %g)]]):format(followingEdge, Window.w, Window.w, Window.h, followingEdge, Window.h)
         end
         self.lastPosition = position
@@ -1143,9 +1329,7 @@ do
   _class_0 = setmetatable({
     __init = function(self)
       _class_0.__parent.__init(self)
-      self.line[8] = self.line[8]:format(settings['bar-foreground-style'])
       self.lastPosition = 0
-      self.barWidth = settings['progress-bar-width']
     end,
     __base = _base_0,
     __name = "ProgressBar",
@@ -1181,6 +1365,10 @@ do
   local _class_0
   local _parent_0 = BarBase
   local _base_0 = {
+    reconfigure = function(self)
+      _class_0.__parent.__base.reconfigure(self)
+      self.line[8] = self.line[8]:format(settings['bar-cache-style'])
+    end,
     redraw = function(self)
       _class_0.__parent.__base.redraw(self)
       local totalSize = mp.get_property_number('file-size', 0)
@@ -1188,9 +1376,16 @@ do
         local position = mp.get_property_number('percent-pos', 0.001)
         local cacheUsed = mp.get_property_number('cache-used', 0) * 1024
         local networkCacheContribution = cacheUsed / totalSize
-        local demuxerCacheDuration = mp.get_property_number('demuxer-cache-duration', 0)
+        local demuxerCache = mp.get_property('demuxer-cache-state/cache-end', nil)
         local fileDuration = mp.get_property_number('duration', 0.001)
-        local demuxerCacheContribution = demuxerCacheDuration / fileDuration
+        local demuxerCacheContribution = 0
+        if demuxerCache then
+          local currentTime = mp.get_property_number('time-pos', 0)
+          demuxerCacheContribution = (demuxerCache - currentTime) / fileDuration
+        else
+          local demuxerCacheDuration = mp.get_property_number('demuxer-cache-duration', 0)
+          demuxerCacheContribution = demuxerCacheDuration / fileDuration
+        end
         self.line[6] = (networkCacheContribution + demuxerCacheContribution) * 100 + position
         self.needsUpdate = true
       end
@@ -1200,9 +1395,8 @@ do
   _base_0.__index = _base_0
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
-    __init = function(self)
-      _class_0.__parent.__init(self)
-      self.line[8] = self.line[8]:format(settings['bar-cache-style'])
+    __init = function(self, ...)
+      return _class_0.__parent.__init(self, ...)
     end,
     __base = _base_0,
     __name = "ProgressBarCache",
@@ -1235,14 +1429,18 @@ local ProgressBarBackground
 do
   local _class_0
   local _parent_0 = BarBase
-  local _base_0 = { }
+  local _base_0 = {
+    reconfigure = function(self)
+      _class_0.__parent.__base.reconfigure(self)
+      self.line[6] = 100
+      self.line[8] = self.line[8]:format(settings['bar-background-style'])
+    end
+  }
   _base_0.__index = _base_0
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
-    __init = function(self)
-      _class_0.__parent.__init(self)
-      self.line[6] = 100
-      self.line[8] = self.line[8]:format(settings['bar-background-style'])
+    __init = function(self, ...)
+      return _class_0.__parent.__init(self, ...)
     end,
     __base = _base_0,
     __name = "ProgressBarBackground",
@@ -1280,14 +1478,16 @@ do
       return table.concat(self.line)
     end,
     resize = function(self)
-      self.line[2] = ([[%d,%d]]):format(math.floor(self.position * Window.w), Window.h)
+      self.line[2] = ('%d,%d'):format(math.floor(self.position * Window.w), Window.h)
     end,
     animate = function(self, width, height)
-      self.line[4] = ([[%g]]):format(width)
-      self.line[6] = ([[%g]]):format(height)
+      self.line[4] = ('%g'):format(width)
+      self.line[6] = ('%g'):format(height)
     end,
-    redraw = function(self, position)
-      local update = false
+    redraw = function(self, position, update)
+      if update == nil then
+        update = false
+      end
       if not self.passed and (position > self.position) then
         self.line[7] = afterStyle
         self.passed = true
@@ -1330,6 +1530,10 @@ do
   local self = _class_0
   beforeStyle = settings['chapter-marker-before-style']
   afterStyle = settings['chapter-marker-after-style']
+  self.reconfigure = function(self)
+    beforeStyle = settings['chapter-marker-before-style']
+    afterStyle = settings['chapter-marker-after-style']
+  end
   ChapterMarker = _class_0
 end
 local Chapters
@@ -1352,6 +1556,22 @@ do
         table.insert(self.line, marker:stringify())
       end
       self.needsUpdate = true
+    end,
+    reconfigure = function(self)
+      UIElement.reconfigure(self)
+      minWidth = settings['chapter-marker-width'] * 100
+      maxWidth = settings['chapter-marker-width-active'] * 100
+      maxHeight = settings['bar-height-active'] * 100
+      maxHeightFrac = settings['chapter-marker-active-height-fraction']
+      ChapterMarker:reconfigure()
+      self:createMarkers()
+      self.animation = Animation(0, 1, self.animationDuration, (function()
+        local _base_1 = self
+        local _fn_0 = _base_1.animate
+        return function(...)
+          return _fn_0(_base_1, ...)
+        end
+      end)())
     end,
     resize = function(self)
       for i, marker in ipairs(self.markers) do
@@ -1435,13 +1655,27 @@ do
   local bottomMargin
   local _parent_0 = BarAccent
   local _base_0 = {
+    reconfigure = function(self)
+      _class_0.__parent.__base.reconfigure(self)
+      bottomMargin = settings['elapsed-bottom-margin']
+      local offscreenPos = settings['elapsed-offscreen-pos']
+      self.line[2] = ('%g,%g'):format(self.position, self.yPos - bottomMargin)
+      self.line[3] = ([[)\an1%s%s}]]):format(settings['default-style'], settings['elapsed-style'])
+      self.animation = Animation(offscreenPos, settings['elapsed-left-margin'], self.animationDuration, (function()
+        local _base_1 = self
+        local _fn_0 = _base_1.animate
+        return function(...)
+          return _fn_0(_base_1, ...)
+        end
+      end)(), nil, 0.5)
+    end,
     resize = function(self)
       _class_0.__parent.__base.resize(self)
-      self.line[2] = ([[%g,%g]]):format(self.position, self.yPos - bottomMargin)
+      self.line[2] = ('%g,%g'):format(self.position, self.yPos - bottomMargin)
     end,
     animate = function(self, value)
       self.position = value
-      self.line[2] = ([[%g,%g]]):format(self.position, self.yPos - bottomMargin)
+      self.line[2] = ('%g,%g'):format(value, self.yPos - bottomMargin)
       self.needsUpdate = true
     end,
     redraw = function(self)
@@ -1450,7 +1684,7 @@ do
         local timeElapsed = math.floor(mp.get_property_number('time-pos', 0))
         if timeElapsed ~= self.lastTime then
           local update = true
-          self.line[4] = ([[%d:%02d:%02d]]):format(math.floor(timeElapsed / 3600), math.floor((timeElapsed / 60) % 60), math.floor(timeElapsed % 60))
+          self.line[4] = ('%d:%02d:%02d'):format(math.floor(timeElapsed / 3600), math.floor((timeElapsed / 60) % 60), math.floor(timeElapsed % 60))
           self.lastTime = timeElapsed
           self.needsUpdate = true
         end
@@ -1468,7 +1702,7 @@ do
         [[{\pos(]],
         ([[%g,0]]):format(offscreenPos),
         ([[)\an1%s%s}]]):format(settings['default-style'], settings['elapsed-style']),
-        0
+        [[????]]
       }
       self.lastTime = -1
       self.position = offscreenPos
@@ -1512,16 +1746,31 @@ end
 local TimeRemaining
 do
   local _class_0
+  local bottomMargin
   local _parent_0 = BarAccent
   local _base_0 = {
+    reconfigure = function(self)
+      _class_0.__parent.__base.reconfigure(self)
+      bottomMargin = settings['remaining-bottom-margin']
+      local offscreenPos = settings['remaining-offscreen-pos']
+      self.line[2] = ('%g,%g'):format(self.position, self.yPos - bottomMargin)
+      self.line[3] = ([[)\an3%s%s}]]):format(settings['default-style'], settings['remaining-style'])
+      self.animation = Animation(offscreenPos, settings['remaining-right-margin'], self.animationDuration, (function()
+        local _base_1 = self
+        local _fn_0 = _base_1.animate
+        return function(...)
+          return _fn_0(_base_1, ...)
+        end
+      end)(), nil, 0.5)
+    end,
     resize = function(self)
       _class_0.__parent.__base.resize(self)
       self.position = Window.w - self.animation.value
-      self.line[2] = ([[%g,%g]]):format(self.position, self.yPos - settings['remaining-bottom-margin'])
+      self.line[2] = ('%g,%g'):format(self.position, self.yPos - bottomMargin)
     end,
     animate = function(self, value)
       self.position = Window.w - value
-      self.line[2] = ([[%g,%g]]):format(self.position, self.yPos - settings['remaining-bottom-margin'])
+      self.line[2] = ('%g,%g'):format(self.position, self.yPos - bottomMargin)
       self.needsUpdate = true
     end,
     redraw = function(self)
@@ -1530,7 +1779,7 @@ do
         local timeRemaining = math.floor(mp.get_property_number('playtime-remaining', 0))
         if timeRemaining ~= self.lastTime then
           local update = true
-          self.line[4] = ([[–%d:%02d:%02d]]):format(math.floor(timeRemaining / 3600), math.floor((timeRemaining / 60) % 60), math.floor(timeRemaining % 60))
+          self.line[4] = ('–%d:%02d:%02d'):format(math.floor(timeRemaining / 3600), math.floor((timeRemaining / 60) % 60), math.floor(timeRemaining % 60))
           self.lastTime = timeRemaining
           self.needsUpdate = true
         end
@@ -1548,7 +1797,7 @@ do
         [[{\pos(]],
         ([[%g,0]]):format(offscreenPos),
         ([[)\an3%s%s}]]):format(settings['default-style'], settings['remaining-style']),
-        0
+        [[????]]
       }
       self.lastTime = -1
       self.position = offscreenPos
@@ -1582,6 +1831,8 @@ do
     end
   })
   _base_0.__class = _class_0
+  local self = _class_0
+  bottomMargin = settings['remaining-bottom-margin']
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
@@ -1590,26 +1841,43 @@ end
 local HoverTime
 do
   local _class_0
-  local rightMargin, leftMargin, bottomMargin
+  local rightMargin, leftMargin, bottomMargin, offScreenPos
   local _parent_0 = BarAccent
   local _base_0 = {
+    reconfigure = function(self)
+      _class_0.__parent.__base.reconfigure(self)
+      rightMargin = settings['hover-time-right-margin']
+      leftMargin = settings['hover-time-left-margin']
+      bottomMargin = settings['hover-time-bottom-margin']
+      offScreenPos = settings['hover-time-offscreen-pos']
+      self.line[2] = ('%g,%g'):format(math.min(Window.w - rightMargin, math.max(leftMargin, Mouse.x)), self.position)
+      self.line[1] = ([[{%s%s\pos(]]):format(settings['default-style'], settings['hover-time-style'])
+      self.animation = Animation(offScreenPos, bottomMargin, self.animationDuration, (function()
+        local _base_1 = self
+        local _fn_0 = _base_1.animate
+        return function(...)
+          return _fn_0(_base_1, ...)
+        end
+      end)(), nil, 0.5)
+    end,
     resize = function(self)
       _class_0.__parent.__base.resize(self)
-      self.line[2] = ("%g,%g"):format(math.min(Window.w - rightMargin, math.max(leftMargin, Mouse.x)), self.yPos - bottomMargin)
+      self.line[2] = ("%g,%g"):format(math.min(Window.w - rightMargin, math.max(leftMargin, Mouse.x)), self.yPos - self.animation.value)
     end,
     animate = function(self, value)
-      self.line[4] = ([[%02X]]):format(value)
+      self.position = self.yPos - value
+      self.line[2] = ("%g,%g"):format(math.min(Window.w - rightMargin, math.max(leftMargin, Mouse.x)), self.position)
       self.needsUpdate = true
     end,
     redraw = function(self)
       if self.active then
         _class_0.__parent.__base.redraw(self)
         if Mouse.x ~= self.lastX then
-          self.line[2] = ("%g,%g"):format(math.min(Window.w - rightMargin, math.max(leftMargin, Mouse.x)), self.yPos - bottomMargin)
+          self.line[2] = ("%g,%g"):format(math.min(Window.w - rightMargin, math.max(leftMargin, Mouse.x)), self.position)
           self.lastX = Mouse.x
           local hoverTime = mp.get_property_number('duration', 0) * Mouse.x / Window.w
           if hoverTime ~= self.lastTime then
-            self.line[6] = ([[%d:%02d:%02d]]):format(math.floor(hoverTime / 3600), math.floor((hoverTime / 60) % 60), math.floor(hoverTime % 60))
+            self.line[4] = ([[%d:%02d:%02d]]):format(math.floor(hoverTime / 3600), math.floor((hoverTime / 60) % 60), math.floor(hoverTime % 60))
             self.lastTime = hoverTime
           end
           self.needsUpdate = true
@@ -1626,21 +1894,19 @@ do
       self.line = {
         ([[{%s%s\pos(]]):format(settings['default-style'], settings['hover-time-style']),
         [[-100,0]],
-        [[)\alpha&H]],
-        [[FF]],
-        [[&\an2}]],
-        0
+        [[)\an2}]],
+        [[????]]
       }
       self.lastTime = 0
       self.lastX = -1
-      self.position = -100
-      self.animation = Animation(255, 0, self.animationDuration, (function()
+      self.position = offScreenPos
+      self.animation = Animation(offScreenPos, bottomMargin, self.animationDuration, (function()
         local _base_1 = self
         local _fn_0 = _base_1.animate
         return function(...)
           return _fn_0(_base_1, ...)
         end
-      end)())
+      end)(), nil, 0.5)
     end,
     __base = _base_0,
     __name = "HoverTime",
@@ -1668,6 +1934,7 @@ do
   rightMargin = settings['hover-time-right-margin']
   leftMargin = settings['hover-time-left-margin']
   bottomMargin = settings['hover-time-bottom-margin']
+  offScreenPos = settings['hover-time-offscreen-pos']
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
@@ -1762,9 +2029,22 @@ do
   local _class_0
   local _parent_0 = UIElement
   local _base_0 = {
+    reconfigure = function(self)
+      _class_0.__parent.__base.reconfigure(self)
+      local offscreenPos = settings['title-offscreen-pos']
+      self.line[2] = ('%g,%g'):format(settings['title-left-margin'], self.animation.value)
+      self.line[3] = ([[)\an7%s%s}]]):format(settings['default-style'], settings['title-style'])
+      self.animation = Animation(offscreenPos, settings['title-top-margin'], self.animationDuration, (function()
+        local _base_1 = self
+        local _fn_0 = _base_1.animate
+        return function(...)
+          return _fn_0(_base_1, ...)
+        end
+      end)(), nil, 0.5)
+    end,
     resize = function(self) end,
     animate = function(self, value)
-      self.line[2] = ([[%g,%g]]):format(settings['title-left-margin'], value)
+      self.line[2] = ('%g,%g'):format(settings['title-left-margin'], value)
       self.needsUpdate = true
     end,
     updatePlaylistInfo = function(self)
@@ -1775,7 +2055,7 @@ do
       if settings['title-print-to-cli'] then
         log.warn("Playing: %s%q", playlistString, title)
       end
-      self.line[4] = ([[%s%s]]):format(playlistString, title)
+      self.line[4] = ('%s%s'):format(playlistString, title)
       self.needsUpdate = true
     end
   }
@@ -1789,8 +2069,9 @@ do
         [[{\pos(]],
         ([[%g,%g]]):format(settings['title-left-margin'], offscreenPos),
         ([[)\an7%s%s}]]):format(settings['default-style'], settings['title-style']),
-        0
+        [[????]]
       }
+      self.position = offscreenPos
       self.animation = Animation(offscreenPos, settings['title-top-margin'], self.animationDuration, (function()
         local _base_1 = self
         local _fn_0 = _base_1.animate
@@ -1829,16 +2110,31 @@ end
 local SystemTime
 do
   local _class_0
-  local offscreen_position, top_margin, time_format
+  local offscreenPosition, topMargin, timeFormat
   local _parent_0 = UIElement
   local _base_0 = {
+    reconfigure = function(self)
+      _class_0.__parent.__base.reconfigure(self)
+      offscreenPosition = settings['system-time-offscreen-pos']
+      topMargin = settings['system-time-top-margin']
+      timeFormat = settings['system-time-format']
+      self.line[2] = ('%g,%g'):format(self.position, topMargin)
+      self.line[3] = ([[)\an9%s%s}]]):format(settings['default-style'], settings['system-time-style'])
+      self.animation = Animation(offscreenPosition, settings['system-time-right-margin'], self.animationDuration, (function()
+        local _base_1 = self
+        local _fn_0 = _base_1.animate
+        return function(...)
+          return _fn_0(_base_1, ...)
+        end
+      end)(), nil, 0.5)
+    end,
     resize = function(self)
       self.position = Window.w - self.animation.value
-      self.line[2] = ([[%g,%g]]):format(self.position, top_margin)
+      self.line[2] = ('%g,%g'):format(self.position, topMargin)
     end,
     animate = function(self, value)
       self.position = Window.w - value
-      self.line[2] = ([[%g,%g]]):format(self.position, top_margin)
+      self.line[2] = ('%g,%g'):format(self.position, topMargin)
       self.needsUpdate = true
     end,
     redraw = function(self)
@@ -1846,7 +2142,7 @@ do
         local systemTime = os.time()
         if systemTime ~= self.lastTime then
           local update = true
-          self.line[4] = os.date(time_format, systemTime)
+          self.line[4] = os.date(timeFormat, systemTime)
           self.lastTime = systemTime
           self.needsUpdate = true
         end
@@ -1863,11 +2159,11 @@ do
         [[{\pos(]],
         [[-100,0]],
         ([[)\an9%s%s}]]):format(settings['default-style'], settings['system-time-style']),
-        0
+        [[????]]
       }
       self.lastTime = -1
-      self.position = offscreen_position
-      self.animation = Animation(offscreen_position, settings['system-time-right-margin'], self.animationDuration, (function()
+      self.position = offscreenPosition
+      self.animation = Animation(offscreenPosition, settings['system-time-right-margin'], self.animationDuration, (function()
         local _base_1 = self
         local _fn_0 = _base_1.animate
         return function(...)
@@ -1898,9 +2194,9 @@ do
   })
   _base_0.__class = _class_0
   local self = _class_0
-  offscreen_position = settings['system-time-offscreen-pos']
-  top_margin = settings['system-time-top-margin']
-  time_format = settings['system-time-format']
+  offscreenPosition = settings['system-time-offscreen-pos']
+  topMargin = settings['system-time-top-margin']
+  timeFormat = settings['system-time-format']
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
@@ -1966,8 +2262,8 @@ if settings['enable-system-time'] then
   bottomZone:addUIElement(systemTime)
   topZone:addUIElement(systemTime)
 end
-eventLoop:addZone(bottomZone)
 eventLoop:addZone(hoverTimeZone)
+eventLoop:addZone(bottomZone)
 eventLoop:addZone(topZone)
 local notFrameStepping = false
 if settings['pause-indicator'] then
@@ -1996,7 +2292,6 @@ end
 local streamMode = false
 local initDraw
 initDraw = function()
-  mp.unregister_event(initDraw)
   if chapters then
     chapters:createMarkers()
   end
@@ -2045,8 +2340,4 @@ initDraw = function()
   eventLoop:resize()
   return eventLoop:redraw()
 end
-local fileLoaded
-fileLoaded = function()
-  return mp.register_event('playback-restart', initDraw)
-end
-return mp.register_event('file-loaded', fileLoaded)
+return mp.register_event('file-loaded', initDraw)
