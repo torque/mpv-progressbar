@@ -25,10 +25,10 @@ convenient to update if you symlink it in from somewhere else.
 `progressbar.lua` has a whole host of options that can be set to change
 the way it displays. These can be set on the mpv command line, but the
 recommended approach is by using the configuration file
-`~~/lua-settings/torque-progressbar.conf`, where `~~` is either `~/.mpv`
-or `~/.config/mpv`, depending on your setup. The defaults are provided
-in `settings.moon`, and are reproduced in config-file-compatible syntax
-in [`torque-progressbar.conf`][conf-example].
+`~~/script-opts/torque-progressbar/main.conf`, where `~~` is either
+`~/.mpv` or `~/.config/mpv`, depending on your setup. The defaults are
+provided in `settings.moon`, and are reproduced in config-file-
+compatible syntax in [`torque-progressbar.conf`][conf-example].
 
 #### Keybindings
 
