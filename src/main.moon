@@ -93,7 +93,6 @@ if settings['pause-indicator']
 
 streamMode = false
 initDraw = ->
-	mp.unregister_event initDraw
 	-- this forces sizing activityzones and ui elements
 	if chapters
 		chapters\createMarkers!
@@ -134,7 +133,4 @@ initDraw = ->
 	eventLoop\resize!
 	eventLoop\redraw!
 
-fileLoaded = ->
-	mp.register_event 'playback-restart', initDraw
-
-mp.register_event 'file-loaded', fileLoaded
+mp.register_event 'file-loaded', initDraw
