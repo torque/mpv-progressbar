@@ -75,6 +75,57 @@ local settingsMeta = {
     end
   end,
   _migrate = function(self)
+    local pathSep = package.config:sub(1, 1)
+    local onWindows = pathSep == '\\'
+    local mv
+    mv = function(oldFile, newFile)
+      local cmd = {
+        args = {
+          'mv',
+          oldConfig,
+          newConfig
+        }
+      }
+      if onWindows then
+        local oldfile = oldFile:gsub('/', pathSep)
+        newFile = newFile:gsub('/', pathSep)
+        cmd = {
+          args = {
+            'cmd',
+            '/Q',
+            '/C',
+            'move',
+            '/Y',
+            oldfile,
+            newFile
+          }
+        }
+      end
+      return utils.subprocess(cmd)
+    end
+    local mkdir
+    mkdir = function(directory)
+      local cmd = {
+        args = {
+          'mkdir',
+          '-p',
+          directory
+        }
+      }
+      if onWindows then
+        directory = directory:gsub('/', pathSep)
+        cmd = {
+          args = {
+            'cmd',
+            '/Q',
+            '/C',
+            'mkdir',
+            directory
+          }
+        }
+      end
+      return utils.subprocess(cmd)
+    end
     local settingsDirectories = {
       'script-opts',
       'lua-settings'
@@ -101,8 +152,6 @@ local settingsMeta = {
       end
       newConfigFiles = _accum_0
     end
-    log.dump(oldConfigFiles)
-    log.dump(newConfigFiles)
     local oldConfig = nil
     local oldConfigIndex = 1
     local newConfigFile = nil
@@ -144,12 +193,7 @@ local settingsMeta = {
       else
         if not dirExists then
           log.debug(('Attempting to create directory "%s"'):format(configDir))
-          local res = utils.subprocess({
-            args = {
-              'mkdir',
-              configDir
-            }
-          })
+          local res = mkdir(configDir)
           if res.error or res.status ~= 0 then
             log.warn(('Making directory "%s" failed.'):format(configDir))
             return 
@@ -160,13 +204,7 @@ local settingsMeta = {
         end
       end
       log.debug(('Attempting to move "%s" -> "%s"'):format(oldConfig, newConfig))
-      local res = utils.subprocess({
-        args = {
-          'mv',
-          oldConfig,
-          newConfig
-        }
-      })
+      local res = mv(oldConfig, newConfig)
       if res.error or res.status ~= 0 then
         log.warn(('Moving file "%s" -> "%s" failed.'):format(oldConfig, newConfig))
         return 
