@@ -29,12 +29,27 @@ settingsMeta = {
 			@['bar-height-inactive'] = 1
 
 	_migrate: =>
-		-- mp.utils.subprocess does not seem to work on Windows.
-		settingsDirectories = {'script-opts', 'lua-settings'}
-		oldConfigFiles = ['%s/%s.conf'\format dir, script_name for dir in *settingsDirectories]
-		newConfigFiles = ['%s/%s/main.conf'\format dir, script_name for dir in *settingsDirectories]
-		log.dump oldConfigFiles
-		log.dump newConfigFiles
+		pathSep = package.config\sub( 1, 1 )
+		onWindows = pathSep == '\\'
+
+		mv = (oldFile, newFile) ->
+			cmd = { args: { 'mv', oldConfig, newConfig } }
+			if onWindows
+				oldfile = oldFile\gsub( '/', pathSep )
+				newFile = newFile\gsub( '/', pathSep )
+				cmd = { args: { 'cmd', '/Q', '/C', 'move', '/Y', oldfile, newFile } }
+			return utils.subprocess cmd
+
+		mkdir = (directory) ->
+			cmd = { args: { 'mkdir', '-p', directory } }
+			if onWindows
+				directory = directory\gsub( '/', pathSep )
+				cmd = { args: { 'cmd', '/Q', '/C', 'mkdir', directory } }
+			return utils.subprocess cmd
+
+		settingsDirectories = { 'script-opts', 'lua-settings' }
+		oldConfigFiles = [ '%s/%s.conf'\format dir, script_name for dir in *settingsDirectories ]
+		newConfigFiles = [ '%s/%s/main.conf'\format dir, script_name for dir in *settingsDirectories ]
 
 		oldConfig = nil
 		oldConfigIndex = 1
@@ -77,7 +92,7 @@ settingsMeta = {
 
 			else if not dirExists
 				log.debug 'Attempting to create directory "%s"'\format configDir
-				res = utils.subprocess { args: { 'mkdir', configDir } }
+				res = mkdir configDir
 				if res.error or res.status != 0
 					log.warn 'Making directory "%s" failed.'\format configDir
 					return
@@ -86,7 +101,7 @@ settingsMeta = {
 				log.debug 'Directory "%s" already exists. Continuing.'\format configDir
 
 			log.debug 'Attempting to move "%s" -> "%s"'\format oldConfig, newConfig
-			res = utils.subprocess { args: { 'mv', oldConfig, newConfig } }
+			res = mv oldConfig, newConfig
 			if res.error or res.status != 0
 				log.warn 'Moving file "%s" -> "%s" failed.'\format oldConfig, newConfig
 				return
