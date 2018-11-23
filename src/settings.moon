@@ -149,7 +149,18 @@ bar.
 settings['bar-cache-style'] = [[\c&H515151&]]
 helpText['bar-cache-style'] = [[
 A string of ASS override tags that get applied only to the cache layer of the
-bar. The default sets only the color.
+bar, particularly the part of the cache bar that is behind the current playback
+position. The default sets only the color.
+]]
+
+settings['bar-cache-background-style'] = [[]]
+helpText['bar-cache-background-style'] = [[
+A string of ASS override tags that get applied only to the cache layer of the
+bar, particularly the part of the cache bar that is after the current playback
+position. The tags specified here are applied after bar-cache-style and override
+them. Leaving this blank will leave the style the same as specified by bar-
+cache-style. The split does not account for a nonzero progress-bar-width and may
+look odd when used in tandem with that setting.
 ]]
 
 settings['bar-background-style'] = [[\c&H2D2D2D&]]
