@@ -339,7 +339,16 @@ bar.
 ]]
 settings['bar-cache-style'] = [[\c&H515151&]]
 helpText['bar-cache-style'] = [[A string of ASS override tags that get applied only to the cache layer of the
-bar. The default sets only the color.
+bar, particularly the part of the cache bar that is behind the current playback
+position. The default sets only the color.
+]]
+settings['bar-cache-background-style'] = [[]]
+helpText['bar-cache-background-style'] = [[A string of ASS override tags that get applied only to the cache layer of the
+bar, particularly the part of the cache bar that is after the current playback
+position. The tags specified here are applied after bar-cache-style and override
+them. Leaving this blank will leave the style the same as specified by bar-
+cache-style. The split does not account for a nonzero progress-bar-width and may
+look odd when used in tandem with that setting.
 ]]
 settings['bar-background-style'] = [[\c&H2D2D2D&]]
 helpText['bar-background-style'] = [[A string of ASS override tags that get applied only to the background layer of
@@ -1442,7 +1451,9 @@ do
     reconfigure = function(self)
       _class_0.__parent.__base.reconfigure(self, 'bar-cache-')
       self.line[6] = 100
-      self.line[8] = self.line[8]:format(settings['bar-cache-style'])
+      self.line[8] = self.line[8]:format(settings['bar-cache-style']) .. 'm 0 0'
+      self.line[10] = ([[{\p0%s\p1}]]):format(settings['bar-cache-background-style'])
+      self.line[11] = [[]]
       self.fileDuration = mp.get_property_number('duration', nil)
     end,
     resize = function(self)
@@ -1454,19 +1465,38 @@ do
     redraw = function(self)
       _class_0.__parent.__base.redraw(self)
       if self.fileDuration and (self.fileDuration > 0) then
-        local barDrawing = { }
+        local barDrawing = {
+          past = { },
+          future = { }
+        }
         local ranges
         ranges = mp.get_property_native('demuxer-cache-state', { })['seekable-ranges']
         if ranges then
+          local progressPosition = mp.get_property_number('percent-pos', 0) * Window.w * 0.01
           for _index_0 = 1, #ranges do
             local _des_0 = ranges[_index_0]
             local rangeStart, rangeEnd
             rangeStart, rangeEnd = _des_0.start, _des_0["end"]
-            rangeStart, rangeEnd = rangeStart * self.coordinateRemap, rangeEnd * self.coordinateRemap
-            local rect = ('m %g 0 l %g 1 %g 1 %g 0'):format(rangeStart, rangeStart, rangeEnd, rangeEnd)
-            table.insert(barDrawing, rect)
+            rangeStart = rangeStart * self.coordinateRemap
+            rangeEnd = rangeEnd * self.coordinateRemap
+            if rangeEnd < progressPosition then
+              local rect = ('m %g 0 l %g 1 %g 1 %g 0'):format(rangeStart, rangeStart, rangeEnd, rangeEnd)
+              table.insert(barDrawing.past, rect)
+            elseif rangeStart > progressPosition then
+              rangeStart = rangeStart - progressPosition
+              rangeEnd = rangeEnd - progressPosition
+              local rect = ('m %g 0 l %g 1 %g 1 %g 0'):format(rangeStart, rangeStart, rangeEnd, rangeEnd)
+              table.insert(barDrawing.future, rect)
+            else
+              rangeEnd = rangeEnd - progressPosition
+              local rectPast = ('m %g 0 l %g 1 %g 1 %g 0'):format(rangeStart, rangeStart, progressPosition, progressPosition)
+              local rectFuture = ('m %g 0 l %g 1 %g 1 %g 0'):format(0, 0, rangeEnd, rangeEnd)
+              table.insert(barDrawing.past, rectPast)
+              table.insert(barDrawing.future, rectFuture)
+            end
           end
-          self.line[9] = table.concat(barDrawing, ' ')
+          self.line[9] = table.concat(barDrawing.past, ' ') .. ('m %g 0'):format(progressPosition)
+          self.line[11] = table.concat(barDrawing.future, ' ')
           self.needsUpdate = true
         end
       end
