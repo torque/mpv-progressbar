@@ -1,19 +1,19 @@
 class BarBase extends UIElement
-	minHeight = settings['bar-height-inactive']*100
-	@@animationMinHeight = minHeight
-	@@maxHeight = settings['bar-height-active']*100
 	hideInactive = settings['bar-hide-inactive']
+	@instantiatedBars: {}
 
-	@toggleInactiveVisibility: ->
+	@toggleInactiveVisibility: =>
 		hideInactive = not hideInactive
-		if hideInactive
-			BarBase.animationMinHeight = 0
-		else
-			BarBase.animationMinHeight = minHeight
+		for bar in *@instantiatedBars
+			bar\_updateBarVisibility!
 
-	lineBaseTemplate = [[\an1%s%s%s\p1}m 0 0 l ]]
+	lineBaseTemplate = [[\an1%s%s%s\p1}]]
 
 	new: =>
+
+		@minHeight = settings['bar-height-inactive']*100
+		@animationMinHeight = minHeight
+		@maxHeight = settings['bar-height-active']*100
 
 		@line = {
 			[[{\pos(]] -- 1
@@ -29,18 +29,25 @@ class BarBase extends UIElement
 
 		super!
 
+		table.insert @@instantiatedBars, @
+
 		@reconfigure!
 
-	reconfigure: =>
-		super!
-		minHeight = settings['bar-height-inactive']*100
-		@@maxHeight = settings['bar-height-active']*100
-		hideInactive = settings['bar-hide-inactive']
+	_updateBarVisibility: =>
 		if hideInactive
-			@@animationMinHeight = 0
+			@animationMinHeight = 0
 		else
-			@@animationMinHeight = minHeight
-		@line[4] = minHeight
+			@animationMinHeight = @minHeight
+
+	reconfigure: (prefix='bar-')=>
+		super!
+		@minHeight = settings[prefix .. 'height-inactive']*100
+		@maxHeight = settings[prefix .. 'height-active']*100
+		hideInactive = settings['bar-hide-inactive']
+
+		@_updateBarVisibility!
+
+		@line[4] = @minHeight
 		@line[8] = lineBaseTemplate\format settings['default-style'], settings['bar-default-style'], '%s'
 
 		@animation = Animation 0, 1, @animationDuration, @\animate
@@ -54,11 +61,11 @@ class BarBase extends UIElement
 
 	resize: =>
 		@line[2] = [[%d,%d]]\format 0, Window.h
-		@line[9] = [[%d 0 %d 1 0 1]]\format Window.w, Window.w
+		@line[9] = [[m 0 0 l %d 0 %d 1 0 1]]\format Window.w, Window.w
 		@needsUpdate = true
 
 	animate: ( value ) =>
-		@line[4] = ([[%g]])\format (@@maxHeight - @@animationMinHeight)*value + @@animationMinHeight, value
+		@line[4] = ([[%g]])\format (@maxHeight - @animationMinHeight)*value + @animationMinHeight
 		@needsUpdate = true
 
 	redraw: =>

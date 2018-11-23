@@ -18,7 +18,7 @@ class Chapters extends BarBase
 		totalTime = mp.get_property_number 'duration', 0.01
 		chapters = mp.get_property_native 'chapter-list', { }
 
-		markerHeight = @active and maxHeight*maxHeightFrac or BarBase.animationMinHeight
+		markerHeight = @active and maxHeight*maxHeightFrac or BarBase.instantiatedBars[1].animationMinHeight
 		markerWidth = @active and maxWidth or minWidth
 		for chapter in *chapters
 			marker = ChapterMarker chapter.time/totalTime, markerWidth, markerHeight
@@ -47,7 +47,7 @@ class Chapters extends BarBase
 
 	animate: ( value ) =>
 		width = (maxWidth - minWidth)*value + minWidth
-		height = (maxHeight*maxHeightFrac - BarBase.animationMinHeight)*value + BarBase.animationMinHeight
+		height = (maxHeight*maxHeightFrac - BarBase.instantiatedBars[1].animationMinHeight)*value + BarBase.instantiatedBars[1].animationMinHeight
 		for i, marker in ipairs @markers
 			marker\animate width, height
 			@line[i] = marker\stringify!

@@ -25,15 +25,23 @@ topZone = ActivityZone =>
 local chapters, progressBar, barCache, barBackground, elapsedTime, remainingTime, hoverTime
 
 if settings['enable-bar']
+	-- this order is recorded and (ab)used by BarBase and
+	-- ProgressBarBackground
 	progressBar = ProgressBar!
 	barCache = ProgressBarCache!
 	barBackground = ProgressBarBackground!
 	bottomZone\addUIElement barBackground
-	bottomZone\addUIElement barCache
-	bottomZone\addUIElement progressBar
+
+	-- this is not runtime reconfigurable, currently
+	if settings['bar-cache-position'] == 'overlay'
+		bottomZone\addUIElement progressBar
+		bottomZone\addUIElement barCache
+	else
+		bottomZone\addUIElement barCache
+		bottomZone\addUIElement progressBar
 
 	mp.add_key_binding "c", "toggle-inactive-bar", ->
-		BarBase.toggleInactiveVisibility!
+		BarBase\toggleInactiveVisibility!
 
 if settings['enable-chapter-markers']
 	chapters = Chapters!

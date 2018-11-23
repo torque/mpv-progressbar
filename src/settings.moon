@@ -64,7 +64,7 @@ is possible to have the bar be persistently present only in windowed or
 fullscreen contexts, depending on the default setting.
 ]]
 
-settings['bar-height-inactive'] = 2
+settings['bar-height-inactive'] = 3
 helpText['bar-height-inactive'] = [[
 Sets the height of the bar display when the mouse is not in the active zone and
 there is no request-display active. A value of 0 or less will cause bar-hide-
@@ -95,6 +95,42 @@ different times when clicking in the same place.
 Actually, this gets passed directly into the `seek` command, so the value can be
 any of the arguments supported by mpv, though the ones above are the only ones
 that really make sense.
+]]
+
+settings['bar-background-adaptive'] = true
+helpText['bar-background-adaptive'] = [[
+Causes the progress bar background layer to automatically size itself to the
+tallest of the cache or progress bars. Useful for improving contrast but can
+make the bar take up more screen space. Has no effect if the cache bar height is
+less than the bar height.
+]]
+
+settings['bar-cache-position'] = 'overlay'
+helpText['bar-cache-position'] = [[
+Placement of the cache bar. Valid values are 'overlay' and 'underlay'.
+
+'overlay' causes the cache bar to be drawn on top of the foreground layer of the
+bar, allowing the display of seek ranges that have already been encountered.
+
+'underlay' draws the cache bar between the foreground and background layers. Any
+demuxer cache ranges that are prior to the current playback point will not be
+shown. This matches the previous behavior.
+]]
+
+settings['bar-cache-height-inactive'] = 1.5
+helpText['bar-cache-height-inactive'] = [[
+Sets the height of the cache bar display when the mouse is not in the active
+zone and there is no request-display active. Useful in combination with bar-
+cache-position to control whether or not the cache bar is occluded by (or
+occludes) the progress bar.
+]]
+
+settings['bar-cache-height-active'] = 4
+helpText['bar-cache-height-active'] = [[
+Sets the height of the cache bar display when the mouse is in the active zone or
+request-display is active. Useful in combination with bar-cache- position to
+control whether or not the cache bar is occluded by (or occludes) the progress
+bar.
 ]]
 
 settings['bar-default-style'] = [[\bord0\shad0]]
