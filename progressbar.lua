@@ -10,7 +10,6 @@ local log = {
     return msg.warn(format:format(...))
   end,
   dump = function(item, ignore)
-    local level = 2
     if "table" ~= type(item) then
       msg.info(tostring(item))
       return 
@@ -276,7 +275,7 @@ the binding `f cycle pause; script-binding progressbar/toggle-inactive-bar`, it
 is possible to have the bar be persistently present only in windowed or
 fullscreen contexts, depending on the default setting.
 ]]
-settings['bar-height-inactive'] = 2
+settings['bar-height-inactive'] = 3
 helpText['bar-height-inactive'] = [[Sets the height of the bar display when the mouse is not in the active zone and
 there is no request-display active. A value of 0 or less will cause bar-hide-
 inactive to be set to true and the bar height to be set to 1. This should result
@@ -300,6 +299,34 @@ different times when clicking in the same place.
 Actually, this gets passed directly into the `seek` command, so the value can be
 any of the arguments supported by mpv, though the ones above are the only ones
 that really make sense.
+]]
+settings['bar-background-adaptive'] = true
+helpText['bar-background-adaptive'] = [[Causes the progress bar background layer to automatically size itself to the
+tallest of the cache or progress bars. Useful for improving contrast but can
+make the bar take up more screen space. Has no effect if the cache bar height is
+less than the bar height.
+]]
+settings['bar-cache-position'] = 'overlay'
+helpText['bar-cache-position'] = [[Placement of the cache bar. Valid values are 'overlay' and 'underlay'.
+
+'overlay' causes the cache bar to be drawn on top of the foreground layer of the
+bar, allowing the display of seek ranges that have already been encountered.
+
+'underlay' draws the cache bar between the foreground and background layers. Any
+demuxer cache ranges that are prior to the current playback point will not be
+shown. This matches the previous behavior.
+]]
+settings['bar-cache-height-inactive'] = 1.5
+helpText['bar-cache-height-inactive'] = [[Sets the height of the cache bar display when the mouse is not in the active
+zone and there is no request-display active. Useful in combination with bar-
+cache-position to control whether or not the cache bar is occluded by (or
+occludes) the progress bar.
+]]
+settings['bar-cache-height-active'] = 4
+helpText['bar-cache-height-active'] = [[Sets the height of the cache bar display when the mouse is in the active zone or
+request-display is active. Useful in combination with bar-cache- position to
+control whether or not the cache bar is occluded by (or occludes) the progress
+bar.
 ]]
 settings['bar-default-style'] = [[\bord0\shad0]]
 helpText['bar-default-style'] = [[A string of ASS override tags that get applied to all three layers of the bar:
@@ -895,7 +922,7 @@ do
   local _class_0
   local _base_0 = {
     reconfigure = function(self)
-      settings:__reload()
+      settings:_reload()
       AnimationQueue.destroyAnimationStack()
       for _, zone in ipairs(self.activityZones) do
         zone:reconfigure()
@@ -1215,20 +1242,26 @@ end
 local BarBase
 do
   local _class_0
-  local minHeight, hideInactive, lineBaseTemplate
+  local hideInactive, lineBaseTemplate
   local _parent_0 = UIElement
   local _base_0 = {
-    reconfigure = function(self)
-      _class_0.__parent.__base.reconfigure(self)
-      minHeight = settings['bar-height-inactive'] * 100
-      self.__class.maxHeight = settings['bar-height-active'] * 100
-      hideInactive = settings['bar-hide-inactive']
+    _updateBarVisibility = function(self)
       if hideInactive then
-        self.__class.animationMinHeight = 0
+        self.animationMinHeight = 0
       else
-        self.__class.animationMinHeight = minHeight
+        self.animationMinHeight = self.minHeight
       end
-      self.line[4] = minHeight
+    end,
+    reconfigure = function(self, prefix)
+      if prefix == nil then
+        prefix = 'bar-'
+      end
+      _class_0.__parent.__base.reconfigure(self)
+      self.minHeight = settings[prefix .. 'height-inactive'] * 100
+      self.maxHeight = settings[prefix .. 'height-active'] * 100
+      hideInactive = settings['bar-hide-inactive']
+      self:_updateBarVisibility()
+      self.line[4] = self.minHeight
       self.line[8] = lineBaseTemplate:format(settings['default-style'], settings['bar-default-style'], '%s')
       self.animation = Animation(0, 1, self.animationDuration, (function()
         local _base_1 = self
@@ -1248,11 +1281,11 @@ do
     end,
     resize = function(self)
       self.line[2] = ([[%d,%d]]):format(0, Window.h)
-      self.line[9] = ([[%d 0 %d 1 0 1]]):format(Window.w, Window.w)
+      self.line[9] = ([[m 0 0 l %d 0 %d 1 0 1]]):format(Window.w, Window.w)
       self.needsUpdate = true
     end,
     animate = function(self, value)
-      self.line[4] = ([[%g]]):format((self.__class.maxHeight - self.__class.animationMinHeight) * value + self.__class.animationMinHeight, value)
+      self.line[4] = ([[%g]]):format((self.maxHeight - self.animationMinHeight) * value + self.animationMinHeight)
       self.needsUpdate = true
     end,
     redraw = function(self)
@@ -1269,6 +1302,9 @@ do
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
     __init = function(self)
+      self.minHeight = settings['bar-height-inactive'] * 100
+      self.animationMinHeight = minHeight
+      self.maxHeight = settings['bar-height-active'] * 100
       self.line = {
         [[{\pos(]],
         0,
@@ -1281,6 +1317,7 @@ do
         0
       }
       _class_0.__parent.__init(self)
+      table.insert(self.__class.instantiatedBars, self)
       return self:reconfigure()
     end,
     __base = _base_0,
@@ -1306,19 +1343,17 @@ do
   })
   _base_0.__class = _class_0
   local self = _class_0
-  minHeight = settings['bar-height-inactive'] * 100
-  self.__class.animationMinHeight = minHeight
-  self.__class.maxHeight = settings['bar-height-active'] * 100
   hideInactive = settings['bar-hide-inactive']
-  self.toggleInactiveVisibility = function()
+  self.instantiatedBars = { }
+  self.toggleInactiveVisibility = function(self)
     hideInactive = not hideInactive
-    if hideInactive then
-      BarBase.animationMinHeight = 0
-    else
-      BarBase.animationMinHeight = minHeight
+    local _list_0 = self.instantiatedBars
+    for _index_0 = 1, #_list_0 do
+      local bar = _list_0[_index_0]
+      bar:_updateBarVisibility()
     end
   end
-  lineBaseTemplate = [[\an1%s%s%s\p1}m 0 0 l ]]
+  lineBaseTemplate = [[\an1%s%s%s\p1}]]
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
@@ -1401,31 +1436,39 @@ end
 local ProgressBarCache
 do
   local _class_0
+  local timestamp
   local _parent_0 = BarBase
   local _base_0 = {
     reconfigure = function(self)
-      _class_0.__parent.__base.reconfigure(self)
+      _class_0.__parent.__base.reconfigure(self, 'bar-cache-')
+      self.line[6] = 100
       self.line[8] = self.line[8]:format(settings['bar-cache-style'])
+      self.fileDuration = mp.get_property_number('duration', nil)
+    end,
+    resize = function(self)
+      _class_0.__parent.__base.resize(self)
+      if self.fileDuration then
+        self.coordinateRemap = Window.w / self.fileDuration
+      end
     end,
     redraw = function(self)
       _class_0.__parent.__base.redraw(self)
-      local totalSize = mp.get_property_number('file-size', 0)
-      if totalSize ~= 0 then
-        local position = mp.get_property_number('percent-pos', 0.001)
-        local cacheUsed = mp.get_property_number('cache-used', 0) * 1024
-        local networkCacheContribution = cacheUsed / totalSize
-        local demuxerCache = mp.get_property('demuxer-cache-state/cache-end', nil)
-        local fileDuration = mp.get_property_number('duration', 0.001)
-        local demuxerCacheContribution = 0
-        if demuxerCache then
-          local currentTime = mp.get_property_number('time-pos', 0)
-          demuxerCacheContribution = (demuxerCache - currentTime) / fileDuration
-        else
-          local demuxerCacheDuration = mp.get_property_number('demuxer-cache-duration', 0)
-          demuxerCacheContribution = demuxerCacheDuration / fileDuration
+      if self.fileDuration and (self.fileDuration > 0) then
+        local barDrawing = { }
+        local ranges
+        ranges = mp.get_property_native('demuxer-cache-state', { })['seekable-ranges']
+        if ranges then
+          for _index_0 = 1, #ranges do
+            local _des_0 = ranges[_index_0]
+            local rangeStart, rangeEnd
+            rangeStart, rangeEnd = _des_0.start, _des_0["end"]
+            rangeStart, rangeEnd = rangeStart * self.coordinateRemap, rangeEnd * self.coordinateRemap
+            local rect = ('m %g 0 l %g 1 %g 1 %g 0'):format(rangeStart, rangeStart, rangeEnd, rangeEnd)
+            table.insert(barDrawing, rect)
+          end
+          self.line[9] = table.concat(barDrawing, ' ')
+          self.needsUpdate = true
         end
-        self.line[6] = (networkCacheContribution + demuxerCacheContribution) * 100 + position
-        self.needsUpdate = true
       end
       return self.needsUpdate
     end
@@ -1433,8 +1476,15 @@ do
   _base_0.__index = _base_0
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
-    __init = function(self, ...)
-      return _class_0.__parent.__init(self, ...)
+    __init = function(self)
+      _class_0.__parent.__init(self)
+      self.coordinateRemap = 0
+      return mp.observe_property('duration', 'number', function(name, value)
+        if value and (value > 0) then
+          self.fileDuration = value
+          self.coordinateRemap = Window.w / value
+        end
+      end)
     end,
     __base = _base_0,
     __name = "ProgressBarCache",
@@ -1458,6 +1508,8 @@ do
     end
   })
   _base_0.__class = _class_0
+  local self = _class_0
+  timestamp = os.time()
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
@@ -1470,6 +1522,15 @@ do
   local _base_0 = {
     reconfigure = function(self)
       _class_0.__parent.__base.reconfigure(self)
+      if settings['bar-background-adaptive'] then
+        local _list_0 = self.__class.instantiatedBars
+        for _index_0 = 1, #_list_0 do
+          local bar = _list_0[_index_0]
+          self.minHeight = math.max(self.minHeight, bar.minHeight)
+          self.maxHeight = math.max(self.maxHeight, bar.maxHeight)
+        end
+        self:_updateBarVisibility()
+      end
       self.line[6] = 100
       self.line[8] = self.line[8]:format(settings['bar-background-style'])
     end
@@ -1585,7 +1646,7 @@ do
       self.markers = { }
       local totalTime = mp.get_property_number('duration', 0.01)
       local chapters = mp.get_property_native('chapter-list', { })
-      local markerHeight = self.active and maxHeight * maxHeightFrac or BarBase.animationMinHeight
+      local markerHeight = self.active and maxHeight * maxHeightFrac or BarBase.instantiatedBars[1].animationMinHeight
       local markerWidth = self.active and maxWidth or minWidth
       for _index_0 = 1, #chapters do
         local chapter = chapters[_index_0]
@@ -1620,7 +1681,7 @@ do
     end,
     animate = function(self, value)
       local width = (maxWidth - minWidth) * value + minWidth
-      local height = (maxHeight * maxHeightFrac - BarBase.animationMinHeight) * value + BarBase.animationMinHeight
+      local height = (maxHeight * maxHeightFrac - BarBase.instantiatedBars[1].animationMinHeight) * value + BarBase.instantiatedBars[1].animationMinHeight
       for i, marker in ipairs(self.markers) do
         marker:animate(width, height)
         self.line[i] = marker:stringify()
@@ -2085,16 +2146,40 @@ do
       self.line[2] = ('%g,%g'):format(settings['title-left-margin'], value)
       self.needsUpdate = true
     end,
-    updatePlaylistInfo = function(self)
-      local title = mp.get_property('media-title', '')
-      local position = mp.get_property_number('playlist-pos-1', 1)
-      local total = mp.get_property_number('playlist-count', 1)
-      local playlistString = (total > 1) and ('%d/%d - '):format(position, total) or ''
-      if settings['title-print-to-cli'] then
-        log.warn("Playing: %s%q", playlistString, title)
+    _forceUpdatePlaylistInfo = function(self)
+      self.playlistInfo = {
+        ['media-title'] = mp.get_property('media-title', '????'),
+        ['playlist-pos-1'] = mp.get_property_number('playlist-pos-1', 1),
+        ['playlist-count'] = mp.get_property_number('playlist-count', 1)
+      }
+    end,
+    generateTitleString = function(self, quote)
+      if quote == nil then
+        quote = false
       end
-      self.line[4] = ('%s%s'):format(playlistString, title)
-      self.needsUpdate = true
+      local title, position, total
+      do
+        local _obj_0 = self.playlistInfo
+        title, position, total = _obj_0['media-title'], _obj_0['playlist-pos-1'], _obj_0['playlist-count']
+      end
+      local prefix = (total > 1) and ('%d/%d - '):format(position, total) or ''
+      if quote then
+        return prefix .. ('%q'):format(title)
+      else
+        return prefix .. title
+      end
+    end,
+    updatePlaylistInfo = function(self, changedProp, newValue)
+      if newValue then
+        self.playlistInfo[changedProp] = newValue
+        self.line[4] = self:generateTitleString()
+        self.needsUpdate = true
+      end
+    end,
+    print = function(self)
+      if settings['title-print-to-cli'] then
+        return log.warn("Playing: " .. self:generateTitleString(true))
+      end
     end
   }
   _base_0.__index = _base_0
@@ -2117,6 +2202,18 @@ do
           return _fn_0(_base_1, ...)
         end
       end)(), nil, 0.5)
+      self:_forceUpdatePlaylistInfo()
+      local updatePlaylistInfo
+      do
+        local _base_1 = self
+        local _fn_0 = _base_1.updatePlaylistInfo
+        updatePlaylistInfo = function(...)
+          return _fn_0(_base_1, ...)
+        end
+      end
+      mp.observe_property('media-title', 'string', updatePlaylistInfo)
+      mp.observe_property('playlist-pos-1', 'number', updatePlaylistInfo)
+      return mp.observe_property('playlist-count', 'number', updatePlaylistInfo)
     end,
     __base = _base_0,
     __name = "Title",
@@ -2267,10 +2364,15 @@ if settings['enable-bar'] then
   barCache = ProgressBarCache()
   barBackground = ProgressBarBackground()
   bottomZone:addUIElement(barBackground)
-  bottomZone:addUIElement(barCache)
-  bottomZone:addUIElement(progressBar)
+  if settings['bar-cache-position'] == 'overlay' then
+    bottomZone:addUIElement(progressBar)
+    bottomZone:addUIElement(barCache)
+  else
+    bottomZone:addUIElement(barCache)
+    bottomZone:addUIElement(progressBar)
+  end
   mp.add_key_binding("c", "toggle-inactive-bar", function()
-    return BarBase.toggleInactiveVisibility()
+    return BarBase:toggleInactiveVisibility()
   end)
 end
 if settings['enable-chapter-markers'] then
@@ -2334,7 +2436,8 @@ initDraw = function()
     chapters:createMarkers()
   end
   if title then
-    title:updatePlaylistInfo()
+    title:_forceUpdatePlaylistInfo()
+    title:print()
   end
   notFrameStepping = true
   local duration = mp.get_property('duration')
