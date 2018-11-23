@@ -39,7 +39,7 @@ class EventLoop
 		mp.add_key_binding 'ctrl+r', 'reconfigure', @\reconfigure, { repeatable: false }
 
 	reconfigure: =>
-		settings\__reload!
+		settings\_reload!
 		AnimationQueue.destroyAnimationStack!
 		for _, zone in ipairs @activityZones
 			zone\reconfigure!
