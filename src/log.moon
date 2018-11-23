@@ -11,7 +11,6 @@ log = {
 		msg.warn format\format ...
 
 	dump: ( item, ignore ) ->
-		level = 2
 		if "table" != type item
 			msg.info tostring item
 			return

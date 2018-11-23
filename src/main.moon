@@ -97,7 +97,8 @@ initDraw = ->
 	if chapters
 		chapters\createMarkers!
 	if title
-		title\updatePlaylistInfo!
+		title\_forceUpdatePlaylistInfo!
+		title\print!
 	notFrameStepping = true
 	-- duration is nil for streams of indeterminate length
 	duration = mp.get_property 'duration'
