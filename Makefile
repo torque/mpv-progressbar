@@ -25,6 +25,7 @@ SOURCES += src/HoverTime.moon
 SOURCES += src/PropertyBarBase.moon
 SOURCES += src/BrightnessBar.moon
 SOURCES += src/ContrastBar.moon
+SOURCES += src/GammaBar.moon
 SOURCES += src/PauseIndicator.moon
 SOURCES += src/Title.moon
 SOURCES += src/SystemTime.moon
