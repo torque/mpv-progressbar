@@ -7,6 +7,7 @@ SOURCES += src/Window.moon
 SOURCES += src/Mouse.moon
 SOURCES += src/Rect.moon
 SOURCES += src/ActivityZone.moon
+SOURCES += src/ActivityZoneSingelton.moon
 SOURCES += src/AnimationQueue.moon
 SOURCES += src/EventLoop.moon
 SOURCES += src/Animation.moon
