@@ -74,7 +74,9 @@ if settings['enable-system-time']
 	topZone\addUIElement systemTime
 
 if settings['enable-property-bar']
+	brightnessBar = BrightnessBar!
 	contrastBar = ContrastBar!
+	propertyZone\addUIElement brightnessBar
 	propertyZone\addUIElement contrastBar
 -- The order of these is important, because the order that elements are added to
 -- eventLoop matters, because that controls how they are layered (first element
