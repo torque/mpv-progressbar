@@ -22,6 +22,7 @@ SOURCES += src/Chapters.moon
 SOURCES += src/TimeElapsed.moon
 SOURCES += src/TimeRemaining.moon
 SOURCES += src/HoverTime.moon
+SOURCES += src/PropertyBarBase.moon
 SOURCES += src/PauseIndicator.moon
 SOURCES += src/Title.moon
 SOURCES += src/SystemTime.moon
