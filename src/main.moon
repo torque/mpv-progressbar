@@ -83,6 +83,7 @@ if settings['enable-property-bar']
 		if volumeBar
 			volumeBar\updateMuteInfo muted
 
+	mp.set_property "osd-level", 0
 	propertyZone\addUIElement brightnessBar
 	propertyZone\addUIElement contrastBar
 	propertyZone\addUIElement gammaBar
