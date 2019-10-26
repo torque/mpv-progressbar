@@ -78,10 +78,17 @@ if settings['enable-property-bar']
 	contrastBar = ContrastBar!
 	gammaBar = GammaBar!
 	saturationBar = SaturationBar!
+	volumeBar = VolumeBar!
+	mp.observe_property "mute", "bool", ( event, muted ) ->
+		if volumeBar
+			volumeBar\updateMuteInfo muted
+
 	propertyZone\addUIElement brightnessBar
 	propertyZone\addUIElement contrastBar
 	propertyZone\addUIElement gammaBar
 	propertyZone\addUIElement saturationBar
+	propertyZone\addUIElement volumeBar
+
 -- The order of these is important, because the order that elements are added to
 -- eventLoop matters, because that controls how they are layered (first element
 -- on the bottom).

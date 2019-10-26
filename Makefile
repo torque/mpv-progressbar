@@ -27,6 +27,7 @@ SOURCES += src/BrightnessBar.moon
 SOURCES += src/ContrastBar.moon
 SOURCES += src/GammaBar.moon
 SOURCES += src/SaturationBar.moon
+SOURCES += src/VolumeBar.moon
 SOURCES += src/PauseIndicator.moon
 SOURCES += src/Title.moon
 SOURCES += src/SystemTime.moon
