@@ -17,8 +17,11 @@ hoverTimeZone = ActivityZone =>
 
 topZone = ActivityZone =>
 		@reset 0, 0, Window.w, activeHeight,
-	ignoreRequestDisplay
+	=>
+		return false
 
+propertyZone = ActivityZoneSingelton =>
+	@reset 0, 0, Window.w, Window.h
 
 -- This is kind of ugly but I have gone insane and don't care any more.
 -- Watch the rapidly declining quality of this codebase in realtime.
@@ -70,12 +73,16 @@ if settings['enable-system-time']
 	bottomZone\addUIElement systemTime
 	topZone\addUIElement systemTime
 
+if settings['enable-property-bar']
+	contrastBar = ContrastBar!
+	propertyZone\addUIElement contrastBar
 -- The order of these is important, because the order that elements are added to
 -- eventLoop matters, because that controls how they are layered (first element
 -- on the bottom).
 eventLoop\addZone hoverTimeZone
 eventLoop\addZone bottomZone
 eventLoop\addZone topZone
+eventLoop\addZone propertyZone
 
 notFrameStepping = false
 if settings['pause-indicator']
