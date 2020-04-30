@@ -424,4 +424,38 @@ will disappear without animating all the way off-screen. Positive values will
 cause the display to animate the wrong direction.
 ]]
 
+settings['enable-property-bar'] = true
+helpText['enable-property-bar'] = [[Controls whether or not the property bar for
+e.g. volume and brightness is drawn at all.
+]]
+
+settings['property-bar-width'] = 100
+helpText['property-bar-width'] = [[Sets the width of the property bar.
+]]
+
+settings['property-bar-height'] = 8
+helpText['property-bar-height'] = [[Sets the height of the property bar. There
+is no logic attached to this, so 0 or negative values may have unexpected
+results.
+]]
+
+settings['property-bar-top-margin'] = 100
+helpText['property-bar-top-margin'] = [[Controls how far from the top edge of
+the window the property bar display is positioned.
+]]
+
+settings['property-bar-right-margin'] = 100
+helpText['property-bar-right-margin'] = [[ Controls how far from the right edge
+of the window the property bar display is positioned.
+]]
+
+settings['property-bar-display-duration'] = 1
+helpText['property-bar-display-duration'] = [[Sets the amount of time in seconds
+that the property bar stays on the screen.
+]]
+
+settings['property-bar-marker-width'] = 2
+helpText['property-bar-marker-width'] = [[Controls the width of the marker.
+]]
+
 settings\_reload!
