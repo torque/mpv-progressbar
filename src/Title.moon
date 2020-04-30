@@ -55,4 +55,4 @@ class Title extends UIElement
 
 	print: =>
 		if settings['title-print-to-cli']
-			log.warn "Playing: " .. @generateTitleString true
+			log.warn "Playing: %s", @generateTitleString true
