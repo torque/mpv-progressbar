@@ -5,6 +5,7 @@ class EventLoop
 		@uiElements = Stack!
 		@activityZones = Stack!
 		@displayRequested = false
+		@needsRedraw = false
 
 		@updateTimer = mp.add_periodic_timer settings['redraw-period'], @\redraw
 		@updateTimer\stop!
@@ -83,6 +84,7 @@ class EventLoop
 		-- the stack instance itself)
 		table.remove @script, uiElement[@uiElements]
 		@uiElements\remove uiElement
+		@needsRedraw = true
 
 	resize: =>
 		for _, zone in ipairs @activityZones
@@ -99,7 +101,12 @@ class EventLoop
 			zone\update @displayRequested, clickPending
 
 		AnimationQueue.animate!
+
 		for index, uiElement in ipairs @uiElements
 			if uiElement\redraw!
 				@script[index] = uiElement\stringify!
-		mp.set_osd_ass Window.w, Window.h, table.concat @script, '\n'
+				@needsRedraw = true
+
+		if @needsRedraw
+			mp.set_osd_ass Window.w, Window.h, table.concat @script, '\n'
+			@needsRedraw = false

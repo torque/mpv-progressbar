@@ -25,6 +25,9 @@ class ProgressBar extends BarBase
 
 	redraw: =>
 		super!
+		if @hideInactive and not @active
+			return @needsUpdate
+
 		position = mp.get_property_number 'percent-pos', 0
 		if position != @lastPosition or @needsUpdate
 			@line[6] = position

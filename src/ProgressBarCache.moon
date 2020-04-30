@@ -5,6 +5,7 @@ class ProgressBarCache extends BarBase
 	new: =>
 		super!
 
+		@cacheKey = nil
 		@coordinateRemap = 0
 		mp.observe_property 'duration', 'number', ( name,  value ) ->
 			if value and (value > 0)
@@ -23,9 +24,14 @@ class ProgressBarCache extends BarBase
 		super!
 		if @fileDuration
 			@coordinateRemap = Window.w/@fileDuration
+		-- undo BarBase size update
+		@line[9] = [[]]
 
 	redraw: =>
 		super!
+
+		if @hideInactive and not @active
+			return @needsUpdate
 
 		if @fileDuration and (@fileDuration > 0)
 			barDrawing = { past: { },  future: { } }
@@ -38,11 +44,25 @@ class ProgressBarCache extends BarBase
 			-- the ranges returned here are not necessarily in chronological order.
 			{'seekable-ranges': ranges} = mp.get_property_native 'demuxer-cache-state', {}
 
-			if ranges
+			if ranges and (#ranges > 0)
+
+				-- TODO: be more smart about caching chunks of this.
+				position = mp.get_property_number 'percent-pos', 0
+				cacheKeyAggregator = { Window.w, position }
+				for {start: rangeStart, end: rangeEnd} in *ranges
+					table.insert cacheKeyAggregator, rangeStart
+					table.insert cacheKeyAggregator, rangeEnd
+
+				cacheKey = table.concat cacheKeyAggregator, '_'
+
+				if cacheKey == @cacheKey
+					return @needsUpdate
+
 				progressPosition = mp.get_property_number('percent-pos', 0)*Window.w*0.01
 				for {start: rangeStart, end: rangeEnd} in *ranges
 					rangeStart *= @coordinateRemap
 					rangeEnd *= @coordinateRemap
+
 					-- we could branch here and only perform this more complex cache
 					-- splitting logic if bar-cache-background-style is not an empty
 					-- string, but I'd rather not have an extra code path to worry about
@@ -51,7 +71,7 @@ class ProgressBarCache extends BarBase
 						rect = 'm %g 0 l %g 1 %g 1 %g 0'\format rangeStart, rangeStart, rangeEnd, rangeEnd
 						table.insert barDrawing.past, rect
 					elseif rangeStart > progressPosition
-						-- the way ASS handles two drawings in a single line is weird,
+						-- the way ASS handles two drawings in a single line is weird
 						-- (drawing coordinates are relative to the end of the previous
 						-- drawing/character on the same line), so we have to offset all
 						-- future values by the split point. This is handled by bounding the
@@ -71,6 +91,7 @@ class ProgressBarCache extends BarBase
 				@line[9] = table.concat( barDrawing.past, ' ' ) .. 'm %g 0'\format progressPosition
 				@line[11] = table.concat barDrawing.future, ' '
 
+				@cacheKey = cacheKey
 				@needsUpdate = true
 
 		return @needsUpdate
