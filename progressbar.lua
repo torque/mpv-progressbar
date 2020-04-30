@@ -979,7 +979,8 @@ do
         error('nil UIElement removed.')
       end
       table.remove(self.script, uiElement[self.uiElements])
-      return self.uiElements:remove(uiElement)
+      self.uiElements:remove(uiElement)
+      self.needsRedraw = true
     end,
     resize = function(self)
       for _, zone in ipairs(self.activityZones) do
@@ -1001,9 +1002,13 @@ do
       for index, uiElement in ipairs(self.uiElements) do
         if uiElement:redraw() then
           self.script[index] = uiElement:stringify()
+          self.needsRedraw = true
         end
       end
-      return mp.set_osd_ass(Window.w, Window.h, table.concat(self.script, '\n'))
+      if self.needsRedraw then
+        mp.set_osd_ass(Window.w, Window.h, table.concat(self.script, '\n'))
+        self.needsRedraw = false
+      end
     end
   }
   _base_0.__index = _base_0
@@ -1013,6 +1018,7 @@ do
       self.uiElements = Stack()
       self.activityZones = Stack()
       self.displayRequested = false
+      self.needsRedraw = false
       self.updateTimer = mp.add_periodic_timer(settings['redraw-period'], (function()
         local _base_1 = self
         local _fn_0 = _base_1.redraw
@@ -1393,6 +1399,9 @@ do
     end,
     redraw = function(self)
       _class_0.__parent.__base.redraw(self)
+      if self.hideInactive and not self.active then
+        return self.needsUpdate
+      end
       local position = mp.get_property_number('percent-pos', 0)
       if position ~= self.lastPosition or self.needsUpdate then
         self.line[6] = position
@@ -1461,9 +1470,13 @@ do
       if self.fileDuration then
         self.coordinateRemap = Window.w / self.fileDuration
       end
+      self.line[9] = [[]]
     end,
     redraw = function(self)
       _class_0.__parent.__base.redraw(self)
+      if self.hideInactive and not self.active then
+        return self.needsUpdate
+      end
       if self.fileDuration and (self.fileDuration > 0) then
         local barDrawing = {
           past = { },
@@ -1471,7 +1484,23 @@ do
         }
         local ranges
         ranges = mp.get_property_native('demuxer-cache-state', { })['seekable-ranges']
-        if ranges then
+        if ranges and (#ranges > 0) then
+          local position = mp.get_property_number('percent-pos', 0)
+          local cacheKeyAggregator = {
+            Window.w,
+            position
+          }
+          for _index_0 = 1, #ranges do
+            local _des_0 = ranges[_index_0]
+            local rangeStart, rangeEnd
+            rangeStart, rangeEnd = _des_0.start, _des_0["end"]
+            table.insert(cacheKeyAggregator, rangeStart)
+            table.insert(cacheKeyAggregator, rangeEnd)
+          end
+          local cacheKey = table.concat(cacheKeyAggregator, '_')
+          if cacheKey == self.cacheKey then
+            return self.needsUpdate
+          end
           local progressPosition = mp.get_property_number('percent-pos', 0) * Window.w * 0.01
           for _index_0 = 1, #ranges do
             local _des_0 = ranges[_index_0]
@@ -1497,6 +1526,7 @@ do
           end
           self.line[9] = table.concat(barDrawing.past, ' ') .. ('m %g 0'):format(progressPosition)
           self.line[11] = table.concat(barDrawing.future, ' ')
+          self.cacheKey = cacheKey
           self.needsUpdate = true
         end
       end
@@ -1508,6 +1538,7 @@ do
   _class_0 = setmetatable({
     __init = function(self)
       _class_0.__parent.__init(self)
+      self.cacheKey = nil
       self.coordinateRemap = 0
       return mp.observe_property('duration', 'number', function(name, value)
         if value and (value > 0) then
@@ -2208,7 +2239,7 @@ do
     end,
     print = function(self)
       if settings['title-print-to-cli'] then
-        return log.warn("Playing: " .. self:generateTitleString(true))
+        return log.warn("Playing: %s", self:generateTitleString(true))
       end
     end
   }
