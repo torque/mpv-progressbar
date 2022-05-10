@@ -7,6 +7,8 @@ class EventLoop
 		@displayRequested = false
 		@needsRedraw = false
 
+		@canvas = mp.create_osd_overlay "ass-events"
+
 		@updateTimer = mp.add_periodic_timer settings['redraw-period'], @\redraw
 		@updateTimer\stop!
 
@@ -93,8 +95,11 @@ class EventLoop
 			uiElement\resize!
 
 	redraw: ( forceRedraw ) =>
+
 		clickPending = Mouse\update!
 		if Window\update!
+			@canvas.res_x = Window.w
+			@canvas.res_y = Window.h
 			@resize!
 
 		for index, zone in ipairs @activityZones
@@ -108,5 +113,6 @@ class EventLoop
 				@needsRedraw = true
 
 		if @needsRedraw
-			mp.set_osd_ass Window.w, Window.h, table.concat @script, '\n'
+			@canvas.data = table.concat @script, '\n'
+			@canvas\update!
 			@needsRedraw = false
