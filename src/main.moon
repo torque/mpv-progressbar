@@ -22,7 +22,7 @@ topZone = ActivityZone =>
 
 -- This is kind of ugly but I have gone insane and don't care any more.
 -- Watch the rapidly declining quality of this codebase in realtime.
-local chapters, progressBar, barCache, barBackground, elapsedTime, remainingTime, hoverTime
+local chapters, progressBar, barCache, barBackground, elapsedTime, remainingTime, hoverTime, thumbnail
 
 if settings['enable-bar']
 	-- this order is recorded and (ab)used by BarBase and
@@ -58,6 +58,9 @@ if settings['enable-remaining-time']
 if settings['enable-hover-time']
 	hoverTime = HoverTime!
 	hoverTimeZone\addUIElement hoverTime
+
+thumbnail = Thumbnail!
+bottomZone\addUIElement thumbnail
 
 title = nil
 if settings['enable-title']

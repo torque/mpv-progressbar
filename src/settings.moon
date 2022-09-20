@@ -246,6 +246,24 @@ Controls how far above the expanded progress bar the remaining time display is
 positioned.
 ]]
 
+settings['thumbnail-left-margin'] = 10
+helpText['thumbnail-left-margin'] = [[
+Controls how close to the left edge of the window the thumbnail display can
+get.
+]]
+
+settings['thumbnail-right-margin'] = 10
+helpText['thumbnail-right-margin'] = [[
+Controls how close to the right edge of the window the thumbnail display can
+get.
+]]
+
+settings['thumbnail-bottom-margin'] = 40
+helpText['thumbnail-bottom-margin'] = [[
+Controls how far above the expanded progress bar the thumbnail display is
+positioned.
+]]
+
 settings['enable-title'] = true
 helpText['enable-title'] = [[
 Sets whether or not the video title is displayed at all.
