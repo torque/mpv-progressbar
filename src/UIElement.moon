@@ -14,11 +14,16 @@ class UIElement
 
 	activate: ( activate ) =>
 		if activate == true
-			@animation\interrupt false
+			if @animation
+				@animation\interrupt false
+
 			@active = true
 		else
-			@animation\interrupt true
-			@animation.finishedCb = ->
+			if @animation
+				@animation\interrupt true
+				@animation.finishedCb = ->
+					@active = false
+			else
 				@active = false
 
 	reconfigure: =>
