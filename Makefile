@@ -1,5 +1,6 @@
 # The order of the sources does matter.
 SOURCES := src/log.moon
+SOURCES += src/util.moon
 SOURCES += src/requires.moon
 SOURCES += src/settings.moon
 SOURCES += src/Stack.moon

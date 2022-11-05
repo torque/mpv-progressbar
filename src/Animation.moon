@@ -11,13 +11,14 @@ class Animation
 
 	update: ( now ) =>
 		if @isReversed
-			@linearProgress = math.max 0, math.min 1, @linearProgress + (@lastUpdate - now)*@durationR
+			@linearProgress = clamp @linearProgress + (@lastUpdate - now) * @durationR, 0, 1
 			if @linearProgress == 0
 				@isFinished = true
 		else
-			@linearProgress = math.max 0, math.min 1, @linearProgress + (now - @lastUpdate)*@durationR
+			@linearProgress = clamp @linearProgress + (now - @lastUpdate) * @durationR, 0, 1
 			if @linearProgress == 1
 				@isFinished = true
+
 		@lastUpdate = now
 
 		progress = math.pow @linearProgress, @accel
