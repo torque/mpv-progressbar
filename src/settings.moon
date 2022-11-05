@@ -239,6 +239,12 @@ Controls how far above the expanded progress bar the remaining time display is
 positioned.
 ]]
 
+settings['enable-thumbnail'] = true
+helpText['enable-thumbnail'] = [[
+Sets whether or not thumbnails are displayed at all. Note: thumbnail display
+requires use of the thumbfast script (See: https://github.com/po5/thumbfast).
+]]
+
 settings['thumbnail-left-margin'] = 10
 helpText['thumbnail-left-margin'] = [[
 Controls how close to the left edge of the window the thumbnail display can
