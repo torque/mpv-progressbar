@@ -14,13 +14,6 @@ Sets the height of the rectangular area at the top of the screen that shows the
 file name and system time when the mouse is hovered over it.
 ]]
 
-settings['display-scale-factor'] = 1
-helpText['display-scale-factor'] = [[
-Acts as a multiplier to increase the size of every UI element. Useful for high-
-DPI displays that cause the UI to be rendered too small (happens at least on
-macOS).
-]]
-
 settings['default-style'] = [[\fnSource Sans Pro\b1\bord2\shad0\fs30\c&HFC799E&\3c&H2D2D2D&]]
 helpText['default-style'] = [[
 Default style that is applied to all UI elements. A string of ASS override tags.

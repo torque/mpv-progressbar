@@ -1,18 +1,18 @@
 class Mouse
-	osdScale = settings['display-scale-factor']
-
 	@@x, @@y = -1, -1
+	@@_rawX, @@_rawY = -1, -1
 	@@inWindow, @@dead = false, true
 	@@clickX, @@clickY = -1, -1
 	@@clickPending = false
 
-	scaledPosition = ->
+	scaledPosition = =>
 		x, y = mp.get_mouse_pos!
-		return math.floor( x/osdScale ), math.floor( y/osdScale )
+		@_rawX, @_rawY = x, y
+		return math.floor( x/Window.osdScale ), math.floor( y/Window.osdScale )
 
 	@update: =>
 		oldX, oldY = @x, @y
-		@x, @y = scaledPosition!
+		@x, @y = scaledPosition @
 		if @dead and (oldX != @x or oldY != @y)
 			@dead = false
 		if not @dead and @clickPending
@@ -22,7 +22,7 @@ class Mouse
 
 	@cacheClick: =>
 		if not @dead
-			@clickX, @clickY = scaledPosition!
+			@clickX, @clickY = scaledPosition @
 			@clickPending = true
 		else
 			@dead = false
