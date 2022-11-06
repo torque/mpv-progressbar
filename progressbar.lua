@@ -55,6 +55,12 @@ local log = {
     return msg.info(table.concat(result, "\n"))
   end
 }
+local _mathmin = math.min
+local _mathmax = math.max
+local clamp
+clamp = function(value, min, max)
+  return _mathmin(max, _mathmax(value, min))
+end
 local options = require('mp.options')
 local utils = require('mp.utils')
 local script_name = 'torque-progressbar'
@@ -233,11 +239,6 @@ settings['top-hover-zone-height'] = 40
 helpText['top-hover-zone-height'] = [[Sets the height of the rectangular area at the top of the screen that shows the
 file name and system time when the mouse is hovered over it.
 ]]
-settings['display-scale-factor'] = 1
-helpText['display-scale-factor'] = [[Acts as a multiplier to increase the size of every UI element. Useful for high-
-DPI displays that cause the UI to be rendered too small (happens at least on
-macOS).
-]]
 settings['default-style'] = [[\fnSource Sans Pro\b1\bord2\shad0\fs30\c&HFC799E&\3c&H2D2D2D&]]
 helpText['default-style'] = [[Default style that is applied to all UI elements. A string of ASS override tags.
 Individual elements have their own style settings which override the tags here.
@@ -404,6 +405,22 @@ display.
 ]]
 settings['hover-time-bottom-margin'] = 0
 helpText['hover-time-bottom-margin'] = [[Controls how far above the expanded progress bar the remaining time display is
+positioned.
+]]
+settings['enable-thumbnail'] = true
+helpText['enable-thumbnail'] = [[Sets whether or not thumbnails are displayed at all. Note: thumbnail display
+requires use of the thumbfast script (See: https://github.com/po5/thumbfast).
+]]
+settings['thumbnail-left-margin'] = 10
+helpText['thumbnail-left-margin'] = [[Controls how close to the left edge of the window the thumbnail display can
+get.
+]]
+settings['thumbnail-right-margin'] = 10
+helpText['thumbnail-right-margin'] = [[Controls how close to the right edge of the window the thumbnail display can
+get.
+]]
+settings['thumbnail-bottom-margin'] = 40
+helpText['thumbnail-bottom-margin'] = [[Controls how far above the expanded progress bar the thumbnail display is
 positioned.
 ]]
 settings['enable-title'] = true
@@ -620,7 +637,6 @@ end
 local Window
 do
   local _class_0
-  local osdScale
   local _base_0 = { }
   _base_0.__index = _base_0
   _class_0 = setmetatable({
@@ -637,13 +653,16 @@ do
   })
   _base_0.__class = _class_0
   local self = _class_0
-  osdScale = settings['display-scale-factor']
+  self.__class.osdScale = mp.get_property_number("display-hidpi-scale", 1)
   self.__class.w, self.__class.h = 0, 0
+  self.__class._rawW, self.__class._rawH = 0, 0
   self.update = function(self)
     local w, h = mp.get_osd_size()
+    local osdScale = mp.get_property_number("display-hidpi-scale", 1)
+    self._rawW, self._rawH = w, h
     w, h = math.floor(w / osdScale), math.floor(h / osdScale)
-    if w ~= self.w or h ~= self.h then
-      self.w, self.h = w, h
+    if w ~= self.w or h ~= self.h or osdScale ~= self.osdScale then
+      self.w, self.h, self.osdScale = w, h, osdScale
       return true
     else
       return false
@@ -654,7 +673,7 @@ end
 local Mouse
 do
   local _class_0
-  local osdScale, scaledPosition
+  local scaledPosition
   local _base_0 = { }
   _base_0.__index = _base_0
   _class_0 = setmetatable({
@@ -671,18 +690,19 @@ do
   })
   _base_0.__class = _class_0
   local self = _class_0
-  osdScale = settings['display-scale-factor']
   self.__class.x, self.__class.y = -1, -1
+  self.__class._rawX, self.__class._rawY = -1, -1
   self.__class.inWindow, self.__class.dead = false, true
   self.__class.clickX, self.__class.clickY = -1, -1
   self.__class.clickPending = false
-  scaledPosition = function()
+  scaledPosition = function(self)
     local x, y = mp.get_mouse_pos()
-    return math.floor(x / osdScale), math.floor(y / osdScale)
+    self._rawX, self._rawY = x, y
+    return math.floor(x / Window.osdScale), math.floor(y / Window.osdScale)
   end
   self.update = function(self)
     local oldX, oldY = self.x, self.y
-    self.x, self.y = scaledPosition()
+    self.x, self.y = scaledPosition(self)
     if self.dead and (oldX ~= self.x or oldY ~= self.y) then
       self.dead = false
     end
@@ -694,7 +714,7 @@ do
   end
   self.cacheClick = function(self)
     if not self.dead then
-      self.clickX, self.clickY = scaledPosition()
+      self.clickX, self.clickY = scaledPosition(self)
       self.clickPending = true
     else
       self.dead = false
@@ -993,6 +1013,8 @@ do
     redraw = function(self, forceRedraw)
       local clickPending = Mouse:update()
       if Window:update() then
+        self.canvas.res_x = Window.w
+        self.canvas.res_y = Window.h
         self:resize()
       end
       for index, zone in ipairs(self.activityZones) do
@@ -1006,7 +1028,8 @@ do
         end
       end
       if self.needsRedraw then
-        mp.set_osd_ass(Window.w, Window.h, table.concat(self.script, '\n'))
+        self.canvas.data = table.concat(self.script, '\n')
+        self.canvas:update()
         self.needsRedraw = false
       end
     end
@@ -1019,6 +1042,7 @@ do
       self.activityZones = Stack()
       self.displayRequested = false
       self.needsRedraw = false
+      self.canvas = mp.create_osd_overlay("ass-events")
       self.updateTimer = mp.add_periodic_timer(settings['redraw-period'], (function()
         local _base_1 = self
         local _fn_0 = _base_1.redraw
@@ -1083,12 +1107,12 @@ do
   local _base_0 = {
     update = function(self, now)
       if self.isReversed then
-        self.linearProgress = math.max(0, math.min(1, self.linearProgress + (self.lastUpdate - now) * self.durationR))
+        self.linearProgress = clamp(self.linearProgress + (self.lastUpdate - now) * self.durationR, 0, 1)
         if self.linearProgress == 0 then
           self.isFinished = true
         end
       else
-        self.linearProgress = math.max(0, math.min(1, self.linearProgress + (now - self.lastUpdate) * self.durationR))
+        self.linearProgress = clamp(self.linearProgress + (now - self.lastUpdate) * self.durationR, 0, 1)
         if self.linearProgress == 1 then
           self.isFinished = true
         end
@@ -1154,11 +1178,17 @@ do
     end,
     activate = function(self, activate)
       if activate == true then
-        self.animation:interrupt(false)
+        if self.animation then
+          self.animation:interrupt(false)
+        end
         self.active = true
       else
-        self.animation:interrupt(true)
-        self.animation.finishedCb = function()
+        if self.animation then
+          self.animation:interrupt(true)
+          self.animation.finishedCb = function()
+            self.active = false
+          end
+        else
           self.active = false
         end
       end
@@ -1472,6 +1502,10 @@ do
       end
       self.line[9] = [[]]
     end,
+    clobber = function(self)
+      self.line[9] = ""
+      self.line[11] = ""
+    end,
     redraw = function(self)
       _class_0.__parent.__base.redraw(self)
       if self.hideInactive and not self.active then
@@ -1528,6 +1562,8 @@ do
           self.line[11] = table.concat(barDrawing.future, ' ')
           self.cacheKey = cacheKey
           self.needsUpdate = true
+        else
+          self:clobber()
         end
       end
       return self.needsUpdate
@@ -2010,7 +2046,7 @@ do
       leftMargin = settings['hover-time-left-margin']
       bottomMargin = settings['hover-time-bottom-margin']
       offScreenPos = settings['hover-time-offscreen-pos']
-      self.line[2] = ('%g,%g'):format(math.min(Window.w - rightMargin, math.max(leftMargin, Mouse.x)), self.position)
+      self.line[2] = ('%g,%g'):format(clamp(Mouse.x, leftMargin, Window.w - rightMargin), self.position)
       self.line[1] = ([[{%s%s\pos(]]):format(settings['default-style'], settings['hover-time-style'])
       self.animation = Animation(offScreenPos, bottomMargin, self.animationDuration, (function()
         local _base_1 = self
@@ -2022,23 +2058,29 @@ do
     end,
     resize = function(self)
       _class_0.__parent.__base.resize(self)
-      self.line[2] = ("%g,%g"):format(math.min(Window.w - rightMargin, math.max(leftMargin, Mouse.x)), self.yPos - self.animation.value)
+      self.line[2] = ("%g,%g"):format(clamp(Mouse.x, leftMargin, Window.w - rightMargin), self.yPos - self.animation.value)
     end,
     animate = function(self, value)
       self.position = self.yPos - value
-      self.line[2] = ("%g,%g"):format(math.min(Window.w - rightMargin, math.max(leftMargin, Mouse.x)), self.position)
+      self.line[2] = ("%g,%g"):format(clamp(Mouse.x, leftMargin, Window.w - rightMargin), self.position)
       self.needsUpdate = true
     end,
     redraw = function(self)
       if self.active then
         _class_0.__parent.__base.redraw(self)
-        if Mouse.x ~= self.lastX then
-          self.line[2] = ("%g,%g"):format(math.min(Window.w - rightMargin, math.max(leftMargin, Mouse.x)), self.position)
+        local duration = mp.get_property_number('duration', 0)
+        if Mouse.x ~= self.lastX or duration ~= self.lastDuration then
+          self.lastDuration = duration
+          self.line[2] = ("%g,%g"):format(clamp(Mouse.x, leftMargin, Window.w - rightMargin), self.position)
           self.lastX = Mouse.x
-          local hoverTime = mp.get_property_number('duration', 0) * Mouse.x / Window.w
-          if hoverTime ~= self.lastTime then
-            self.line[4] = ([[%d:%02d:%02d]]):format(math.floor(hoverTime / 3600), math.floor((hoverTime / 60) % 60), math.floor(hoverTime % 60))
-            self.lastTime = hoverTime
+          if duration == 0 then
+            self.line[4] = "????"
+          else
+            local hoverTime = duration * Mouse.x / Window.w
+            if hoverTime ~= self.lastTime then
+              self.line[4] = ([[%d:%02d:%02d]]):format(math.floor(hoverTime / 3600), math.floor((hoverTime / 60) % 60), math.floor(hoverTime % 60))
+              self.lastTime = hoverTime
+            end
           end
           self.needsUpdate = true
         end
@@ -2057,6 +2099,7 @@ do
         [[)\an2}]],
         [[????]]
       }
+      self.lastDuration = 0
       self.lastTime = 0
       self.lastX = -1
       self.position = offScreenPos
@@ -2099,6 +2142,83 @@ do
     _parent_0.__inherited(_parent_0, _class_0)
   end
   HoverTime = _class_0
+end
+local Thumbnail
+do
+  local _class_0
+  local rightMargin, leftMargin, bottomMargin
+  local _parent_0 = BarAccent
+  local _base_0 = {
+    updateInfo = function(self, thumbfastInfo)
+      self.thumbfast = thumbfastInfo
+      self.lastX = -1
+      self.needsUpdate = true
+    end,
+    reconfigure = function(self)
+      _class_0.__parent.__base.reconfigure(self)
+      rightMargin = settings['thumbnail-right-margin']
+      leftMargin = settings['thumbnail-left-margin']
+      bottomMargin = settings['thumbnail-bottom-margin']
+    end,
+    activate = function(self, activate)
+      _class_0.__parent.__base.activate(self, activate)
+      if not activate then
+        mp.commandv('script-message-to', 'thumbfast', 'clear')
+        self.needsUpdate = true
+      end
+    end,
+    redraw = function(self)
+      if self.active then
+        _class_0.__parent.__base.redraw(self)
+        if Mouse.x ~= self.lastX and not self.thumbfast.disabled then
+          self.lastX = Mouse.x
+          local hoverTime = mp.get_property_number('duration', 0) * Mouse.x / Window.w
+          mp.commandv('script-message-to', 'thumbfast', 'thumb', hoverTime, clamp(Mouse._rawX - self.thumbfast.width / 2, leftMargin, Window._rawW - self.thumbfast.width - rightMargin), Window._rawH - bottomMargin * Window.osdScale - self.thumbfast.height)
+        end
+        self.needsUpdate = true
+      end
+      return self.needsUpdate
+    end
+  }
+  _base_0.__index = _base_0
+  setmetatable(_base_0, _parent_0.__base)
+  _class_0 = setmetatable({
+    __init = function(self, thumbfastInfo)
+      _class_0.__parent.__init(self)
+      self.line = { }
+      self.lastX = -1
+      return self:updateInfo(thumbfastInfo)
+    end,
+    __base = _base_0,
+    __name = "Thumbnail",
+    __parent = _parent_0
+  }, {
+    __index = function(cls, name)
+      local val = rawget(_base_0, name)
+      if val == nil then
+        local parent = rawget(cls, "__parent")
+        if parent then
+          return parent[name]
+        end
+      else
+        return val
+      end
+    end,
+    __call = function(cls, ...)
+      local _self_0 = setmetatable({}, _base_0)
+      cls.__init(_self_0, ...)
+      return _self_0
+    end
+  })
+  _base_0.__class = _class_0
+  local self = _class_0
+  rightMargin = settings['thumbnail-right-margin']
+  leftMargin = settings['thumbnail-left-margin']
+  bottomMargin = settings['thumbnail-bottom-margin']
+  if _parent_0.__inherited then
+    _parent_0.__inherited(_parent_0, _class_0)
+  end
+  Thumbnail = _class_0
 end
 local PauseIndicator
 do
@@ -2419,7 +2539,7 @@ end, ignoreRequestDisplay)
 local topZone = ActivityZone(function(self)
   return self:reset(0, 0, Window.w, activeHeight)
 end, ignoreRequestDisplay)
-local chapters, progressBar, barCache, barBackground, elapsedTime, remainingTime, hoverTime
+local chapters, progressBar, barCache, barBackground, elapsedTime, remainingTime, hoverTime, thumbnail
 if settings['enable-bar'] then
   progressBar = ProgressBar()
   barCache = ProgressBarCache()
@@ -2451,6 +2571,22 @@ end
 if settings['enable-hover-time'] then
   hoverTime = HoverTime()
   hoverTimeZone:addUIElement(hoverTime)
+end
+if settings['enable-thumbnail'] then
+  mp.register_script_message('thumbfast-info', function(json)
+    local data = utils.parse_json(json)
+    if type(data) ~= 'table' or not data.width or not data.height then
+      return log.warn('thumbfast did not respond with proper thumbnail information. Thumbnails are disabled.')
+    else
+      if thumbnail then
+        return thumbnail:updateInfo(data)
+      else
+        thumbnail = Thumbnail(data)
+        hoverTimeZone:addUIElement(thumbnail)
+        return eventLoop:generateUIFromZones()
+      end
+    end
+  end)
 end
 local title = nil
 if settings['enable-title'] then
