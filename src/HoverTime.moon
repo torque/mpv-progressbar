@@ -15,6 +15,7 @@ class HoverTime extends BarAccent
 			[[????]]
 		}
 
+		@lastDuration = 0
 		@lastTime = 0
 		@lastX = -1
 		@position = offScreenPos
@@ -42,14 +43,22 @@ class HoverTime extends BarAccent
 	redraw: =>
 		if @active
 			super!
-			if Mouse.x != @lastX
+
+			duration = mp.get_property_number( 'duration', 0 )
+
+			if Mouse.x != @lastX or duration != @lastDuration
+				@lastDuration = duration
+
 				@line[2] = ("%g,%g")\format clamp( Mouse.x, leftMargin, Window.w - rightMargin ), @position
 				@lastX = Mouse.x
 
-				hoverTime = mp.get_property_number( 'duration', 0 ) * Mouse.x / Window.w
-				if hoverTime != @lastTime
-					@line[4] = ([[%d:%02d:%02d]])\format math.floor( hoverTime/3600 ), math.floor( (hoverTime/60)%60 ), math.floor( hoverTime%60 )
-					@lastTime = hoverTime
+				if duration == 0
+					@line[4] = "????"
+				else
+					hoverTime = duration * Mouse.x / Window.w
+					if hoverTime != @lastTime
+						@line[4] = ([[%d:%02d:%02d]])\format math.floor( hoverTime / 3600 ), math.floor( (hoverTime / 60) % 60 ), math.floor( hoverTime % 60 )
+						@lastTime = hoverTime
 
 				@needsUpdate = true
 
