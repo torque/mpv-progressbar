@@ -2065,24 +2065,35 @@ do
       self.line[2] = ("%g,%g"):format(clamp(Mouse.x, leftMargin, Window.w - rightMargin), self.position)
       self.needsUpdate = true
     end,
+    _setXPosition = function(self, x)
+      self.line[2] = ("%g,%g"):format(clamp(x, leftMargin, Window.w - rightMargin), self.position)
+      self.needsUpdate = true
+    end,
+    _setUnknownDuration = function(self)
+      self.line[4] = "????"
+      self.needsUpdate = true
+    end,
+    _setTime = function(self, hoverTime)
+      self.line[4] = ([[%d:%02d:%02d]]):format(math.floor(hoverTime / 3600), math.floor((hoverTime / 60) % 60), math.floor(hoverTime % 60))
+      self.needsUpdate = true
+    end,
     redraw = function(self)
       if self.active then
         _class_0.__parent.__base.redraw(self)
         local duration = mp.get_property_number('duration', 0)
-        if Mouse.x ~= self.lastX or duration ~= self.lastDuration then
-          self.lastDuration = duration
-          self.line[2] = ("%g,%g"):format(clamp(Mouse.x, leftMargin, Window.w - rightMargin), self.position)
+        local hoverTime = duration * Mouse.x / Window.w
+        if Mouse.x ~= self.lastX then
           self.lastX = Mouse.x
+          self:_setXPosition(Mouse.x)
+        end
+        if duration ~= self.lastDuration or hoverTime ~= self.lastTime then
+          self.lastDuration = duration
+          self.lastTime = hoverTime
           if duration == 0 then
-            self.line[4] = "????"
+            self:_setUnknownDuration()
           else
-            local hoverTime = duration * Mouse.x / Window.w
-            if hoverTime ~= self.lastTime then
-              self.line[4] = ([[%d:%02d:%02d]]):format(math.floor(hoverTime / 3600), math.floor((hoverTime / 60) % 60), math.floor(hoverTime % 60))
-              self.lastTime = hoverTime
-            end
+            self:_setTime(hoverTime)
           end
-          self.needsUpdate = true
         end
       end
       return self.needsUpdate
