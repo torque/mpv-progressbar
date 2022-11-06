@@ -40,26 +40,40 @@ class HoverTime extends BarAccent
 		@line[2] = ("%g,%g")\format clamp( Mouse.x, leftMargin, Window.w - rightMargin ), @position
 		@needsUpdate = true
 
+	_setXPosition: (x) =>
+		@line[2] = ("%g,%g")\format clamp( x, leftMargin, Window.w - rightMargin ), @position
+		@needsUpdate = true
+
+	_setUnknownDuration: =>
+		@line[4] = "????"
+		@needsUpdate = true
+
+	_setTime: ( hoverTime ) =>
+		@line[4] = ([[%d:%02d:%02d]])\format(
+			math.floor( hoverTime / 3600 ),
+			math.floor( (hoverTime / 60) % 60 ),
+			math.floor( hoverTime % 60 )
+		)
+		@needsUpdate = true
+
 	redraw: =>
 		if @active
 			super!
 
 			duration = mp.get_property_number( 'duration', 0 )
+			hoverTime = duration * Mouse.x / Window.w
 
-			if Mouse.x != @lastX or duration != @lastDuration
-				@lastDuration = duration
-
-				@line[2] = ("%g,%g")\format clamp( Mouse.x, leftMargin, Window.w - rightMargin ), @position
+			if Mouse.x != @lastX
 				@lastX = Mouse.x
+				@_setXPosition( Mouse.x )
+
+			if duration != @lastDuration or hoverTime != @lastTime
+				@lastDuration = duration
+				@lastTime = hoverTime
 
 				if duration == 0
-					@line[4] = "????"
+					@_setUnknownDuration!
 				else
-					hoverTime = duration * Mouse.x / Window.w
-					if hoverTime != @lastTime
-						@line[4] = ([[%d:%02d:%02d]])\format math.floor( hoverTime / 3600 ), math.floor( (hoverTime / 60) % 60 ), math.floor( hoverTime % 60 )
-						@lastTime = hoverTime
-
-				@needsUpdate = true
+					@_setTime( hoverTime )
 
 		return @needsUpdate
