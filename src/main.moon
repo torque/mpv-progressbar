@@ -69,7 +69,7 @@ if settings['enable-thumbnail']
 				thumbnail\updateInfo data
 			else
 				thumbnail = Thumbnail data
-				bottomZone\addUIElement thumbnail
+				hoverTimeZone\addUIElement thumbnail
 				-- a bit of a weird hack, but since this resolves asynchronously, it
 				-- may be called after initDraw has been called. In that case, we
 				-- have to call generateUIFromZones to actually make the thumbnail
