@@ -22,7 +22,7 @@ topZone = ActivityZone =>
 
 -- This is kind of ugly but I have gone insane and don't care any more.
 -- Watch the rapidly declining quality of this codebase in realtime.
-local chapters, progressBar, barCache, barBackground, elapsedTime, remainingTime, hoverTime
+local chapters, progressBar, barCache, barBackground, elapsedTime, remainingTime, hoverTime, thumbnail
 
 if settings['enable-bar']
 	-- this order is recorded and (ab)used by BarBase and
@@ -65,14 +65,17 @@ if settings['enable-thumbnail']
 		if type(data) != 'table' or not data.width or not data.height then
 			log.warn 'thumbfast did not respond with proper thumbnail information. Thumbnails are disabled.'
 		else
-			thumbnail = Thumbnail data
-			bottomZone\addUIElement thumbnail
+			if thumbnail
+				thumbnail\updateInfo data
+			else
+				thumbnail = Thumbnail data
+				bottomZone\addUIElement thumbnail
+				-- a bit of a weird hack, but since this resolves asynchronously, it
+				-- may be called after initDraw has been called. In that case, we
+				-- have to call generateUIFromZones to actually make the thumbnail
+				-- get redrawn by the event loop.
+				eventLoop\generateUIFromZones!
 
-			-- a bit of a weird hack, but since this resolves asynchronously, it
-			-- may be called after initDraw has been called. In that case, we
-			-- have to call generateUIFromZones to actually make the thumbnail
-			-- get redrawn by the event loop.
-			eventLoop\generateUIFromZones!
 
 title = nil
 if settings['enable-title']

@@ -9,7 +9,12 @@ class Thumbnail extends BarAccent
 
 		@line = {}
 		@lastX = -1
+		@updateInfo thumbfastInfo
+
+	updateInfo: ( thumbfastInfo ) =>
 		@thumbfast = thumbfastInfo
+		-- TODO: should we also send a `thumbfast clear` message here?
+		@needsUpdate = true
 
 	reconfigure: =>
 		super!
