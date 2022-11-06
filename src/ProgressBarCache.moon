@@ -27,6 +27,10 @@ class ProgressBarCache extends BarBase
 		-- undo BarBase size update
 		@line[9] = [[]]
 
+	clobber: =>
+		@line[9] = ""
+		@line[11] = ""
+
 	redraw: =>
 		super!
 
@@ -93,5 +97,7 @@ class ProgressBarCache extends BarBase
 
 				@cacheKey = cacheKey
 				@needsUpdate = true
+			else
+				@clobber!
 
 		return @needsUpdate
