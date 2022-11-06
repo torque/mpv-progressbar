@@ -31,7 +31,7 @@ class Thumbnail extends BarAccent
 	redraw: =>
 		if @active
 			super!
-			if Mouse.x != @lastX and not @thumbfast.disabled and @thumbfast.width >= 0 and @thumbfast.height >= 0
+			if Mouse.x != @lastX and not @thumbfast.disabled
 				@lastX = Mouse.x
 
 				hoverTime = mp.get_property_number( 'duration', 0 ) * Mouse.x / Window.w
