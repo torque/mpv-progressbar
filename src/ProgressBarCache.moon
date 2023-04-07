@@ -15,21 +15,34 @@ class ProgressBarCache extends BarBase
 	reconfigure: =>
 		super 'bar-cache-'
 		@line[6] = 100
-		@line[8] = @line[8]\format( settings['bar-cache-style'] ) .. 'm 0 0'
-		@line[10] = [[{\p0%s\p1}]]\format settings['bar-cache-background-style']
-		@line[11] = [[]]
+		@line[9] = ''
+		-- TODO: this is a hack
+		@line[10] = '\n'
+		for idx = 1, 9
+			@line[idx + 10] = @line[idx]
+
+		@line[8] = @line[8]\format( settings['bar-cache-style'] )
+		@line[18] = @line[18]\format( settings['bar-cache-background-style'] )
 		@fileDuration = mp.get_property_number 'duration', nil
 
 	resize: =>
 		super!
 		if @fileDuration
 			@coordinateRemap = Window.w/@fileDuration
+
+		-- map position onto background bar
+		@line[12] = @line[2]
 		-- undo BarBase size update
-		@line[9] = [[]]
+		@clobber!
+
+	animate: ( value ) =>
+		super value
+		-- map scale onto background bar
+		@line[14] = @line[4]
 
 	clobber: =>
 		@line[9] = ""
-		@line[11] = ""
+		@line[19] = ""
 
 	redraw: =>
 		super!
@@ -75,25 +88,16 @@ class ProgressBarCache extends BarBase
 						rect = 'm %g 0 l %g 1 %g 1 %g 0'\format rangeStart, rangeStart, rangeEnd, rangeEnd
 						table.insert barDrawing.past, rect
 					elseif rangeStart > progressPosition
-						-- the way ASS handles two drawings in a single line is weird
-						-- (drawing coordinates are relative to the end of the previous
-						-- drawing/character on the same line), so we have to offset all
-						-- future values by the split point. This is handled by bounding the
-						-- first (past) set of drawings with m 0 0 and m #{progressPosition}
-						-- 0.
-						rangeStart -= progressPosition
-						rangeEnd -= progressPosition
 						rect = 'm %g 0 l %g 1 %g 1 %g 0'\format rangeStart, rangeStart, rangeEnd, rangeEnd
 						table.insert barDrawing.future, rect
 					else
-						rangeEnd -= progressPosition
 						rectPast = 'm %g 0 l %g 1 %g 1 %g 0'\format rangeStart, rangeStart, progressPosition, progressPosition
-						rectFuture = 'm %g 0 l %g 1 %g 1 %g 0'\format 0, 0, rangeEnd, rangeEnd
+						rectFuture = 'm %g 0 l %g 1 %g 1 %g 0'\format progressPosition, progressPosition, rangeEnd, rangeEnd
 						table.insert barDrawing.past, rectPast
 						table.insert barDrawing.future, rectFuture
 
-				@line[9] = table.concat( barDrawing.past, ' ' ) .. 'm %g 0'\format progressPosition
-				@line[11] = table.concat barDrawing.future, ' '
+				@line[9] = table.concat barDrawing.past, ' '
+				@line[19] = table.concat barDrawing.future, ' '
 
 				@cacheKey = cacheKey
 				@needsUpdate = true
