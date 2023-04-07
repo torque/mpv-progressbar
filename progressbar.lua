@@ -1490,9 +1490,13 @@ do
     reconfigure = function(self)
       _class_0.__parent.__base.reconfigure(self, 'bar-cache-')
       self.line[6] = 100
-      self.line[8] = self.line[8]:format(settings['bar-cache-style']) .. 'm 0 0'
-      self.line[10] = ([[{\p0%s\p1}]]):format(settings['bar-cache-background-style'])
-      self.line[11] = [[]]
+      self.line[9] = ''
+      self.line[10] = '\n'
+      for idx = 1, 9 do
+        self.line[idx + 10] = self.line[idx]
+      end
+      self.line[8] = self.line[8]:format(settings['bar-cache-style'])
+      self.line[18] = self.line[18]:format(settings['bar-cache-background-style'])
       self.fileDuration = mp.get_property_number('duration', nil)
     end,
     resize = function(self)
@@ -1500,11 +1504,16 @@ do
       if self.fileDuration then
         self.coordinateRemap = Window.w / self.fileDuration
       end
-      self.line[9] = [[]]
+      self.line[12] = self.line[2]
+      return self:clobber()
+    end,
+    animate = function(self, value)
+      _class_0.__parent.__base.animate(self, value)
+      self.line[14] = self.line[4]
     end,
     clobber = function(self)
       self.line[9] = ""
-      self.line[11] = ""
+      self.line[19] = ""
     end,
     redraw = function(self)
       _class_0.__parent.__base.redraw(self)
@@ -1546,20 +1555,17 @@ do
               local rect = ('m %g 0 l %g 1 %g 1 %g 0'):format(rangeStart, rangeStart, rangeEnd, rangeEnd)
               table.insert(barDrawing.past, rect)
             elseif rangeStart > progressPosition then
-              rangeStart = rangeStart - progressPosition
-              rangeEnd = rangeEnd - progressPosition
               local rect = ('m %g 0 l %g 1 %g 1 %g 0'):format(rangeStart, rangeStart, rangeEnd, rangeEnd)
               table.insert(barDrawing.future, rect)
             else
-              rangeEnd = rangeEnd - progressPosition
               local rectPast = ('m %g 0 l %g 1 %g 1 %g 0'):format(rangeStart, rangeStart, progressPosition, progressPosition)
-              local rectFuture = ('m %g 0 l %g 1 %g 1 %g 0'):format(0, 0, rangeEnd, rangeEnd)
+              local rectFuture = ('m %g 0 l %g 1 %g 1 %g 0'):format(progressPosition, progressPosition, rangeEnd, rangeEnd)
               table.insert(barDrawing.past, rectPast)
               table.insert(barDrawing.future, rectFuture)
             end
           end
-          self.line[9] = table.concat(barDrawing.past, ' ') .. ('m %g 0'):format(progressPosition)
-          self.line[11] = table.concat(barDrawing.future, ' ')
+          self.line[9] = table.concat(barDrawing.past, ' ')
+          self.line[19] = table.concat(barDrawing.future, ' ')
           self.cacheKey = cacheKey
           self.needsUpdate = true
         else
@@ -2344,6 +2350,7 @@ do
         ['playlist-pos-1'] = mp.get_property_number('playlist-pos-1', 1),
         ['playlist-count'] = mp.get_property_number('playlist-count', 1)
       }
+      self.needsUpdate = true
     end,
     generateTitleString = function(self, quote)
       if quote == nil then
