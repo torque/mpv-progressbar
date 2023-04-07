@@ -37,6 +37,7 @@ class Title extends UIElement
 			'playlist-pos-1': mp.get_property_number 'playlist-pos-1', 1
 			'playlist-count': mp.get_property_number 'playlist-count', 1
 		}
+		@needsUpdate = true
 
 	generateTitleString: (quote=false) =>
 		{'media-title': title, 'playlist-pos-1': position, 'playlist-count': total} = @playlistInfo
