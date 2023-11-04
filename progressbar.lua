@@ -317,13 +317,13 @@ bar, allowing the display of seek ranges that have already been encountered.
 demuxer cache ranges that are prior to the current playback point will not be
 shown. This matches the previous behavior.
 ]]
-settings['bar-cache-height-inactive'] = 1.5
+settings['bar-cache-height-inactive'] = 3
 helpText['bar-cache-height-inactive'] = [[Sets the height of the cache bar display when the mouse is not in the active
 zone and there is no request-display active. Useful in combination with bar-
 cache-position to control whether or not the cache bar is occluded by (or
 occludes) the progress bar.
 ]]
-settings['bar-cache-height-active'] = 4
+settings['bar-cache-height-active'] = 8
 helpText['bar-cache-height-active'] = [[Sets the height of the cache bar display when the mouse is in the active zone or
 request-display is active. Useful in combination with bar-cache- position to
 control whether or not the cache bar is occluded by (or occludes) the progress
@@ -338,12 +338,12 @@ settings['bar-foreground-style'] = ''
 helpText['bar-foreground-style'] = [[A string of ASS override tags that get applied only to the progress layer of the
 bar.
 ]]
-settings['bar-cache-style'] = [[\c&H515151&]]
+settings['bar-cache-style'] = [[\c&HFDAFC8&]]
 helpText['bar-cache-style'] = [[A string of ASS override tags that get applied only to the cache layer of the
 bar, particularly the part of the cache bar that is behind the current playback
 position. The default sets only the color.
 ]]
-settings['bar-cache-background-style'] = [[]]
+settings['bar-cache-background-style'] = [[\c&H525252&]]
 helpText['bar-cache-background-style'] = [[A string of ASS override tags that get applied only to the cache layer of the
 bar, particularly the part of the cache bar that is after the current playback
 position. The tags specified here are applied after bar-cache-style and override
