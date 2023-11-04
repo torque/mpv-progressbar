@@ -26,9 +26,10 @@ convenient to update if you symlink it in from somewhere else.
 the way it displays. These can be set on the mpv command line, but the
 recommended approach is by using the configuration file
 `~~/script-opts/torque-progressbar/main.conf`, where `~~` is either
-`~/.mpv` or `~/.config/mpv`, depending on your setup. The defaults are
-provided in `settings.moon`, and are reproduced in config-file-
-compatible syntax in [`torque-progressbar.conf`][conf-example].
+`~/.mpv` or `~/.config/mpv`, depending on your setup (on Windows, it's
+`%appdata%\mpv`). The defaults are provided in `settings.moon`, and are
+reproduced in config-file- compatible syntax in
+[`torque-progressbar.conf`][conf-example].
 
 #### Keybindings
 
