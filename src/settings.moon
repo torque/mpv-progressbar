@@ -423,7 +423,7 @@ display will disappear without animating all the way off-screen. Positive values
 will cause the display to animate the wrong direction.
 ]]
 
-settings['system-time-offscreen-pos'] = -100
+settings['system-time-offscreen-pos'] = 4
 helpText['system-time-offscreen-pos'] = [[
 Controls how far off the left side of the window the system time display tries
 to move when it is inactive. If you use a non-default font, this value may need

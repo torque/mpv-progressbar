@@ -19,6 +19,8 @@ topZone = ActivityZone =>
 		@reset 0, 0, Window.w, activeHeight,
 	ignoreRequestDisplay
 
+dummyZone = DummyZone =>
+
 
 -- This is kind of ugly but I have gone insane and don't care any more.
 -- Watch the rapidly declining quality of this codebase in realtime.
@@ -85,8 +87,7 @@ if settings['enable-title']
 
 if settings['enable-system-time']
 	systemTime = SystemTime!
-	bottomZone\addUIElement systemTime
-	topZone\addUIElement systemTime
+	dummyZone\addUIElement systemTime
 
 -- The order of these is important, because the order that elements are added to
 -- eventLoop matters, because that controls how they are layered (first element
@@ -94,6 +95,7 @@ if settings['enable-system-time']
 eventLoop\addZone hoverTimeZone
 eventLoop\addZone bottomZone
 eventLoop\addZone topZone
+eventLoop\addZone dummyZone
 
 notFrameStepping = false
 if settings['pause-indicator']

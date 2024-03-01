@@ -45,3 +45,14 @@ class ActivityZone extends Rect
 			@clickHandler!
 
 		return nowActive
+
+class DummyZone extends ActivityZone
+	addUIElement: ( element ) =>
+		@elements\insert element
+		element\activate true
+
+	activityCheck: ( displayRequested ) =>
+		return true
+
+	update: ( displayRequested, clickPending ) =>
+		return true
