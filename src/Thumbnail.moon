@@ -40,7 +40,7 @@ class Thumbnail extends BarAccent
 					'script-message-to', 'thumbfast', 'thumb',
 					hoverTime,
 					clamp( Mouse._rawX - @thumbfast.width / 2, leftMargin, Window._rawW - @thumbfast.width - rightMargin ),
-					Window._rawH - bottomMargin*Window.osdScale - @thumbfast.height
+					bottomMargin*Window.osdScale
 				)
 
 			@needsUpdate = true

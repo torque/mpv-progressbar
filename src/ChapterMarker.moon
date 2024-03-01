@@ -8,8 +8,8 @@ class ChapterMarker
 
 	new: ( @position, minWidth, minHeight ) =>
 		@line = {
-			[[{\an2\bord0\p1\pos(]]   -- 1
-			[[%g,%g]]\format @position*Window.w, Window.h
+			[[{\an8\bord0\p1\pos(]]   -- 1
+			[[%g,%g]]\format @position*Window.w, 0
 			[[)\fscx]]                -- 3
 			minWidth
 			[[\fscy]]                 -- 5
@@ -24,7 +24,7 @@ class ChapterMarker
 		return table.concat @line
 
 	resize: =>
-		@line[2] = ('%d,%d')\format math.floor( @position*Window.w ), Window.h
+		@line[2] = ('%d,%d')\format math.floor( @position*Window.w ), 0
 
 	animate: ( width, height ) =>
 		@line[4] = ('%g')\format width

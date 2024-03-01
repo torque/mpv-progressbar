@@ -10,7 +10,7 @@ class TimeElapsed extends BarAccent
 		@line = {
 			[[{\pos(]]
 			[[%g,0]]\format offscreenPos
-			[[)\an1%s%s}]]\format settings['default-style'], settings['elapsed-style']
+			[[)\an7%s%s}]]\format settings['default-style'], settings['elapsed-style']
 			[[????]]
 		}
 		@lastTime = -1
@@ -21,17 +21,17 @@ class TimeElapsed extends BarAccent
 		super!
 		bottomMargin = settings['elapsed-bottom-margin']
 		offscreenPos = settings['elapsed-offscreen-pos']
-		@line[2] = ('%g,%g')\format @position, @yPos - bottomMargin
-		@line[3] = ([[)\an1%s%s}]])\format settings['default-style'], settings['elapsed-style']
+		@line[2] = ('%g,%g')\format @position, bottomMargin
+		@line[3] = ([[)\an7%s%s}]])\format settings['default-style'], settings['elapsed-style']
 		@animation = Animation offscreenPos, settings['elapsed-left-margin'], @animationDuration, @\animate, nil, 0.5
 
 	resize: =>
 		super!
-		@line[2] = ('%g,%g')\format @position, @yPos - bottomMargin
+		@line[2] = ('%g,%g')\format @position, bottomMargin
 
 	animate: ( value ) =>
 		@position = value
-		@line[2] = ('%g,%g')\format value, @yPos - bottomMargin
+		@line[2] = ('%g,%g')\format value, bottomMargin
 		@needsUpdate = true
 
 	redraw: =>

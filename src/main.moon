@@ -9,10 +9,10 @@ ignoreRequestDisplay = =>
 	return @containsPoint Mouse.x, Mouse.y
 
 bottomZone = ActivityZone =>
-	@reset 0, Window.h - activeHeight, Window.w, activeHeight
+	@reset 0, 0, Window.w, activeHeight
 
 hoverTimeZone = ActivityZone =>
-		@reset 0, Window.h - activeHeight, Window.w, activeHeight,
+		@reset 0, 0, Window.w, activeHeight,
 	ignoreRequestDisplay
 
 topZone = ActivityZone =>

@@ -7,7 +7,7 @@ class BarBase extends UIElement
 		for bar in *@instantiatedBars
 			bar\_updateBarVisibility!
 
-	lineBaseTemplate = [[\an1%s%s%s\p1}]]
+	lineBaseTemplate = [[\an7%s%s%s\p1}]]
 
 	new: =>
 
@@ -60,7 +60,7 @@ class BarBase extends UIElement
 			return table.concat @line
 
 	resize: =>
-		@line[2] = [[%d,%d]]\format 0, Window.h
+		@line[2] = [[%d,%d]]\format 0, 0
 		@line[9] = [[m 0 0 l %d 0 %d 1 0 1]]\format Window.w, Window.w
 		@needsUpdate = true
 

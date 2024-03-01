@@ -9,7 +9,7 @@ class TimeRemaining extends BarAccent
 		@line = {
 			[[{\pos(]]
 			[[%g,0]]\format offscreenPos
-			[[)\an3%s%s}]]\format settings['default-style'], settings['remaining-style']
+			[[)\an9%s%s}]]\format settings['default-style'], settings['remaining-style']
 			[[????]]
 		}
 		@lastTime = -1
@@ -20,18 +20,18 @@ class TimeRemaining extends BarAccent
 		super!
 		bottomMargin = settings['remaining-bottom-margin']
 		offscreenPos = settings['remaining-offscreen-pos']
-		@line[2] = ('%g,%g')\format @position, @yPos - bottomMargin
-		@line[3] = ([[)\an3%s%s}]])\format settings['default-style'], settings['remaining-style']
+		@line[2] = ('%g,%g')\format @position, bottomMargin
+		@line[3] = ([[)\an9%s%s}]])\format settings['default-style'], settings['remaining-style']
 		@animation = Animation offscreenPos, settings['remaining-right-margin'], @animationDuration, @\animate, nil, 0.5
 
 	resize: =>
 		super!
 		@position = Window.w - @animation.value
-		@line[2] = ('%g,%g')\format @position, @yPos - bottomMargin
+		@line[2] = ('%g,%g')\format @position, bottomMargin
 
 	animate: ( value ) =>
 		@position = Window.w - value
-		@line[2] = ('%g,%g')\format @position, @yPos - bottomMargin
+		@line[2] = ('%g,%g')\format @position, bottomMargin
 		@needsUpdate = true
 
 	redraw: =>

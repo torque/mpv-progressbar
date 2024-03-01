@@ -11,7 +11,7 @@ class HoverTime extends BarAccent
 		@line = {
 			[[{%s%s\pos(]]\format settings['default-style'], settings['hover-time-style']
 			[[-100,0]]
-			[[)\an2}]]
+			[[)\an8}]]
 			[[????]]
 		}
 
@@ -33,10 +33,10 @@ class HoverTime extends BarAccent
 
 	resize: =>
 		super!
-		@line[2] = ("%g,%g")\format clamp( Mouse.x, leftMargin, Window.w - rightMargin ), @yPos - @animation.value
+		@line[2] = ("%g,%g")\format clamp( Mouse.x, leftMargin, Window.w - rightMargin ), @animation.value
 
 	animate: ( value ) =>
-		@position = @yPos - value
+		@position = value
 		@line[2] = ("%g,%g")\format clamp( Mouse.x, leftMargin, Window.w - rightMargin ), @position
 		@needsUpdate = true
 

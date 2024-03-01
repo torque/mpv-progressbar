@@ -177,7 +177,7 @@ Controls how far from the left edge of the window the elapsed time display is
 positioned.
 ]]
 
-settings['elapsed-bottom-margin'] = 0
+settings['elapsed-bottom-margin'] = 6
 helpText['elapsed-bottom-margin'] = [[
 Controls how far above the expanded progress bar the elapsed time display is
 positioned.
@@ -201,7 +201,7 @@ Controls how far from the right edge of the window the remaining time display is
 positioned.
 ]]
 
-settings['remaining-bottom-margin'] = 0
+settings['remaining-bottom-margin'] = 6
 helpText['remaining-bottom-margin'] = [[
 Controls how far above the expanded progress bar the remaining time display is
 positioned.
@@ -233,7 +233,7 @@ get. If this value is too small, it will end up overlapping the remaining time
 display.
 ]]
 
-settings['hover-time-bottom-margin'] = 0
+settings['hover-time-bottom-margin'] = 6
 helpText['hover-time-bottom-margin'] = [[
 Controls how far above the expanded progress bar the remaining time display is
 positioned.
@@ -279,7 +279,7 @@ Controls how far from the left edge of the window the video title display is
 positioned.
 ]]
 
-settings['title-top-margin'] = 0
+settings['title-top-margin'] = 30
 helpText['title-top-margin'] = [[
 Controls how far from the top edge of the window the video title display is
 positioned.
@@ -313,7 +313,7 @@ Controls how far from the right edge of the window the system time display is
 positioned.
 ]]
 
-settings['system-time-top-margin'] = 0
+settings['system-time-top-margin'] = 30
 helpText['system-time-top-margin'] = [[
 Controls how far from the top edge of the window the system time display is
 positioned.
