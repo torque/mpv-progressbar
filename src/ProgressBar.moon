@@ -15,8 +15,13 @@ class ProgressBar extends BarBase
 		@line[7] = [[]]
 		@line[8] = @line[8]\format settings['bar-foreground-style']
 
-	clickHandler: =>
-		mp.commandv "seek", Mouse.clickX*100/Window.w, seekString
+	clickHandler: ( button ) =>
+		if button == 0
+			@seek Mouse.clickX * 100 / Window.w
+			return false
+
+	seek: ( percent ) =>
+		mp.commandv 'seek', percent, seekString
 
 	resize: =>
 		super!

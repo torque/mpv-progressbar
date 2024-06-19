@@ -15,13 +15,13 @@ class ActivityZone extends Rect
 		@elements\remove element
 
 	-- bottom-up click propagation does not deal with mouse down/up events.
-	clickHandler: =>
+	clickHandler: ( button ) =>
 		unless @containsPoint Mouse.clickX, Mouse.clickY
 			return
 
 		for _, element in ipairs @elements
 			-- if clickHandler returns false, the click stops propagating.
-			if element.clickHandler and not element\clickHandler!
+			if element.clickHandler and element\clickHandler( button ) == false
 				break
 
 	activityCheck: ( displayRequested ) =>
@@ -41,7 +41,7 @@ class ActivityZone extends Rect
 			for id, element in ipairs @elements
 				element\activate nowActive
 
-		if clickPending
-			@clickHandler!
+		if clickPending != false
+			@clickHandler clickPending
 
 		return nowActive

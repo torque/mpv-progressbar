@@ -345,6 +345,20 @@ number of chapters may slow down the script somewhat, but I have yet to run
 into this being a problem.
 ]]
 
+settings['enable-chapter-seek'] = false
+helpText['enable-chapter-seek'] = [[
+If enabled and the item being played back has chapters, using the
+`chapter-seek-button` while the progress bar is hovered will seek the video to
+the chapter that is closest to the mouse cursor's position.
+]]
+
+settings['chapter-seek-button'] = 'MBTN_RIGHT'
+helpText['chapter-seek-button'] = [[
+The button to register for chapter seeking, if enabled. Since chapter seeking
+is based on the mouse position, this should probably be bound to a mouse button,
+but it doesn't have to be.
+]]
+
 settings['chapter-marker-width'] = 2
 helpText['chapter-marker-width'] = [[
 Controls the width of each chapter marker when the progress bar is inactive.

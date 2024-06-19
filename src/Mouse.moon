@@ -15,27 +15,33 @@ class Mouse
 		@x, @y = scaledPosition @
 		if @dead and (oldX != @x or oldY != @y)
 			@dead = false
-		if not @dead and @clickPending
+		if not @dead and @clickPending != false
+			button = @clickPending
 			@clickPending = false
-			return true
+			return button
 		return false
 
-	@cacheClick: =>
+	@cacheClick: (button) =>
 		if not @dead
 			@clickX, @clickY = scaledPosition @
-			@clickPending = true
+			@clickPending = button
 		else
 			@dead = false
 
-mp.add_key_binding "mouse_btn0", "left-click", ->
-	Mouse\cacheClick!
+mp.add_key_binding 'MBTN_LEFT', 'left-click', ->
+	Mouse\cacheClick 0
+
+
+if settings['enable-chapter-seek']
+	mp.add_key_binding settings['chapter-seek-button'], 'chapter-seek-click', ->
+		Mouse\cacheClick 2
 
 mp.observe_property 'fullscreen', 'bool', ->
 	Mouse\update!
 	Mouse.dead = true
 
-mp.add_forced_key_binding "mouse_leave", "mouse-leave", ->
+mp.add_forced_key_binding 'mouse_leave', 'mouse-leave', ->
 	Mouse.inWindow = false
 
-mp.add_forced_key_binding "mouse_enter", "mouse-enter", ->
+mp.add_forced_key_binding 'mouse_enter', 'mouse-enter', ->
 	Mouse.inWindow = true

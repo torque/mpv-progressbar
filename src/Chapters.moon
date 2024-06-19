@@ -39,6 +39,32 @@ class Chapters extends BarBase
 		@createMarkers!
 		@animation = Animation 0, 1, @animationDuration, @\animate
 
+	clickHandler: ( button ) =>
+		if button == 2
+			@seekNearestChapter Mouse.clickX / Window.w
+			return false
+
+	seekNearestChapter: ( frac ) =>
+		chapters = mp.get_property_native 'chapter-list', { }
+		if #chapters == 0
+			return
+
+		duration = mp.get_property_number( 'duration', 0 )
+		time = duration * frac
+
+		-- could make this a bisection ehhhhh
+		mindist = duration
+		minidx = #chapters
+		for idx, chap in ipairs chapters
+			dist = math.abs chap.time - time
+			if dist < mindist
+				mindist = dist
+				minidx = idx
+			elseif dist > mindist
+				break
+
+		mp.set_property_native 'chapter', minidx - 1
+
 	resize: =>
 		for i, marker in ipairs @markers
 			marker\resize!
