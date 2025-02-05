@@ -423,6 +423,12 @@ settings['thumbnail-bottom-margin'] = 40
 helpText['thumbnail-bottom-margin'] = [[Controls how far above the expanded progress bar the thumbnail display is
 positioned.
 ]]
+settings['thumbnail-border-expansion'] = 5
+helpText['thumbnail-border-expansion'] = [[Controls the thickness of the thumbnail border box.
+]]
+settings['thumbnail-border-style'] = [[\c&H2D2D2D&\bord0]]
+helpText['thumbnail-border-style'] = [[Controls the style of the thumbnail border box.
+]]
 settings['enable-title'] = true
 helpText['enable-title'] = [[Sets whether or not the video title is displayed at all.
 ]]
@@ -573,6 +579,15 @@ do
       end
       if self.containmentKey then
         element[self.containmentKey] = true
+      end
+    end,
+    insertBefore = function(self, new, existing)
+      local index = existing[self]
+      if index then
+        self:insert(new, index)
+        return reindex(self, index + 1)
+      else
+        return self:insert(new)
       end
     end,
     remove = function(self, element)
@@ -828,6 +843,9 @@ do
   local _base_0 = {
     reconfigure = function(self)
       self.active = false
+    end,
+    addUIElementBefore = function(self, new, existing)
+      return self.elements:insertBefore(new, existing)
     end,
     addUIElement = function(self, element)
       self.elements:insert(element)
@@ -2211,7 +2229,7 @@ end
 local Thumbnail
 do
   local _class_0
-  local rightMargin, leftMargin, bottomMargin
+  local rightMargin, leftMargin, bottomMargin, borderExpansion, boxStyle
   local _parent_0 = BarAccent
   local _base_0 = {
     updateInfo = function(self, thumbfastInfo)
@@ -2224,6 +2242,8 @@ do
       rightMargin = settings['thumbnail-right-margin']
       leftMargin = settings['thumbnail-left-margin']
       bottomMargin = settings['thumbnail-bottom-margin']
+      borderExpansion = settings['thumbnail-border-expansion']
+      self.line[3] = boxStyle:format(settings['default-style'], settings['thumbnail-border-style'])
     end,
     activate = function(self, activate)
       _class_0.__parent.__base.activate(self, activate)
@@ -2238,6 +2258,10 @@ do
         if Mouse.x ~= self.lastX and not self.thumbfast.disabled then
           self.lastX = Mouse.x
           local hoverTime = mp.get_property_number('duration', 0) * Mouse.x / Window.w
+          self.line[2] = ([[%d,%d]]):format(self.lastX, Window.h - (bottomMargin - borderExpansion))
+          local width = (self.thumbfast.width / Window.osdScale) + (2 * borderExpansion)
+          local height = (self.thumbfast.height / Window.osdScale) + (2 * borderExpansion)
+          self.line[4] = ([[m 0 0 l %d 0 %d %d 0 %d]]):format(width, width, height, height)
           mp.commandv('script-message-to', 'thumbfast', 'thumb', hoverTime, clamp(Mouse._rawX - self.thumbfast.width / 2, leftMargin, Window._rawW - self.thumbfast.width - rightMargin), Window._rawH - bottomMargin * Window.osdScale - self.thumbfast.height)
         end
         self.needsUpdate = true
@@ -2249,8 +2273,13 @@ do
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
     __init = function(self, thumbfastInfo)
+      self.line = {
+        [[{\pos(]],
+        0,
+        boxStyle:format(settings['default-style'], settings['thumbnail-border-style']),
+        0
+      }
       _class_0.__parent.__init(self)
-      self.line = { }
       self.lastX = -1
       return self:updateInfo(thumbfastInfo)
     end,
@@ -2280,6 +2309,8 @@ do
   rightMargin = settings['thumbnail-right-margin']
   leftMargin = settings['thumbnail-left-margin']
   bottomMargin = settings['thumbnail-bottom-margin']
+  borderExpansion = settings['thumbnail-border-expansion']
+  boxStyle = [[)\an2%s%s\p1}]]
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
@@ -2648,7 +2679,11 @@ if settings['enable-thumbnail'] then
         return thumbnail:updateInfo(data)
       else
         thumbnail = Thumbnail(data)
-        hoverTimeZone:addUIElement(thumbnail)
+        if hoverTime then
+          hoverTimeZone:addUIElementBefore(thumbnail, hoverTime)
+        else
+          hoverTimeZone:addUIElement(thumbnail)
+        end
         return eventLoop:generateUIFromZones()
       end
     end
