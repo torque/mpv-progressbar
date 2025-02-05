@@ -7,6 +7,9 @@ class ActivityZone extends Rect
 	reconfigure: =>
 		@active = false
 
+	addUIElementBefore: ( new, existing ) =>
+		@elements\insertBefore new, existing
+
 	addUIElement: ( element ) =>
 		@elements\insert element
 		element\activate @active

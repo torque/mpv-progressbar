@@ -263,6 +263,16 @@ Controls how far above the expanded progress bar the thumbnail display is
 positioned.
 ]]
 
+settings['thumbnail-border-expansion'] = 5
+helpText['thumbnail-border-expansion'] = [[
+Controls the thickness of the thumbnail border box.
+]]
+
+settings['thumbnail-border-style'] = [[\c&H2D2D2D&\bord0]]
+helpText['thumbnail-border-style'] = [[
+Controls the style of the thumbnail border box.
+]]
+
 settings['enable-title'] = true
 helpText['enable-title'] = [[
 Sets whether or not the video title is displayed at all.

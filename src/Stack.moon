@@ -19,6 +19,14 @@ class Stack
 		if @containmentKey
 			element[@containmentKey] = true
 
+	insertBefore: ( new, existing ) =>
+		index = existing[@]
+		if index
+			@insert new, index
+			reindex @, index + 1
+		else
+			@insert new
+
 	removeElementMetadata = ( element ) =>
 		element[@] = nil
 		if @containmentKey
