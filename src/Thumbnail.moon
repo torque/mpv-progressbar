@@ -1,9 +1,9 @@
 class Thumbnail extends BarAccent
 
-	rightMargin = settings['thumbnail-right-margin']
-	leftMargin = settings['thumbnail-left-margin']
 	bottomMargin = settings['thumbnail-bottom-margin']
 	borderExpansion = settings['thumbnail-border-expansion']
+	rightMargin = settings['thumbnail-right-margin'] + borderExpansion
+	leftMargin = settings['thumbnail-left-margin'] + borderExpansion
 
 	boxStyle = [[)\an2%s%s\p1}]]
 
@@ -28,9 +28,9 @@ class Thumbnail extends BarAccent
 	reconfigure: =>
 		super!
 		rightMargin = settings['thumbnail-right-margin']
-		leftMargin = settings['thumbnail-left-margin']
-		bottomMargin = settings['thumbnail-bottom-margin']
 		borderExpansion = settings['thumbnail-border-expansion']
+		leftMargin = settings['thumbnail-left-margin'] + borderExpansion
+		bottomMargin = settings['thumbnail-bottom-margin'] + borderExpansion
 
 		@line[3] = boxStyle\format settings['default-style'], settings['thumbnail-border-style']
 
@@ -48,9 +48,12 @@ class Thumbnail extends BarAccent
 
 				hoverTime = mp.get_property_number( 'duration', 0 ) * Mouse.x / Window.w
 
-				@line[2] = [[%d,%d]]\format @lastX, Window.h - (bottomMargin - borderExpansion)
+				scaledWidth = @thumbfast.width / Window.osdScale
 
-				width = (@thumbfast.width / Window.osdScale) + (2 * borderExpansion)
+				thumbX = clamp(@lastX, leftMargin + (scaledWidth / 2), Window.w - rightMargin - (scaledWidth / 2))
+				@line[2] = [[%d,%d]]\format thumbX, Window.h - (bottomMargin - borderExpansion)
+
+				width = scaledWidth + (2 * borderExpansion)
 				height = (@thumbfast.height / Window.osdScale) + (2 * borderExpansion)
 				@line[4] = [[m 0 0 l %d 0 %d %d 0 %d]]\format width, width, height, height
 
