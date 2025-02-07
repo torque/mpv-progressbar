@@ -57,8 +57,12 @@ class Thumbnail extends BarAccent
 				mp.commandv(
 					'script-message-to', 'thumbfast', 'thumb',
 					hoverTime,
-					clamp( Mouse._rawX - @thumbfast.width / 2, leftMargin, Window._rawW - @thumbfast.width - rightMargin ),
-					Window._rawH - bottomMargin*Window.osdScale - @thumbfast.height
+					clamp(
+						Mouse._rawX - @thumbfast.width / 2,
+						leftMargin * Window.osdScale,
+						Window._rawW - @thumbfast.width - (rightMargin * Window.osdScale)
+					),
+					Window._rawH - @thumbfast.height - (bottomMargin * Window.osdScale)
 				)
 
 			@needsUpdate = true

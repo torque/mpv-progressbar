@@ -245,13 +245,13 @@ Sets whether or not thumbnails are displayed at all. Note: thumbnail display
 requires use of the thumbfast script (See: https://github.com/po5/thumbfast).
 ]]
 
-settings['thumbnail-left-margin'] = 10
+settings['thumbnail-left-margin'] = 4
 helpText['thumbnail-left-margin'] = [[
 Controls how close to the left edge of the window the thumbnail display can
 get.
 ]]
 
-settings['thumbnail-right-margin'] = 10
+settings['thumbnail-right-margin'] = 4
 helpText['thumbnail-right-margin'] = [[
 Controls how close to the right edge of the window the thumbnail display can
 get.
