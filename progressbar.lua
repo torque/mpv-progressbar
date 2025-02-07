@@ -411,11 +411,11 @@ settings['enable-thumbnail'] = true
 helpText['enable-thumbnail'] = [[Sets whether or not thumbnails are displayed at all. Note: thumbnail display
 requires use of the thumbfast script (See: https://github.com/po5/thumbfast).
 ]]
-settings['thumbnail-left-margin'] = 10
+settings['thumbnail-left-margin'] = 4
 helpText['thumbnail-left-margin'] = [[Controls how close to the left edge of the window the thumbnail display can
 get.
 ]]
-settings['thumbnail-right-margin'] = 10
+settings['thumbnail-right-margin'] = 4
 helpText['thumbnail-right-margin'] = [[Controls how close to the right edge of the window the thumbnail display can
 get.
 ]]
@@ -2229,7 +2229,7 @@ end
 local Thumbnail
 do
   local _class_0
-  local rightMargin, leftMargin, bottomMargin, borderExpansion, boxStyle
+  local bottomMargin, borderExpansion, rightMargin, leftMargin, boxStyle
   local _parent_0 = BarAccent
   local _base_0 = {
     updateInfo = function(self, thumbfastInfo)
@@ -2240,9 +2240,9 @@ do
     reconfigure = function(self)
       _class_0.__parent.__base.reconfigure(self)
       rightMargin = settings['thumbnail-right-margin']
-      leftMargin = settings['thumbnail-left-margin']
-      bottomMargin = settings['thumbnail-bottom-margin']
       borderExpansion = settings['thumbnail-border-expansion']
+      leftMargin = settings['thumbnail-left-margin'] + borderExpansion
+      bottomMargin = settings['thumbnail-bottom-margin'] + borderExpansion
       self.line[3] = boxStyle:format(settings['default-style'], settings['thumbnail-border-style'])
     end,
     activate = function(self, activate)
@@ -2258,11 +2258,13 @@ do
         if Mouse.x ~= self.lastX and not self.thumbfast.disabled then
           self.lastX = Mouse.x
           local hoverTime = mp.get_property_number('duration', 0) * Mouse.x / Window.w
-          self.line[2] = ([[%d,%d]]):format(self.lastX, Window.h - (bottomMargin - borderExpansion))
-          local width = (self.thumbfast.width / Window.osdScale) + (2 * borderExpansion)
+          local scaledWidth = self.thumbfast.width / Window.osdScale
+          local thumbX = clamp(self.lastX, leftMargin + (scaledWidth / 2), Window.w - rightMargin - (scaledWidth / 2))
+          self.line[2] = ([[%d,%d]]):format(thumbX, Window.h - (bottomMargin - borderExpansion))
+          local width = scaledWidth + (2 * borderExpansion)
           local height = (self.thumbfast.height / Window.osdScale) + (2 * borderExpansion)
           self.line[4] = ([[m 0 0 l %d 0 %d %d 0 %d]]):format(width, width, height, height)
-          mp.commandv('script-message-to', 'thumbfast', 'thumb', hoverTime, clamp(Mouse._rawX - self.thumbfast.width / 2, leftMargin, Window._rawW - self.thumbfast.width - rightMargin), Window._rawH - bottomMargin * Window.osdScale - self.thumbfast.height)
+          mp.commandv('script-message-to', 'thumbfast', 'thumb', hoverTime, clamp(Mouse._rawX - self.thumbfast.width / 2, leftMargin * Window.osdScale, Window._rawW - self.thumbfast.width - (rightMargin * Window.osdScale)), Window._rawH - self.thumbfast.height - (bottomMargin * Window.osdScale))
         end
         self.needsUpdate = true
       end
@@ -2306,10 +2308,10 @@ do
   })
   _base_0.__class = _class_0
   local self = _class_0
-  rightMargin = settings['thumbnail-right-margin']
-  leftMargin = settings['thumbnail-left-margin']
   bottomMargin = settings['thumbnail-bottom-margin']
   borderExpansion = settings['thumbnail-border-expansion']
+  rightMargin = settings['thumbnail-right-margin'] + borderExpansion
+  leftMargin = settings['thumbnail-left-margin'] + borderExpansion
   boxStyle = [[)\an2%s%s\p1}]]
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
