@@ -723,7 +723,7 @@ do
   scaledPosition = function(self)
     local x, y = mp.get_mouse_pos()
     self._rawX, self._rawY = x, y
-    return math.floor(x / Window.osdScale), math.floor(y / Window.osdScale)
+    return x / Window.osdScale, y / Window.osdScale
   end
   self.update = function(self)
     local oldX, oldY = self.x, self.y
@@ -2260,10 +2260,10 @@ do
           local hoverTime = mp.get_property_number('duration', 0) * Mouse.x / Window.w
           local scaledWidth = self.thumbfast.width / Window.osdScale
           local thumbX = clamp(self.lastX, leftMargin + (scaledWidth / 2), Window.w - rightMargin - (scaledWidth / 2))
-          self.line[2] = ([[%d,%d]]):format(thumbX, Window.h - (bottomMargin - borderExpansion))
+          self.line[2] = ([[%g,%g]]):format(thumbX, Window.h - (bottomMargin - borderExpansion))
           local width = scaledWidth + (2 * borderExpansion)
           local height = (self.thumbfast.height / Window.osdScale) + (2 * borderExpansion)
-          self.line[4] = ([[m 0 0 l %d 0 %d %d 0 %d]]):format(width, width, height, height)
+          self.line[4] = ([[m 0 0 l %g 0 %g %g 0 %g]]):format(width, width, height, height)
           mp.commandv('script-message-to', 'thumbfast', 'thumb', hoverTime, clamp(Mouse._rawX - self.thumbfast.width / 2, leftMargin * Window.osdScale, Window._rawW - self.thumbfast.width - (rightMargin * Window.osdScale)), Window._rawH - self.thumbfast.height - (bottomMargin * Window.osdScale))
         end
         self.needsUpdate = true
