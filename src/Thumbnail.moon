@@ -49,13 +49,12 @@ class Thumbnail extends BarAccent
 				hoverTime = mp.get_property_number( 'duration', 0 ) * Mouse.x / Window.w
 
 				scaledWidth = @thumbfast.width / Window.osdScale
-
-				thumbX = clamp(@lastX, leftMargin + (scaledWidth / 2), Window.w - rightMargin - (scaledWidth / 2))
-				@line[2] = [[%d,%d]]\format thumbX, Window.h - (bottomMargin - borderExpansion)
+				thumbX = clamp @lastX, leftMargin + (scaledWidth / 2), Window.w - rightMargin - (scaledWidth / 2)
+				@line[2] = [[%g,%g]]\format thumbX, Window.h - (bottomMargin - borderExpansion)
 
 				width = scaledWidth + (2 * borderExpansion)
 				height = (@thumbfast.height / Window.osdScale) + (2 * borderExpansion)
-				@line[4] = [[m 0 0 l %d 0 %d %d 0 %d]]\format width, width, height, height
+				@line[4] = [[m 0 0 l %g 0 %g %g 0 %g]]\format width, width, height, height
 
 				mp.commandv(
 					'script-message-to', 'thumbfast', 'thumb',
