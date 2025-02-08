@@ -8,7 +8,7 @@ class Mouse
 	scaledPosition = =>
 		x, y = mp.get_mouse_pos!
 		@_rawX, @_rawY = x, y
-		return math.floor( x/Window.osdScale ), math.floor( y/Window.osdScale )
+		return x / Window.osdScale, y / Window.osdScale
 
 	@update: =>
 		oldX, oldY = @x, @y
