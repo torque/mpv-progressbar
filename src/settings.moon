@@ -263,7 +263,7 @@ Controls how far above the expanded progress bar the thumbnail display is
 positioned.
 ]]
 
-settings['thumbnail-border-expansion'] = 5
+settings['thumbnail-border-expansion'] = 3
 helpText['thumbnail-border-expansion'] = [[
 Controls the thickness of the thumbnail border box.
 ]]
