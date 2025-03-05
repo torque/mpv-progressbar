@@ -2235,6 +2235,9 @@ do
     updateInfo = function(self, thumbfastInfo)
       self.thumbfast = thumbfastInfo
       self.lastX = -1
+      if self.thumbfast.disabled then
+        self.line[4] = ""
+      end
       self.needsUpdate = true
     end,
     reconfigure = function(self)
@@ -2277,9 +2280,9 @@ do
     __init = function(self, thumbfastInfo)
       self.line = {
         [[{\pos(]],
-        0,
+        [[0,0]],
         boxStyle:format(settings['default-style'], settings['thumbnail-border-style']),
-        0
+        [[]]
       }
       _class_0.__parent.__init(self)
       self.lastX = -1
