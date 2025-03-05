@@ -10,9 +10,9 @@ class Thumbnail extends BarAccent
 	new: ( thumbfastInfo ) =>
 		@line = {
 			[[{\pos(]] -- 1
-			0          -- 2
+			[[0,0]]    -- 2
 			boxStyle\format settings['default-style'], settings['thumbnail-border-style']
-			0          -- 4
+			[[]]       -- 4
 		}
 
 		super!
@@ -23,6 +23,8 @@ class Thumbnail extends BarAccent
 	updateInfo: ( thumbfastInfo ) =>
 		@thumbfast = thumbfastInfo
 		@lastX = -1
+		if @thumbfast.disabled
+			@line[4] = ""
 		@needsUpdate = true
 
 	reconfigure: =>
